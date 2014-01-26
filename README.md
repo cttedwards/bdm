@@ -1,4 +1,4 @@
 bdm
 ===
 
-Bayesian Biomass Dynamic Model
+Bayesian biomass dynamic model
