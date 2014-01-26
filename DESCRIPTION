@@ -1,0 +1,11 @@
+Package: bdm
+Type: Package
+Title: Bayesian biomass dynamic model of population dynamics
+Version: 1.0
+Date: 2014-01-08
+Author: Charles T T Edwards
+Maintainer: Charles T T Edwards <charles.edwards@niwa.co.nz>
+Description: Bayesian fit of a logistic surplus production model to catch and abundance data using Hamiltonian MCMC
+License: GNU General Public License Version 3
+Depends: R(>= 3.0.1), methods, rstan, DEoptim, pscl
+Collate: edat.R bdm.R bdm-internal.R rdat.R rdat.iter.R rprior.R iterate.R mass.R maturity.R nmort.R size.R sr.R survivorship.R rcalc.R update_bdm.R compile_bdm.R fit.R plot.bdm.R
