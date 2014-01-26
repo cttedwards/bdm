@@ -1,0 +1,31 @@
+import(rstan)
+import(DEoptim)
+import(pscl)
+exportPattern("^[[:alpha:]]+")
+exportMethods(
+    "compile_bdm",
+    "fit",
+    "initialize",
+    "iterate",
+    "mass",
+    "mass<-",
+    "maturity",
+    "maturity<-",
+    "nmort",
+    "nmort<-",
+    "rcalc",
+    "size",
+    "size<-",
+    "sr",
+    "sr<-",
+    "survivorship",
+    "update_bdm" 
+)
+exportClasses(
+	 "edat",
+     "bdm",
+     "rdat",
+     "rdat.iter",
+     "rprior"
+)
+S3method(plot,bdm)
