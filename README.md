@@ -1,4 +1,4 @@
-bdm
+bdm (branch)
 ===
 
-Bayesian biomass dynamic model (tsm branch)
+Bayesian biomass dynamic model
