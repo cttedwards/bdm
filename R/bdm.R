@@ -71,6 +71,9 @@ bdm <- function(compile=FALSE) {
       logK ~ uniform(1.0,20.0);
       r0 ~ lognormal(log(0.3),0.2);
       
+      // Jacobian for logK
+      lp__ <- lp__ - logK;
+      
       // conjugate prior densities for
       // hyper-parameters
       sigRsq ~ inv_gamma(1.0,0.5);     
