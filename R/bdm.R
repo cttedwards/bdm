@@ -35,8 +35,8 @@ bdm <- function(compile=FALSE) {
     parameters {
       real logK;
       real<lower=0,upper=2> r0;
-      real<lower=0,upper=10> sigRsq;
-      real<lower=0,upper=10> sigQsq;
+      real<lower=0,upper=2> sigRsq;
+      real<lower=0,upper=2> sigQsq;
       real<lower=0,upper=2> x[T];
     }
     transformed parameters {

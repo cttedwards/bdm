@@ -9,8 +9,9 @@ setMethod("maturity",signature(x="rdat"),
 
 #{{{ assignment function
 setGeneric("maturity<-", function(x,i,j, ...,value) standardGeneric("maturity<-"))
+#{{ list
 setMethod("maturity<-",
-          signature(x="rdat"),
+          signature(x="rdat",value="list"),
           function(x,i,j, ...,value) {
             
             acrit.mu <- value$mu$acrit
@@ -41,4 +42,20 @@ setMethod("maturity<-",
             
           }
 )
+#}}
+#{{ numeric
+setMethod("maturity<-",
+          signature(x="rdat",value="numeric"),
+          function(x,i,j, ...,value) {
+            
+            mat.mu <- value
+            if(length(mat.mu)<x@amax)
+              mat.mu[(length(mat.mu)+1):x@amax] <- rep(mat.mu[length(mat.mu)],x@amax-length(mat.mu))
+            
+            x@lhdat[['maturity']] <- apply(x@lhdat[['maturity']],2,function(x) mat.mu)
+            
+            x
+          }
+)
+#}}
 #}}}

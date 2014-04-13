@@ -56,7 +56,7 @@ setMethod("fit",signature=c("bdm","edat"),function(.Object,data,init,chains,iter
     
     bm[1] <- 1
     
-    # estimate logK numerically
+    # estimate approximate logK numerically
     # using DEoptim
     obj <- function(logK) {
     
@@ -64,12 +64,12 @@ setMethod("fit",signature=c("bdm","edat"),function(.Object,data,init,chains,iter
         bm[t+1] <- max(bm[t] + init.r0*bm[t]*(1 - bm[t]) - cc[t]/exp(logK),1e-3)
       bm <- bm[-length(bm)]
     
-      q <- mean(apply(ii,2,function(x) exp(mean(log(x/bm)))))
+      q <- mean(apply(ii,2,function(x) exp(mean(log(x[x>0]/bm[x>0])))))
     
-      -sum(apply(ii,2,function(x) log(x/(q*bm))^2))
+      -sum(apply(ii,2,function(x) log(x[x>0]/(q*bm[x>0]))^2))
     }
     
-    init.logK <- as.numeric(DEoptim(obj,lower=0,upper=200,control = DEoptim.control(trace = FALSE))$optim$bestmem)
+    init.logK <- as.numeric(DEoptim(obj,lower=0,upper=30,control = DEoptim.control(trace = FALSE))$optim$bestmem)
     init.logK
   }
   
@@ -124,3 +124,7 @@ setMethod("fit",signature=c("bdm","edat"),function(.Object,data,init,chains,iter
   .Object
 })
 #}}}
+
+setMethod("fit",signature=c("rprior","missing"),function(.Object, ...) { .fitr(.Object) })
+
+

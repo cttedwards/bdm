@@ -56,7 +56,7 @@ setMethod("update_bdm",signature=c("bdm","list"),function(.Object,x,compile=FALS
     
     if(plot) {
       windows()
-      curve(dlnorm(x,logmu,logsigma),col=2,xlab='r',ylab='',yaxt='n',main='')
+      curve(dlnorm(x,logmu,logsigma),col=2,from=0,to=2,xlab='r',ylab='',yaxt='n',main='')
     }
   }
   if(x$par=='sigRsq') {
@@ -67,7 +67,7 @@ setMethod("update_bdm",signature=c("bdm","list"),function(.Object,x,compile=FALS
     if(plot) {
       dinvgamma <- function(x,alpha,beta) (beta^alpha / gamma(alpha)) * (1/(x^(alpha+1))) * exp(-beta / x)
       windows()
-      curve(dinvgamma(x,alpha,beta),col=2,xlab='sigRsq',ylab='',yaxt='n',main='')
+      curve(dinvgamma(x,alpha,beta),col=2,from=0,to=2,xlab='Observation error (sigRsq)',ylab='',yaxt='n',main='')
       abline(v=beta/(alpha + 1),col=2,lty=2)
     }
   }
@@ -79,7 +79,7 @@ setMethod("update_bdm",signature=c("bdm","list"),function(.Object,x,compile=FALS
     if(plot) {
       dinvgamma <- function(x,alpha,beta) (beta^alpha / gamma(alpha)) * (1/(x^(alpha+1))) * exp(-beta / x)
       windows()
-      curve(dinvgamma(x,alpha,beta),col=2,xlab='sigQsq',ylab='',yaxt='n',main='')
+      curve(dinvgamma(x,alpha,beta),col=2,from=0,to=2,xlab='Process error (sigQsq)',ylab='',yaxt='n',main='')
       abline(v=beta/(alpha + 1),col=2,lty=2)
     }
   }

@@ -1,10 +1,10 @@
 
 #{{{ empirical data class
 setClass("edat",contains="list",representation(names="character"))
-setMethod("initialize","edat",function(.Object,index,catch) {
+setMethod("initialize","edat",function(.Object,index,catch,year) {
   
-  .Object@.Data <- vector('list',4)
-  names(.Object) <- c('T','N','index','catch')
+  .Object@.Data <- vector('list',5)
+  names(.Object) <- c('T','N','index','catch','year')
   
   if(!missing(index)) {
     if(any(!is.na(index))) {
@@ -30,9 +30,12 @@ setMethod("initialize","edat",function(.Object,index,catch) {
     if(any(!is.na(index)) & any(!is.na(catch)))
       if(T.index!=T.catch) 
         stop('index and catch must have the same time dimension\n')
+  if(!missing(year)) {
+    .Object$year <- year
+  } else .Object$year <- 1:length(catch)
   
   .Object
 })
 # constructor
-edat <- function(index=NA,catch=NA) new("edat",index,catch)
+edat <- function(index,catch,year) new("edat",index,catch,year)
 #}}}

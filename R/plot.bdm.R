@@ -7,8 +7,8 @@ plot.bdm <- function(x,par, ...) {
   nix <- x@data$N
   if(missing(par)) par <- c('logK','r0','sigRsq','sigQsq','q','lp__')
   
-  op <- options()
-  options("device.ask.default" = TRUE)
+  #op <- options()
+  #options("device.ask.default" = TRUE)
   
   dev.new()
   traceplot(x@fit,par,nrow=2,ncol=2)
@@ -22,7 +22,7 @@ plot.bdm <- function(x,par, ...) {
   }
   
   # reset graphics options
-  options(op)
+  #options(op)
   
 }
   #)

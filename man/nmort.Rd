@@ -13,9 +13,10 @@ nmort(x) <- data
 }
 \arguments{
   \item{x}{an \code{rdat} class object}
-	\item{data}{a list object containing the components \code{mu} and \code{cv}}
-	\item{mu}{a list containing the single parameter \code{M} which can be either a mean value across ages or a numeric vector representing natural mortality from age 1 to \code{length(M)}}
-	\item{cv}{optional list containing the single parameter \code{M} representing the coefficient of variation}
+	\item{data}{a numeric vector or list object containing the components \code{mu} and \code{cv}, or \code{range}}
+	\item{mu}{the single parameter \code{M} which can be either a mean value across ages or a numeric vector representing natural mortality from age 1 to \code{length(M)}}
+	\item{cv}{optional coefficient of variation}
+  \item{range}{optional vector of length two with upper and lower bounds for \code{M} (ignored if \code{mu} is specified)}
 }
 \details{
 When \code{M} is of length one, then it is assumed constant across all ages. When a vector is input it is assumed to represent natural mortality from age 1 to \code{length(M)}. Older ages are set at \code{M[length(M)]}. When a \code{cv} is supplied, each error value is sampled from a log-normal distribution with \eqn{\sigma = \sqrt{ln(1+cv^2)}} and applied consistently across all ages.
@@ -39,11 +40,16 @@ Charles T T Edwards \email{charles.edwards@niwa.co.nz}
 \examples{
 # vector input
 dat <- rdat(amax=30,iter=1)
-nmort(dat) <- list(mu=list(M=c(0.1,0.1,0.2)))
+nmort(dat) <- c(0.1,0.1,0.2)
 nmort(dat)
 
 # single value with uncertainty
 dat <- rdat(amax=30,iter=10)
-nmort(dat) <- list(mu=list(M=0.2),cv=list(M=0.25))
+nmort(dat) <- list(mu=0.2,cv=0.25)
+nmort(dat)
+
+# range of values
+dat <- rdat(amax=30,iter=10)
+nmort(dat) <- list(range=c(0.1,0.3))
 nmort(dat)
 }
