@@ -66,10 +66,10 @@ setMethod("fit",signature=c("bdm","edat"),function(.Object,data,init,chains,iter
     
       q <- mean(apply(ii,2,function(x) exp(mean(log(x[x>0]/bm[x>0])))))
     
-      -sum(apply(ii,2,function(x) log(x[x>0]/(q*bm[x>0]))^2))
+      -sum(apply(ii,2,function(x) sum(log(x[x>0]/(q*bm[x>0]))^2)))
     }
     
-    init.logK <- as.numeric(DEoptim(obj,lower=0,upper=30,control = DEoptim.control(trace = FALSE))$optim$bestmem)
+    init.logK <- as.numeric(DEoptim(obj,lower=3,upper=30,control = DEoptim.control(trace = FALSE))$optim$bestmem)
     init.logK
   }
   
