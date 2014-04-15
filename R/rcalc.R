@@ -27,9 +27,9 @@ setMethod("rcalc",signature="rdat",function(.Object, ...) {
   # recruits per unit of spawning biomass
   if(.Object@sr=='BH') {
     alpha <- (4 * .Object@lhdat[['h']])/(SBPR * (1 - .Object@lhdat[['h']]))
-  } else if(.Object@sr=='R') {
+  } else if(.Object@sr=='RK') {
     alpha <- .Object@lhdat[['h']]^1.25 / (SBPR * exp(log(0.2)/0.8))
-  } else stop("sr must be either 'BH' or 'R'\n")
+  } else stop("sr must be either 'BH' or 'RK'\n")
   #cat('alpha:',alpha,'\n')
   
   # female fecundity at age 

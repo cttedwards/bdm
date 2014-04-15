@@ -30,8 +30,7 @@ setMethod("maturity<-",
               } else delta <- rep(delta.mu,x@iter)
               
               for(i in 1:x@iter)
-                for(a in 1:x@amax)
-                  x@lhdat[['maturity']][a,i] <- 1/(1+exp((acrit[i]-a)/delta[i]))
+                x@lhdat[['maturity']][,i] <- 1/(1+exp((acrit[i]-(1:x@amax))/delta[i]))
             } else {
               acrit.mu <- as.integer(acrit.mu)
               if(acrit.mu<=x@amax)

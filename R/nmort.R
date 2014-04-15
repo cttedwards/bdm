@@ -21,8 +21,12 @@ setMethod("nmort<-",
               
               if(!is.null(value$cv)) {
                 M.sd <- sqrt(log(1+value$cv^2)) 
-                for(i in 1:x@iter) 
-                  x@lhdat[['M']][,i]  <- M.mu * rlnorm(1,-M.sd^2/2,M.sd)
+                x@lhdat[['M']] <- apply(x@lhdat[['M']],2,function(y) M.mu * rlnorm(1,-M.sd^2/2,M.sd))
+                if(!is.null(value$range)) {
+                  low <- value$range[1]
+                  upp <- value$range[2]
+                  x@lhdat[['M']] <- apply(x@lhdat[['M']],2,function(y) ifelse(y>upp|y<low,M.mu,y))
+                }
               } else {
                 x@lhdat[['M']] <- apply(x@lhdat[['M']],2,function(y) M.mu)
               }
@@ -36,10 +40,16 @@ setMethod("nmort<-",
               }
             }
             
-            # recalculate survivorship
-            for(i in 1:x@iter)
-              for(a in 1:x@amax)
-                x@lhdat[['survivorship']][a,i] <- exp(-sum(x@lhdat[['M']][1:a,i]))
+            # calculate survivorship (assuming constant M-at-age)
+            x@lhdat[['survivorship']] <- x@lhdat[['M']]
+            x@lhdat[['survivorship']] <- apply(x@lhdat[['survivorship']],2,function(y) { for(a in 1:x@amax)
+                                                                                          y[a] <- exp(-y[a]*a);
+                                                                                         y
+                                                                                         })
+            # calculate survivorship (for age dependent M)
+            #for(i in 1:x@iter)
+            #  for(a in 1:x@amax)
+            #    x@lhdat[['survivorship']][a,i] <- exp(-sum(x@lhdat[['M']][1:a,i]))
             
             x
           }
