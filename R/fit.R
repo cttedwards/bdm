@@ -1,6 +1,7 @@
 
-#{{{ fit bdm model to data
+#{{{ fit functions
 setGeneric("fit", function(.Object,data, ...) standardGeneric("fit"))
+#{{ fit bdm model to data
 setMethod("fit",signature=c("bdm","edat"),function(.Object,data,init,chains,iter,warmup,thin, ...) {
   
   require(DEoptim)
@@ -12,14 +13,14 @@ setMethod("fit",signature=c("bdm","edat"),function(.Object,data,init,chains,iter
   nix <- ifelse(length(dim(data$index))>1,dim(data$index)[2],1)
   
   # renormalise indices to geometric mean
-  renorm <- function(x) { y<-x[x>0]; x[x>0] <- y/(prod(y)^(1/length(y))); x }
-  if(nix>1) {
-    data$index <- apply(data$index,2,renorm)
-    cat('Re-normalised indices.\n')
-  } else {
-    data$index <- renorm(data$index)
-    cat('Re-normalised index.\n')
-  }
+  #renorm <- function(x) { y<-x[x>0]; x[x>0] <- y/(prod(y)^(1/length(y))); x }
+  #if(nix>1) {
+  #  data$index <- apply(data$index,2,renorm)
+  #  cat('Re-normalised indices.\n')
+  #} else {
+  #  data$index <- renorm(data$index)
+  #  cat('Re-normalised index.\n')
+  #}
   
   # initial value functions
   # for r0 and logK
@@ -91,11 +92,11 @@ setMethod("fit",signature=c("bdm","edat"),function(.Object,data,init,chains,iter
     
     init.values <- list(logK   = init.logK * rlnorm(1,0,0.1),
                         r0     = init.r0 * rlnorm(1,0,0.1),
-                        sigRsq = rigamma(1,10,1),
-                        sigQsq = rigamma(1,10,1),
+                        #sigRsq = rigamma(1,10,1),
+                        #sigQsq = rigamma(1,10,1),
                         x      = rbeta(data$T,5,3))
     
-	  cat(round(unlist(init.values)[1:4],2),'\n')
+	  cat(round(unlist(init.values)[1:2],2),'\n')
     
     init.values
   }
@@ -114,7 +115,7 @@ setMethod("fit",signature=c("bdm","edat"),function(.Object,data,init,chains,iter
 
   # initiate mc-sampling
   cat('Initial value set for each chain:\n')
-  cat('logK  r  sigRsq  sigQsq \n')
+  cat('logK  r\n')
   .Object@fit <- sampling(.Object,data=.Object@data,init=.Object@init.func,iter=.Object@iter,chains=.Object@chains,warmup=.Object@warmup,thin=.Object@thin, ...)
   
   # extract traces
@@ -123,8 +124,22 @@ setMethod("fit",signature=c("bdm","edat"),function(.Object,data,init,chains,iter
   
   .Object
 })
+#}}
+#{{ fit log-normal distribution to monte-carlo r values
+setMethod("fit",signature=c("rprior","missing"),function(.Object, ...) { 
+  
+  .Object <- .fitr(.Object)
+  
+  logmu    <- .Object@lognormal.par$mu
+  logsigma <- .Object@lognormal.par$sigma
+  
+  windows()
+  hist(.Object@.Data,freq=FALSE,xlab='r',ylab='',yaxt='n',main='')
+  curve(dlnorm(x,logmu,logsigma),col=2,add=T)
+  
+  .Object
+})
+#}}
 #}}}
-
-setMethod("fit",signature=c("rprior","missing"),function(.Object, ...) { .fitr(.Object) })
 
 
