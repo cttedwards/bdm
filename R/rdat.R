@@ -165,5 +165,5 @@ setMethod("initialize","rdat",function(.Object,amax,iter,nmort,growth,mass,sr,ma
   .Object
 })
 # constructor
-rdat <- function(amax,iter) new('rdat',amax,iter)
+rdat <- function(amax,iter=1) new('rdat',amax,iter)
 #}}}

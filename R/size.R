@@ -26,18 +26,18 @@ setMethod("size<-",
                 } else Linf <- rep(Linf.mu,x@iter)
                 
                 if(!is.null(value$cv$k)) {
-                  k.sd <- sqrt(log(1+value$cv$k^2))
-                  k <- k.mu * rlnorm(x@iter,-k.sd^2/2,k.sd)
+                  k.sd <- value$cv$k * k.mu
+                  k <- rnorm(x@iter,k.mu,k.sd)
                 } else k <- rep(k.mu,x@iter)
                 
                 if(!is.null(value$cv$t0)) {
-                  t0.sd <- sqrt(log(1+value$cv$t0^2))
-                  t0 <- t0.mu * rlnorm(x@iter,-t0.sd^2/2,t0.sd)
+                  t0.sd <- abs(value$cv$t0 * t0.mu)
+                  t0 <- rnorm(x@iter,t0.mu,t0.sd)
+                  t0[t0>0] <- t0.mu
                 } else t0 <- rep(t0.mu,x@iter)
                 
                 for(i in 1:x@iter)
-                  for(a in 1:x@amax)
-                    x@lhdat[['size']][a,i] <- max(Linf[i] * (1 - exp(-k[i]*(a-t0[i]))),0)
+                  x@lhdat[['size']][,i] <- Linf[i] * (1 - exp(-k[i]*(1:x@amax-t0[i])))
               } else {
                 size.sd <- sqrt(log(1+value$cv))
                 x@lhdat[['size']] <- apply(x@lhdat[['size']],2,function(y) Linf.mu * (1 - exp(-k.mu*(c(1:x@amax)-t0.mu))) * rlnorm(1,-size.sd^2/2,size.sd))
@@ -45,6 +45,7 @@ setMethod("size<-",
             } else {
               x@lhdat[['size']] <- apply(x@lhdat[['size']],2,function(y) Linf.mu * (1 - exp(-k.mu*(c(1:x@amax)-t0.mu))))
             }
+            x@lhdat[['size']] <- apply(x@lhdat[['size']],2,function(y) { y[y<0] <- 0; y })
             
             x
           }

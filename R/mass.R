@@ -26,21 +26,24 @@ setMethod("mass<-",
                 } else aa <- rep(a.mu,x@iter)
                 
                 if(!is.null(value$cv$b)) {
-                  b.sd <- sqrt(log(1+value$cv$b^2))
-                  bb <- b.mu * rlnorm(x@iter,-b.sd^2/2,b.sd)
+                  b.sd <- value$cv$b * b.mu
+                  bb <- rnorm(x@iter,b.mu,b.sd)
                 } else bb <- rep(b.mu,x@iter)
                 
+                #x@lhdat[['mass']] <- x@lhdat[['size']]
+                #x@lhdat[['mass']] <- t(apply(x@lhdat[['mass']],1,function(y) aa*y^bb))
                 for(i in 1:x@iter)
-                  for(a in 1:x@amax)
-                    x@lhdat[['mass']][a,i] <- aa[i] * x@lhdat[['size']][a,i]^bb[i]
+                  x@lhdat[['mass']][,i] <- aa[i] * x@lhdat[['size']][,i]^bb[i] 
               } else {
                 mass.sd <- sqrt(log(1+value$cv))
                 for(i in 1:x@iter)
                   x@lhdat[['mass']][,i] <- a.mu * x@lhdat[['size']][,i]^b.mu * rlnorm(1,-mass.sd^2/2,mass.sd)
               }
             } else {
-              for(i in 1:x@iter)
-                x@lhdat[['mass']][,i] <- a.mu * x@lhdat[['size']][,i]^b.mu
+              x@lhdat[['mass']] <- x@lhdat[['size']]
+              x@lhdat[['mass']] <- apply(x@lhdat[['mass']],2,function(y) a.mu*y^b.mu)
+              #for(i in 1:x@iter)
+              #  x@lhdat[['mass']][,i] <- a.mu * x@lhdat[['size']][,i]^b.mu
             }
             
             x

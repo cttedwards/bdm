@@ -42,9 +42,11 @@ setMethod("nmort<-",
             
             # calculate survivorship (assuming constant M-at-age)
             x@lhdat[['survivorship']] <- x@lhdat[['M']]
-            x@lhdat[['survivorship']] <- apply(x@lhdat[['survivorship']],2,function(y) { for(a in 1:x@amax)
-                                                                                          y[a] <- exp(-y[a]*a);
-                                                                                         y
+            x@lhdat[['survivorship']] <- apply(x@lhdat[['survivorship']],2,function(y) {  m <- y; 
+                                                                                          y[1] <- 1;
+                                                                                          for(a in 2:x@amax)
+                                                                                            y[a] <- y[a-1]*exp(-m[a-1]);
+                                                                                          y
                                                                                          })
             # calculate survivorship (for age dependent M)
             #for(i in 1:x@iter)

@@ -29,20 +29,21 @@ setMethod("update_bdm",signature=c("bdm","rprior"),function(.Object,x,compile=FA
   
   # transform to normal
   y <- log(x)
-  n <- length(y)
   
   # estimate parameters of
-  # normal distribution
-  ybar <- mean(y)
-  s2   <- sum((y-ybar)^2)/n
+  # normal distribution log(x)
+  mu    <- mean(y)
+  sigma <- sd(y)
+  sigma2 <- sigma^2
   
   # estimate parameters of
   # log-normal distribution
-  theta <- exp(ybar + s2/2)
-  nu <- sqrt(exp(2*ybar + s2)*(exp(s2) - 1))
+  theta <- exp(mu + sigma2/2)
+  nu <- exp(2*mu + sigma2)*(exp(sigma2) - 1)
+  cv <- sqrt(exp(sigma2) - 1)
   
   # assign and return
-  .Object@lognormal.par <- list(mu=ybar,sigma=sqrt(s2),theta=theta,nu=nu)
+  .Object@lognormal.par <- list('E[log(x)]'=mu,'SD[log(x)]'=sigma,'E[x]'=theta,'VAR[x]'=nu,'CV[x]'=cv)
   return(.Object)
   
 }

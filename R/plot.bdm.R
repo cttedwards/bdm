@@ -5,13 +5,13 @@
 plot.bdm <- function(x,par, ...) {
   
   nix <- x@data$N
-  if(missing(par)) par <- c('logK','r0','sigRsq','sigQsq','q','lp__')
+  if(missing(par)) par <- c('logK','r0')
   
   #op <- options()
   #options("device.ask.default" = TRUE)
   
   dev.new()
-  traceplot(x@fit,par,nrow=2,ncol=2)
+  traceplot(x@fit,par,nrow=2,ncol=1)
   
   dev.new()
   par(mfrow=c(2,2))

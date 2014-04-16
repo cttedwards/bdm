@@ -7,7 +7,7 @@ setMethod("maturity",signature(x="rdat"),
 )
 #}}}
 
-#{{{ assignment function
+#{{{ assignment functions
 setGeneric("maturity<-", function(x,i,j, ...,value) standardGeneric("maturity<-"))
 #{{ list
 setMethod("maturity<-",

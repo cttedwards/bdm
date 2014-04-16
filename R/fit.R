@@ -130,8 +130,8 @@ setMethod("fit",signature=c("rprior","missing"),function(.Object, ...) {
   
   .Object <- .fitr(.Object)
   
-  logmu    <- .Object@lognormal.par$mu
-  logsigma <- .Object@lognormal.par$sigma
+  logmu    <- .Object@lognormal.par[['E[log(x)]']]
+  logsigma <- .Object@lognormal.par[['SD[log(x)]']]
   
   windows()
   hist(.Object@.Data,freq=FALSE,xlab='r',ylab='',yaxt='n',main='')
