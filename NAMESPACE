@@ -1,5 +1,4 @@
 import(rstan)
-import(DEoptim)
 import(pscl)
 exportPattern("^[[:alpha:]]+")
 exportMethods(

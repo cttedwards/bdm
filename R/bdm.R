@@ -1,19 +1,33 @@
 
 #{{{
-setClass("bdm",contains="stanmodel",slots=list(data="list",init.func="function",chains="numeric",iter="numeric",warmup="numeric",thin="numeric",fit="stanfit",trace="list"))
-setMethod("initialize","bdm",function(.Object,model.code,compile=FALSE) {
+setClass("bdm",contains="stanmodel",slots=list(data="list",init.func="function",chains="numeric",iter="numeric",warmup="numeric",thin="numeric",fit="stanfit",trace="list",path="character"))
+setMethod("initialize","bdm",function(.Object,path,model.code,compile) {
   
+  require(rstan)
+  
+  if(!missing(path)) {
+    .Object@path <- path
+    .Object@model_name <- 'BDM'
+    if(compile) {
+      tmp <- stan_model(file=.Object@path)
+      
+      .Object@model_code <- tmp@model_code
+      .Object@model_cpp  <- tmp@model_cpp
+      .Object@dso        <- tmp@dso
+    }
+  }
   if(!missing(model.code)) {
     .Object@model_code <- model.code
     .Object@model_name <- 'BDM'
     if(compile) {
       tmp <- stan_model(model_code=.Object@model_code)
       
-      .Object@model_name <- 'BDM'
+      .Object@path       <- 'local declaration'
       .Object@model_cpp  <- tmp@model_cpp
       .Object@dso        <- tmp@dso
     }
   }
+  
   .Object@chains <- 4
   .Object@iter   <- 2000
   .Object@warmup <- floor(.Object@iter/2)
@@ -23,108 +37,123 @@ setMethod("initialize","bdm",function(.Object,model.code,compile=FALSE) {
   
 })
 # constructor
-bdm <- function(compile=FALSE) {
+bdm <- function(path,model.code,compile=FALSE) {
   
-  bdm_code_statespace <- '
+  bdm_code <- '
     data {
       int T;
-      int N;
-      real index[T,N];
+      int I;
+      real index[T,I];
       real c[T];
+      real sigmaO[I];
+      real sigmaP;
     }
     parameters {
-      real logK;
+      real<lower=3,upper=30> logK;
       real<lower=0,upper=2> r0;
-      real<lower=0,upper=2> sigRsq;
-      real<lower=0,upper=2> sigQsq;
-      real<lower=0,upper=2> x[T];
+      real<lower=0> xdev[T];
     }
     transformed parameters {
 
-      real q[N];
-      real sigR;
-      real sigQ;
+      real x[T];
+      real q[I];
+      real H[T];
       
       real err;
       real p;
-      
-      sigR <- sqrt(sigRsq);
-      sigQ <- sqrt(sigQsq);
+	  
+      // compute biomass dynamics
+      x[1] <- 1.0;
+      H[1] <- fmin(exp(log(c[1]) - logK),0.99);
+      for(t in 2:T){
+        x[t] <- (x[t-1] + r0 * x[t-1] * (1 - x[t-1]) - H[t-1]) * xdev[t-1];
+	      H[t] <- fmin(exp(log(c[t]) - logK),x[t]);
+      }
       
       // compute catchability
-      for(n in 1:N){
+      for(i in 1:I){
         err <- 0.0;
         p <- 0.0;
         for(t in 1:T){
-          if(index[t,n]>0.0) {
-            err <- err + log(index[t,n]/x[t]);
+          if(index[t,i]>0.0 && x[t]>0.0) {
+            err <- err + log(index[t,i]/x[t]);
             p <- p + 1.0;
           }
         }
-        q[n] <- exp(err/p);
+        if(p>0.0) { q[i] <- exp(err/p);
+	      } else q[i] <- 0.0;
       }
     } 
     model {
       
       // prior densities for
       // estimated parameters
-      logK ~ uniform(1.0,20.0);
-      r0 ~ lognormal(log(0.3),0.2);
+      // ********************
+      logK ~ uniform(3.0,30.0);
+      r0 ~ lognormal(-1.0,0.40);
       
-      // Jacobian for logK
-      lp__ <- lp__ - logK;
-      
-      // conjugate prior densities for
-      // hyper-parameters
-      sigRsq ~ inv_gamma(1.0,0.5);     
-      sigQsq ~ inv_gamma(1.0,0.25);    
-      
-      // state equations
-      x[1] ~ lognormal(log(1),sigQ);
-      for(t in 2:T){
-        real H;
-        real mu;
-        H <- fmin(exp(log(c[t-1]) - logK),x[t-1]);
-        mu <- fmax(x[t-1] + r0 * x[t-1] * (1 - x[t-1]) - H,0.001);
-        x[t] ~ lognormal(log(mu),sigQ);
-      }
+      // random deviations
+      // *****************
+      xdev ~ lognormal(0,sigmaP);
       
       // observation equation
-      for(n in 1:N){
+      // ********************
+      for(i in 1:I){
         for(t in 1:T){
-          if(index[t,n]>0.0)
-            index[t,n] ~ lognormal(log(q[n]*x[t]),sigR);
+          if(index[t,i]>0.0 && x[t]>0.0 && q[i]>0.0)
+            index[t,i] ~ lognormal(log(q[i]*x[t]),sigmaO[i]);
           }
+      }
+
+      // apply penalty for Hrel>0.95
+      // ***************************
+      for(t in 1:T){
+      real Hrel; Hrel <- H[t]/x[t];
+        if(Hrel>0.95) {
+          lp__ <- lp__ - log(Hrel/0.95) * (1/sigmaP);
+        }
       }
     }
     generated quantities {
 
+      real biomass[T];
+      real depletion[T];
       real harvest_rate[T];
       real surplus_production[T];
 
+      real current_biomass;
       real current_depletion;
       real current_harvest_rate;
-      real current_surplus_production;
 
-      real predicted_index[T,N];
+      real observed_index_biomass[T,I];
+      real observed_index_depletion[T,I];
+      real predicted_index[T,I];
       
       for(t in 1:T) {
+	    biomass[t] <- x[t] * exp(logK);
+	    depletion[t] <- x[t];
         harvest_rate[t] <- c[t]/exp(log(x[t]) + logK);
-        surplus_production[t] <- fmax(r0 * x[t] * (1 - x[t]),0.0);
+        surplus_production[t] <- r0 * x[t] * (1 - x[t]);
       }
 
+      current_biomass <- biomass[T];
       current_depletion <- x[T];
       current_harvest_rate <- harvest_rate[T];
-      current_surplus_production <- surplus_production[T];
 
-      for(n in 1:N){
+      for(i in 1:I){
         for(t in 1:T){
-          predicted_index[t,n] <- q[n]*x[t];
+          if(index[t,i]>0.0) {
+            observed_index_biomass[t,i]   <- (index[t,i]/q[i]) * exp(logK);
+            observed_index_depletion[t,i] <- index[t,i]/q[i];
+          }
+          predicted_index[t,i] <- q[i]*x[t];
         }
       }
-
     }'
 
-    new('bdm',bdm_code_statespace,compile)
+  if(!missing(path)) { new('bdm',path=path,compile=compile)
+	} else { if(!missing(model.code)) { new('bdm',model.code=model.code,compile=compile)
+	} else new('bdm',model.code=bdm_code,compile=compile)
+	}
 }
 #}}}
