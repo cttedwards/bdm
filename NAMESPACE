@@ -1,11 +1,13 @@
 import(rstan)
-import(pscl)
+import(ggplot2)
 exportPattern("^[[:alpha:]]+")
 exportMethods(
     "compile_bdm",
     "fit",
     "initialize",
     "iterate",
+	"histplot",
+	"traceplot",
     "mass",
     "mass<-",
     "maturity",
@@ -27,4 +29,3 @@ exportClasses(
      "rdat.iter",
      "rprior"
 )
-S3method(plot,bdm)

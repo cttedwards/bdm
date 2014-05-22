@@ -2,45 +2,46 @@
 #{{{ fit functions
 setGeneric("fit", function(.Object,data, ...) standardGeneric("fit"))
 #{{ fit bdm model to data
-setMethod("fit",signature=c("bdm","edat"),function(.Object,data,init,chains,iter,warmup,thin, ...) {
+setMethod("fit",signature=c("bdm","edat"),function(.Object,data,init,chains,iter,warmup,thin,method="MCMC", ...) {
   
-  require(pscl)
-  
-  if(missing(data)) stop('No data object supplied\n')
+  if(missing(data)) 
+    stop('No data object supplied\n')
   
   # number of data indices
   nix <- ifelse(length(dim(data$index))>1,dim(data$index)[2],1)
   
   # check data
-  if(any(data$catch<0) | any(is.na(data$catch))) stop('missing catch data is not allowed\n')
+  if(any(data$catch<0) | any(is.na(data$catch))) 
+    stop('missing catch data is not allowed\n')
   .Object@data <- list(T=data$T,I=data$I,index=data$index,c=data$catch,sigmaO=data$sigmaO,sigmaP=data$sigmaP)
+  
+  # set initialisation function
+  if(.Object@default_model) {
     
-  # default initialisation function
-  init.func.default <- function() { 
-  	init.values <- list(logK   = init.logK + rbeta(1,1,2),
-  			                r0     = init.r0 * rlnorm(1,0,0.2),
-  			                xdev   = rbeta(data$T,5,3))
-  	cat(round(unlist(init.values)[1:2],2),'\n')
-	  init.values
-  }     
-
-  # specify initial values for 
-  # initialisation function
-  if(missing(init)) {
+    # default initialisation function
+    init.func <- function() { 
+      init.values <- list(logK   = init.logK,
+                          r      = init.r * rlnorm(1,log(1)-0.04/2,0.2),
+                          xdev   = rep(1,data$T)) #rbeta(data$T,20,1))
+      init.values
+    }     
     
-    init.r0   <- .getr0(.Object)
-    init.logK <- .getlogK(.Object)
-    init.func <- init.func.default
-	
+    if(missing(init)) {
+      
+      init.r    <- .getr(.Object)
+      init.logK <- .getlogK(.Object)
+  	
+    } else {
+      if(is.list(init)) {
+    		if(!is.null(init$logK)) init.logK <- init$logK else init.logK <- .getlogK(.Object)
+    		if(!is.null(init$r))    init.r    <- init$r    else init.r    <- .getr(.Object)
+      }
+    }
   } else {
-  	if(is.list(init)) {
-  		if(!is.null(init$logK)) init.logK <- init$logK else init.logK <- .getlogK(.Object)
-  		if(!is.null(init$r0))   init.r0   <- init$r0   else init.r0   <- .getr0(.Object)
-  		init.func <- init.func.default
-  	}
+    # non-default settings
   	if(is.function(init)) {
   		init.func <- init
-  	}
+  	} else stop('initialisation function must be supplied\n')
   }
     
   # update .Object
@@ -51,74 +52,83 @@ setMethod("fit",signature=c("bdm","edat"),function(.Object,data,init,chains,iter
   if(!missing(warmup))    .Object@warmup <- warmup else .Object@warmup <- floor(.Object@iter/2)
   if(!missing(thin))      .Object@thin   <- thin
 
-  # initiate mc-sampling
-  cat('Initial values for each chain:\n')
-  cat('logK  r\n')
-  .Object@fit <- sampling(.Object,data=.Object@data,init=.Object@init.func,iter=.Object@iter,chains=.Object@chains,warmup=.Object@warmup,thin=.Object@thin, ...)
-  cat('Completed MCMC sampling\n')
-  
-  # extract traces
-  .Object@trace <- extract(.Object@fit)
-  #.Object@trace$logq  <- lapply(apply(.Object@trace$logq,2,function(x) list(x)),unlist)  
+  if(method=='MCMC') {
+    
+    # initiate mcmc-sampling
+    cat('MCMC sampling\n')
+    .Object@fit <- sampling(.Object,data=.Object@data,init=.Object@init.func,iter=.Object@iter,chains=.Object@chains,warmup=.Object@warmup,thin=.Object@thin, ...)
+    
+    # extract traces
+    .Object@trace <- extract(.Object@fit)
+  }
+  if(method=='MPD') {
+    
+    # initiate mpd fit
+    cat('MPD optimisation\n')
+    .Object@mpd <- optimizing(.Object,data=.Object@data,init=.Object@init.func, ...)
+  }
   
   .Object
 })
-# initial value functions
-# for r0 and logK
-.getr0 <- function(.Object) {
+#{ initial value functions for r and logK
+.getr <- function(.Object) {
   
-  # extract r0 from model_code
-  m <- regexpr('r0.?~.?lognormal\\(log\\(.+?\\)',.Object@model_code)
-  if(m>-1) {
-    x <- regmatches(.Object@model_code,m)
-    m <- regexpr('log\\(.+?\\)',x)
-    m <- m + 4
-    attributes(m)$match.length <- attributes(m)$match.length - 5
-    x <- regmatches(x,m)
-    init.r0 <- as.numeric(x)
-  } else {
-    m <- regexpr('r0.?~.?lognormal\\(.+?\\)',.Object@model_code)
-    x <- regmatches(.Object@model_code,m)
-    m <- regexpr('\\(.+?\\,',x)
-    m <- m + 1
-    attributes(m)$match.length <- attributes(m)$match.length - 2
-    x <- regmatches(x,m)
-    init.r0 <- exp(as.numeric(x))
-  }
+  # extract r from model_code
   
-  init.r0
+  m <- regexpr('r.?~.?lognormal\\(.+?\\)',.Object@model_code)
+  x <- regmatches(.Object@model_code,m)
+  
+  m1 <- regexpr('\\(.+?\\,',x)
+  m1 <- m1 + 1
+  attributes(m1)$match.length <- attributes(m1)$match.length - 2
+  x1 <- regmatches(x,m1)
+  
+  m2 <- regexpr('\\,.+?\\)',x)
+  m2 <- m2 + 1
+  attributes(m2)$match.length <- attributes(m2)$match.length - 2
+  x2 <- regmatches(x,m2)
+  
+  mu <- as.numeric(x1)
+  sigma <- as.numeric(x2)
+  
+  init.r <- exp(mu+sigma^2/2)
+  
+  init.r
 }
 .getlogK <- function(.Object) {
   
-  # get logK from MPD fit
-  init.r0   <- .getr0(.Object)
-  init.logK <- optimizing(.Object,data=.Object@data,init=list(r0=init.r0,logK=25,xdev=rep(1,.Object@data$T)))$par['logK']
-  cat('MPD estimate of logK:',round(init.logK,2),'\n\n')
+  # get logK through grid search
   
-  #require(DEoptim)
-  #ii <- data$index
-  #cc <- data$catch
-  #bm <- numeric(length(cc))
-  #
-  #bm[1] <- 1
-  #
-  # estimate approximate logK numerically
-  # using DEoptim
-  #obj <- function(logK) {
-  #
-  #  for(t in 1:length(cc)) 
-  #    bm[t+1] <- max(bm[t] + init.r0*bm[t]*(1 - bm[t]) - cc[t]/exp(logK),1e-3)
-  #  bm <- bm[-length(bm)]
-  #
-  #  q <- mean(apply(ii,2,function(x) exp(mean(log(x[x>0]/bm[x>0])))))
-  #
-  #  -sum(apply(ii,2,function(x) sum(log(x[x>0]/(q*bm[x>0]))^2)))
-  #}
-  #
-  #init.logK <- as.numeric(DEoptim(obj,lower=3,upper=30,control = DEoptim.control(trace = FALSE))$optim$bestmem)
+  rr <- .getr(.Object)
+  
+  ii <- .Object@data$index
+  cc <- .Object@data$c
+  tt <- length(cc)
+  bm <- numeric(tt)
+  
+  obj <- function(logK) {
+  
+    bm[1] <- 1
+    for(t in 1:tt) 
+      bm[t+1] <- max(bm[t] + rr*bm[t]*(1 - bm[t]) - cc[t]/exp(logK),1e-3)
+    bm <- bm[-length(bm)]
+  
+    q <- mean(apply(ii,2,function(x) exp(mean(log(x[x>0]/bm[x>0])))))
+  
+    -sum(apply(ii,2,function(x) sum(log(x[x>0]/(q*bm[x>0]))^2))) + log(bm[tt]/0.9) + sum(cc/(bm*exp(logK)) > 0.95)
+  }
+  
+  np <- 100
+  logK.llk <- numeric(np)
+  logK.seq <- seq(3,30,length=np)
+  for(i in 1:np) 
+    logK.llk[i] <- obj(logK.seq[i])
+  
+  init.logK <- logK.seq[which.min(logK.llk)]
   
   init.logK
 }
+#}
 #}}
 #{{ fit log-normal distribution to monte-carlo r values
 setMethod("fit",signature=c("rprior","missing"),function(.Object,plot=TRUE, ...) { 
@@ -129,13 +139,40 @@ setMethod("fit",signature=c("rprior","missing"),function(.Object,plot=TRUE, ...)
   logsigma <- .Object@lognormal.par[['SD[log(x)]']]
   
   if(plot) {
-	windows()
-	hist(.Object@.Data,freq=FALSE,xlab='r',ylab='',yaxt='n',main='')
-	curve(dlnorm(x,logmu,logsigma),col=2,add=T)
+  	windows()
+  	hist(.Object@.Data,freq=FALSE,xlab='r',ylab='',yaxt='n',main='')
+  	curve(dlnorm(x,logmu,logsigma),col=2,add=T)
   }
   
   .Object
 })
+#{ fitting function
+.fitr <- function(.Object) {
+  
+  x <- .Object@.Data
+  if(!length(x)>2) stop('need >2 r values')
+  
+  # transform to normal
+  y <- log(x)
+  
+  # estimate parameters of
+  # normal distribution log(x)
+  mu    <- mean(y)
+  sigma <- sd(y)
+  sigma2 <- sigma^2
+  
+  # estimate parameters of
+  # log-normal distribution
+  theta <- exp(mu + sigma2/2)
+  nu <- exp(2*mu + sigma2)*(exp(sigma2) - 1)
+  cv <- sqrt(exp(sigma2) - 1)
+  
+  # assign and return
+  .Object@lognormal.par <- list('E[log(x)]'=mu,'SD[log(x)]'=sigma,'E[x]'=theta,'VAR[x]'=nu,'CV[x]'=cv)
+  return(.Object)
+  
+}
+#}
 #}}
 #}}}
 

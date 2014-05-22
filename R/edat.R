@@ -1,7 +1,7 @@
 
 #{{{ empirical data class
 setClass("edat",contains="list",representation(names="character"))
-setMethod("initialize","edat",function(.Object,index,catch,year,sigmaO,sigmaP) {
+setMethod("initialize","edat",function(.Object,index,catch,year,sigmaO,sigmaP,renormalise=TRUE) {
   
   .Object@.Data <- vector('list',7)
   names(.Object) <- c('T','I','index','catch','year','sigmaO','sigmaP')
@@ -16,13 +16,15 @@ setMethod("initialize","edat",function(.Object,index,catch,year,sigmaO,sigmaP) {
       .Object$I <- ncol(index)
 
       # renormalise indices to geometric mean
-      renorm <- function(x) { y<-x[x>0]; x[x>0] <- y/(prod(y)^(1/length(y))); x }
-      if(.Object$I>1) {
-        .Object$index <- apply(index,2,renorm)
-        cat('Re-normalised indices.\n')
-      } else {
-        .Object$index <- renorm(index)
-        cat('Re-normalised index.\n')
+      if(renormalise) {
+        renorm <- function(x) { y<-x[x>0]; x[x>0] <- y/(prod(y)^(1/length(y))); x }
+        if(.Object$I>1) {
+          .Object$index <- apply(index,2,renorm)
+          cat('Re-normalised indices.\n')
+        } else {
+          .Object$index <- renorm(index)
+          cat('Re-normalised index.\n')
+        }
       }
     }
   }
