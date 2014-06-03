@@ -20,9 +20,15 @@ setMethod("fit",signature=c("bdm","edat"),function(.Object,data,init,chains,iter
     
     # default initialisation function
     init.func <- function() { 
-      init.values <- list(logK   = init.logK,
-                          r      = init.r * rlnorm(1,log(1)-0.04/2,0.2),
-                          xdev   = rep(1,data$T)) #rbeta(data$T,20,1))
+      
+      b    <- init.r/exp(init.logK)
+      r    <- init.r * rlnorm(1,log(1)-0.04/2,0.2)
+      logK <- log(r/b)
+      
+      init.values <- list(logK   = logK,
+                          r      = r,
+                          xdev   = rep(1,data$T))
+      
       init.values
     }     
     
@@ -49,17 +55,18 @@ setMethod("fit",signature=c("bdm","edat"),function(.Object,data,init,chains,iter
   
   if(!missing(chains))    .Object@chains <- chains
   if(!missing(iter))      .Object@iter   <- iter
-  if(!missing(warmup))    .Object@warmup <- warmup else .Object@warmup <- floor(.Object@iter/2)
   if(!missing(thin))      .Object@thin   <- thin
+  if(!missing(warmup))    .Object@warmup <- warmup else .Object@warmup <- floor(.Object@iter/2/.Object@thin)
 
   if(method=='MCMC') {
     
     # initiate mcmc-sampling
     cat('MCMC sampling\n')
-    .Object@fit <- sampling(.Object,data=.Object@data,init=.Object@init.func,iter=.Object@iter,chains=.Object@chains,warmup=.Object@warmup,thin=.Object@thin, ...)
+    fit <- sampling(.Object,data=.Object@data,init=.Object@init.func,iter=.Object@iter,chains=.Object@chains,warmup=.Object@warmup,thin=.Object@thin, ...)
     
     # extract traces
-    .Object@trace <- extract(.Object@fit)
+    .Object@fit   <- extract(fit,permuted=FALSE,inc_warmup=TRUE)
+    .Object@trace <- extract(fit)
   }
   if(method=='MPD') {
     
@@ -98,6 +105,7 @@ setMethod("fit",signature=c("bdm","edat"),function(.Object,data,init,chains,iter
 .getlogK <- function(.Object) {
   
   # get logK through grid search
+  # assuming a logistic production model
   
   rr <- .getr(.Object)
   

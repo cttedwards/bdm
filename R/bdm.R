@@ -1,6 +1,6 @@
 
 #{{{
-setClass("bdm",contains="stanmodel",slots=list(data="list",init.func="function",chains="numeric",iter="numeric",warmup="numeric",thin="numeric",fit="stanfit",trace="list",mpd="list",path="character",default_model="logical"))
+setClass("bdm",contains="stanmodel",slots=list(data="list",init.func="function",chains="numeric",iter="numeric",warmup="numeric",thin="numeric",fit="array",trace="list",mpd="list",path="character",default_model="logical"))
 setMethod("initialize","bdm",function(.Object,path,model.code,model.name,compile,default_model) {
   
   require(rstan)
@@ -22,10 +22,10 @@ setMethod("initialize","bdm",function(.Object,path,model.code,model.name,compile
   if(!missing(model.code)) {
     .Object@model_code <- model.code
     .Object@model_name <- model.name
+    .Object@path       <- ifelse(default_model,'default_model','local_declaration')
     if(compile) {
       tmp <- stan_model(model_code=.Object@model_code)
       
-      .Object@path       <- 'local declaration'
       .Object@model_cpp  <- tmp@model_cpp
       .Object@dso        <- tmp@dso
     }
