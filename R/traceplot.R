@@ -5,26 +5,29 @@ setMethod("traceplot",signature=list(object="bdm"),function(object, pars, inc_wa
   require(ggplot2)
   require(reshape2)
   
-  if(missing(pars) & object@default_model) 
-    pars <- c('r','logK','lp__')
+  if(missing(pars)) {
+    if(object@default_model) 
+      pars <- c('r','logK','lp__')
+    else stop('must define pars for non-default model')
+  }
   
   dfr <- data.frame(variable=NULL,chain=NULL,value=NULL)
   
   for(par in pars) {
     m <- regexpr('\\[.+\\]',par)
     if(m>0) {
-      i <- match(par,dimnames(object@fit)$parameters)
+      i <- match(par,dimnames(object@trace_array)$parameters)
       if(!is.na(i)) {
-        dfr.tmp <- melt(object@fit[,,i])
-        dfr <- rbind(dfr,data.frame(variable=dimnames(object@fit)$parameters[i],iteration=dfr.tmp$iterations,chain=dfr.tmp$chains,value=dfr.tmp$value))
+        dfr.tmp <- melt(object@trace_array[,,i])
+        dfr <- rbind(dfr,data.frame(variable=dimnames(object@trace_array)$parameters[i],iteration=dfr.tmp$iterations,chain=dfr.tmp$chains,value=dfr.tmp$value))
       }
     } else {
       mm <- 0L
-      for(parname in dimnames(object@fit)$parameters) {
+      for(parname in dimnames(object@trace_array)$parameters) {
         m  <- regexpr(par,parname)
         if(m>0) { 
-          i <- match(parname,dimnames(object@fit)$parameters)
-          dfr.tmp <- melt(object@fit[,,i])
+          i <- match(parname,dimnames(object@trace_array)$parameters)
+          dfr.tmp <- melt(object@trace_array[,,i])
           dfr <- rbind(dfr,data.frame(variable=parname,iteration=dfr.tmp$iterations,chain=dfr.tmp$chains,value=dfr.tmp$value)) 
           mm <- mm + 1L
         } else {

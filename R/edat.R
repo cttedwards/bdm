@@ -1,10 +1,10 @@
 
 #{{{ empirical data class
 setClass("edat",contains="list",representation(names="character"))
-setMethod("initialize","edat",function(.Object,index,catch,year,sigmaO,sigmaP,renormalise=TRUE) {
+setMethod("initialize","edat",function(.Object,index,harvest,year,sigmaO,sigmaP,renormalise=TRUE) {
   
   .Object@.Data <- vector('list',7)
-  names(.Object) <- c('T','I','index','catch','year','sigmaO','sigmaP')
+  names(.Object) <- c('T','I','index','harvest','year','sigmaO','sigmaP')
   
   if(!missing(index)) {
     if(any(!is.na(index))) {
@@ -28,32 +28,39 @@ setMethod("initialize","edat",function(.Object,index,catch,year,sigmaO,sigmaP,re
       }
     }
   }
-  if(!missing(catch)) {
-    if(any(!is.na(catch))) {
+  
+  if(!missing(harvest)) {
+    if(any(!is.na(harvest))) {
     
-      catch[which(is.na(catch))] <- -1
+      harvest[which(is.na(harvest))] <- -1
       
-      .Object$T     <- T.catch <- length(catch)
-      .Object$catch <- catch
+      .Object$T       <- T.harvest <- length(harvest)
+      .Object$harvest <- harvest
     }
   }
-  if(!missing(index) & !missing(catch)) 
-    if(any(!is.na(index)) & any(!is.na(catch)))
-      if(T.index!=T.catch) 
-        stop('index and catch must have the same time dimension\n')
+  if(!missing(index) & !missing(harvest)) 
+    if(any(!is.na(index)) & any(!is.na(harvest)))
+      if(T.index!=T.harvest) 
+        stop('index and catch (harvest) must have the same time dimension\n')
   if(!missing(year)) {
     .Object$year <- year
-  } else .Object$year <- 1:length(catch)
-  .Object$sigmaO   <- numeric(2)
+  } else .Object$year <- 1:length(harvest)
   if(!missing(sigmaO)) {
-	.Object$sigmaO[] <- sigmaO
-  } else .Object$sigmaO[] <- 0.2
+    if(length(sigmaO)<.Object$I) {
+      sigmaO <- rep(sigmaO[1],.Object$I)
+      if(length(sigmaO)>1)
+        warning('length of sigmaO is >1 but < number of indices: only first value used\n')
+    }
+	  .Object$sigmaO <- structure(sigmaO,.Dim=.Object$I)
+  } else .Object$sigmaO <- structure(rep(0.2,.Object$I),.Dim=.Object$I)
   if(!missing(sigmaP)) {
-	.Object$sigmaP <- sigmaP
-  } else .Object$sigmaP <- 0.05
+    if(length(sigmaP)>1)
+      warning('length of sigmaP is >1: only first value used\n')
+	  .Object$sigmaP <- structure(sigmaP[1],.Dim=NULL)
+  } else .Object$sigmaP <- structure(0.05,.Dim=NULL)
 
   .Object
 })
 # constructor
-edat <- function(index,catch,year, ...) new("edat",index,catch,year, ...)
+edat <- function(index,harvest,year, ...) new("edat",index,harvest,year, ...)
 #}}}

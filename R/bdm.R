@@ -1,6 +1,6 @@
 
 #{{{
-setClass("bdm",contains="stanmodel",slots=list(data="list",init.func="function",chains="numeric",iter="numeric",warmup="numeric",thin="numeric",fit="array",trace="list",mpd="list",path="character",default_model="logical"))
+setClass("bdm",contains="stanmodel",slots=list(data="list",init.func="function",init.values="list",chains="numeric",iter="numeric",warmup="numeric",thin="numeric",trace_array="array",trace="list",mpd="list",path="character",default_model="logical"))
 setMethod("initialize","bdm",function(.Object,path,model.code,model.name,compile,default_model) {
   
   require(rstan)
@@ -33,8 +33,8 @@ setMethod("initialize","bdm",function(.Object,path,model.code,model.name,compile
   
   .Object@chains <- 4
   .Object@iter   <- 2000
-  .Object@warmup <- floor(.Object@iter/2)
   .Object@thin   <- 1
+  .Object@warmup <- floor(.Object@iter/2/.Object@thin)
   
   .Object@default_model <- default_model
   
@@ -49,7 +49,7 @@ bdm <- function(path,model.code,model.name='BDM',compile=FALSE) {
       int T;
       int I;
       real index[T,I];
-      real c[T];
+      real harvest[T];
       real sigmaO[I];
       real sigmaP;
     }
@@ -66,9 +66,6 @@ bdm <- function(path,model.code,model.name='BDM',compile=FALSE) {
 
       real sigmaOsq[I];
       real sigmaPsq;
-      
-      real err;
-      real p;
 
       // variance terms
       for(i in 1:I)
@@ -77,25 +74,30 @@ bdm <- function(path,model.code,model.name='BDM',compile=FALSE) {
 	  
       // compute biomass dynamics
       x[1] <- 1.0;
-      H[1] <- fmin(exp(log(c[1]) - logK),0.99);
+      H[1] <- fmin(exp(log(harvest[1]) - logK),0.99);
       for(t in 2:T){
         x[t] <- (x[t-1] + r * x[t-1] * (1 - x[t-1]) - H[t-1]) * xdev[t-1];
-	      H[t] <- fmin(exp(log(c[t]) - logK),x[t]);
+	      H[t] <- fmin(exp(log(harvest[t]) - logK),x[t]);
       }
       
-      // compute catchability assuming constant sigmaO
+      // compute catchability assuming 
+      // constant sigmaO over time
       // and uniform prior on ln(q)
-      for(i in 1:I){
-        err <- 0.0;
-        p <- 0.0;
-        for(t in 1:T){
-          if(index[t,i]>0.0 && x[t]>0.0) {
-            err <- err + log(index[t,i]/x[t]);
-            p <- p + 1.0;
+      {
+        real err;
+        real p;
+        for(i in 1:I){
+          err <- 0.0;
+          p <- 0.0;
+          for(t in 1:T){
+            if(index[t,i]>0.0 && x[t]>0.0) {
+              err <- err + log(index[t,i]/x[t]);
+              p <- p + 1.0;
+            }
           }
+          if(p>2.0) { q[i] <- exp(sigmaOsq[i] * (p-2)/(2*p) + err/p);
+  	      } else q[i] <- 0.0;
         }
-        if(p>0.0) { q[i] <- exp(sigmaOsq[i] + err/p);
-	      } else q[i] <- 0.0;
       }
     } 
     model {
@@ -146,7 +148,7 @@ bdm <- function(path,model.code,model.name='BDM',compile=FALSE) {
       for(t in 1:T) {
 	    biomass[t] <- x[t] * exp(logK);
 	    depletion[t] <- x[t];
-        harvest_rate[t] <- c[t]/exp(log(x[t]) + logK);
+        harvest_rate[t] <- harvest[t]/exp(log(x[t]) + logK);
         surplus_production[t] <- r * x[t] * (1 - x[t]);
       }
 
@@ -163,7 +165,8 @@ bdm <- function(path,model.code,model.name='BDM',compile=FALSE) {
           predicted_index[t,i] <- q[i]*x[t];
         }
       }
-    }'
+    }
+  '
 
   if(!missing(path)) { new('bdm',path=path,model.name=model.name,compile=compile,default_model=FALSE)
 	} else { if(!missing(model.code)) { new('bdm',model.code=model.code,model.name=model.name,compile=compile,default_model=FALSE)

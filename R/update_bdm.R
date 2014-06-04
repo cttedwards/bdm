@@ -26,6 +26,9 @@ setMethod("update_bdm",signature=c("bdm","rprior"),function(.Object,x,compile=FA
 #{{ list object
 setMethod("update_bdm",signature=c("bdm","list"),function(.Object,x,compile=FALSE,plot=FALSE) {
     
+  if(length(.Object@model_code)==0)
+    stop('no model code in bdm object: @model_code is empty\n')
+  
   if(x$par=='r') {
     logmu    <- signif(x$a,3)
     logsigma <- signif(x$b,3)

@@ -8,13 +8,13 @@ setMethod("fit",signature=c("bdm","edat"),function(.Object,data,init,chains,iter
     stop('No data object supplied\n')
   
   # number of data indices
-  nix <- ifelse(length(dim(data$index))>1,dim(data$index)[2],1)
+  # nix <- ifelse(length(dim(data$index))>1,dim(data$index)[2],1)
   
   # check data
-  if(any(data$catch<0) | any(is.na(data$catch))) 
-    stop('missing catch data is not allowed\n')
-  .Object@data <- list(T=data$T,I=data$I,index=data$index,c=data$catch,sigmaO=data$sigmaO,sigmaP=data$sigmaP)
-  
+  if(any(data$harvest<0) | any(is.na(data$harvest))) 
+    stop('missing catch (harvest) data is not allowed\n')
+  .Object@data <- lapply(data,function(x) x)
+    
   # set initialisation function
   if(.Object@default_model) {
     
@@ -45,6 +45,8 @@ setMethod("fit",signature=c("bdm","edat"),function(.Object,data,init,chains,iter
     }
   } else {
     # non-default settings
+    if(missing(init))
+      stop('must supply initialisation function for non-default model\n')
   	if(is.function(init)) {
   		init.func <- init
   	} else stop('initialisation function must be supplied\n')
@@ -62,11 +64,14 @@ setMethod("fit",signature=c("bdm","edat"),function(.Object,data,init,chains,iter
     
     # initiate mcmc-sampling
     cat('MCMC sampling\n')
-    fit <- sampling(.Object,data=.Object@data,init=.Object@init.func,iter=.Object@iter,chains=.Object@chains,warmup=.Object@warmup,thin=.Object@thin, ...)
+    stanfit_object <- suppressWarnings(sampling(.Object,data=.Object@data,init=.Object@init.func,iter=.Object@iter,chains=.Object@chains,warmup=.Object@warmup,thin=.Object@thin, ...))
     
     # extract traces
-    .Object@fit   <- extract(fit,permuted=FALSE,inc_warmup=TRUE)
-    .Object@trace <- extract(fit)
+    .Object@trace_array <- extract(stanfit_object,permuted=FALSE,inc_warmup=TRUE)
+    .Object@trace       <- extract(stanfit_object)
+    
+    # record initial values for each chain
+    .Object@init.values <- stanfit_object@inits
   }
   if(method=='MPD') {
     
@@ -110,7 +115,7 @@ setMethod("fit",signature=c("bdm","edat"),function(.Object,data,init,chains,iter
   rr <- .getr(.Object)
   
   ii <- .Object@data$index
-  cc <- .Object@data$c
+  cc <- .Object@data$harvest
   tt <- length(cc)
   bm <- numeric(tt)
   

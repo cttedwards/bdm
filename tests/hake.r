@@ -1,6 +1,5 @@
 
 # NEW ZEALAND HAKE (Chatham rise)
-# BDM random effects model
 
 ##############
 # START HERE #
