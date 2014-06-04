@@ -8,4 +8,4 @@ Maintainer: Charles T T Edwards <charles.edwards@niwa.co.nz>
 Description: Bayesian fit of a logistic surplus production model to catch and abundance data using Hamiltonian MCMC
 License: GNU General Public License Version 3
 Depends: R(>= 3.0.1), methods, rstan, ggplot2, reshape2
-Collate: edat.R bdm.R bdm-internal.R rdat.R rdat.iter.R rprior.R iterate.R mass.R maturity.R nmort.R size.R sr.R survivorship.R rcalc.R update_bdm.R compile_bdm.R fit.R traceplot.R histplot.R
+Collate: edat.R sigmao.R sigmap.R bdm.R bdm-internal.R rdat.R rdat.iter.R rprior.R iterate.R mass.R maturity.R nmort.R size.R sr.R survivorship.R rcalc.R update_bdm.R compile_bdm.R fit.R traceplot.R histplot.R
