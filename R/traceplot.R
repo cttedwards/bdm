@@ -13,6 +13,7 @@ setMethod("traceplot",signature=list(object="bdm"),function(object, pars, inc_wa
   
   dfr <- data.frame(variable=NULL,chain=NULL,value=NULL)
   
+  # extract paramater values from object@trace_array
   for(par in pars) {
     m <- regexpr('\\[.+\\]',par)
     if(m>0) {
@@ -22,14 +23,14 @@ setMethod("traceplot",signature=list(object="bdm"),function(object, pars, inc_wa
         dfr <- rbind(dfr,data.frame(variable=dimnames(object@trace_array)$parameters[i],iteration=dfr.tmp$iterations,chain=dfr.tmp$chains,value=dfr.tmp$value))
       }
     } else {
-      mm <- 0L
+      mm <- 0
       for(parname in dimnames(object@trace_array)$parameters) {
         m  <- regexpr(par,parname)
         if(m>0) { 
           i <- match(parname,dimnames(object@trace_array)$parameters)
           dfr.tmp <- melt(object@trace_array[,,i])
           dfr <- rbind(dfr,data.frame(variable=parname,iteration=dfr.tmp$iterations,chain=dfr.tmp$chains,value=dfr.tmp$value)) 
-          mm <- mm + 1L
+          mm <- mm + 1
         } else {
           if(mm>0) break
         }
@@ -38,9 +39,11 @@ setMethod("traceplot",signature=list(object="bdm"),function(object, pars, inc_wa
   }
   if(!nrow(dfr)>0) stop('parameter not found\n')
   
+  # extract chain numbering
   dfr$chain <- unlist(lapply(strsplit(as.character(dfr$chain),split=':'),function(x) x[2]))
   
-  if(!inc_warmup) dfr <- subset(dfr,iteration>object@warmup)
+  if(!inc_warmup) 
+    dfr <- subset(dfr,iteration>object@warmup)
   
   gg <- ggplot(dfr)
     
