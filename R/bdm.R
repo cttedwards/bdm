@@ -50,6 +50,7 @@ bdm <- function(path,model.code,model.name='BDM',compile=FALSE) {
       int I;
       real index[T,I];
       real harvest[T];
+      real n;
       real sigmaO[I];
       real sigmaP;
     }
@@ -64,8 +65,21 @@ bdm <- function(path,model.code,model.name='BDM',compile=FALSE) {
       real q[I];
       real H[T];
 
+      // variance terms
       real sigmaOsq[I];
       real sigmaPsq;
+
+      // fletcher-schaefer
+      // parameters
+      real dmsy;
+      real h;
+      real m;
+      real g;
+      
+      dmsy <- pow((1/n),(1/(n-1)));
+      h <- 2*dmsy;
+      m <- r*h/4;
+      g <- pow(n,(n/(n-1)))/(n-1);
 
       // variance terms
       for(i in 1:I)
@@ -76,7 +90,8 @@ bdm <- function(path,model.code,model.name='BDM',compile=FALSE) {
       x[1] <- 1.0;
       H[1] <- fmin(exp(log(harvest[1]) - logK),0.99);
       for(t in 2:T){
-        x[t] <- (x[t-1] + r * x[t-1] * (1 - x[t-1]) - H[t-1]) * xdev[t-1];
+        if(x[t-1]<=dmsy) x[t] <- (x[t-1] + r * x[t-1] * (1 - x[t-1]/h) - H[t-1]) * xdev[t-1];
+        if(x[t-1]> dmsy) x[t] <- (x[t-1] + g * m * x[t-1] * (1 - pow(x[t-1],(n-1))) - H[t-1]) * xdev[t-1];
 	      H[t] <- fmin(exp(log(harvest[t]) - logK),x[t]);
       }
       
@@ -149,7 +164,8 @@ bdm <- function(path,model.code,model.name='BDM',compile=FALSE) {
 	    biomass[t] <- x[t] * exp(logK);
 	    depletion[t] <- x[t];
         harvest_rate[t] <- harvest[t]/exp(log(x[t]) + logK);
-        surplus_production[t] <- r * x[t] * (1 - x[t]);
+        if(x[t]<=dmsy) surplus_production[t] <- r * x[t] * (1 - x[t]/h) * xdev[t];
+        if(x[t]> dmsy) surplus_production[t] <- g * m * x[t] * (1 - pow(x[t],(n-1))) * xdev[t];
       }
 
       current_biomass <- biomass[T];

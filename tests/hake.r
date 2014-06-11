@@ -17,7 +17,7 @@ library(bdm)
 data(hake)
 
 # create empirical data.frame
-dat <- edat(catch=hake$catch,index=cbind(hake$survey,hake$cpue),year=rownames(hake))
+dat <- edat(harvest=hake$catch,index=cbind(hake$survey,hake$cpue),year=rownames(hake))
 
 # inspect r prior
 hist(r)
@@ -29,6 +29,11 @@ mdl <- compile_bdm(mdl)
 
 # inspect code
 mdl
+
+# update depletion at MSY
+shape(dat) <- 0.4
+shape(dat,"n")
+shape(dat,"phi")
 
 # mcmc fit
 mdl <- fit(mdl,dat,iter=20000,thin=10)

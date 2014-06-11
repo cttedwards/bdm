@@ -1,10 +1,10 @@
 
 #{{{ empirical data class
 setClass("edat",contains="list",representation(names="character"))
-setMethod("initialize","edat",function(.Object,index,harvest,year,sigmaO,sigmaP,renormalise=TRUE) {
+setMethod("initialize","edat",function(.Object,index,harvest,year,n,sigmaO,sigmaP,renormalise=TRUE) {
   
-  .Object@.Data <- vector('list',7)
-  names(.Object) <- c('T','I','index','harvest','year','sigmaO','sigmaP')
+  .Object@.Data <- vector('list',8)
+  names(.Object) <- c('T','I','index','harvest','year','n','sigmaO','sigmaP')
   
   if(!missing(index)) {
     if(any(!is.na(index))) {
@@ -38,13 +38,20 @@ setMethod("initialize","edat",function(.Object,index,harvest,year,sigmaO,sigmaP,
       .Object$harvest <- harvest
     }
   }
+  
   if(!missing(index) & !missing(harvest)) 
     if(any(!is.na(index)) & any(!is.na(harvest)))
       if(T.index!=T.harvest) 
         stop('index and catch (harvest) must have the same time dimension\n')
+  
   if(!missing(year)) {
     .Object$year <- year
   } else .Object$year <- 1:length(harvest)
+  
+  .Object$n <- 2
+  if(!missing(n))
+    .Object$n <- n
+  
   if(!missing(sigmaO)) {
     if(length(sigmaO)<.Object$I) {
       sigmaO <- rep(sigmaO[1],.Object$I)
@@ -53,6 +60,7 @@ setMethod("initialize","edat",function(.Object,index,harvest,year,sigmaO,sigmaP,
     }
 	  .Object$sigmaO <- structure(sigmaO,.Dim=.Object$I)
   } else .Object$sigmaO <- structure(rep(0.2,.Object$I),.Dim=.Object$I)
+  
   if(!missing(sigmaP)) {
     if(length(sigmaP)>1)
       warning('length of sigmaP is >1: only first value used\n')

@@ -9,6 +9,8 @@ exportMethods(
     "iterate",
 	"histplot",
 	"traceplot",
+	"shape",
+	"shape<-",
 	"sigmao",
 	"sigmao<-",
 	"sigmap",
