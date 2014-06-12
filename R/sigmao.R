@@ -15,9 +15,9 @@ setMethod("sigmao<-",
           function(x,i,j, ...,value) {
             
             if(length(value)<x$I) {
-              value <- rep(value[1],x$I)
               if(length(value)>1)
                 warning('length of input vector is >1 but < number of indices: only first value used\n')
+              value <- rep(value[1],x$I)
             }
             x$sigmaO <- structure(value,.Dim=x$I)        
             

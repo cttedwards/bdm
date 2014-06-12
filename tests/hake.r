@@ -36,7 +36,7 @@ shape(dat,"n")
 shape(dat,"phi")
 
 # mcmc fit
-mdl <- fit(mdl,dat,iter=20000,thin=10)
+mdl <- fit(mdl,dat,iter=2000,thin=10)
 traceplot(mdl)
 histplot(mdl)
 
