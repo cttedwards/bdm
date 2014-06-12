@@ -10,6 +10,7 @@ rm(list=ls())
 # install and load bdm package
 #install.packages("bdm",contriburl="file://niwa.local/Groups/wellington/niwafisheries/R/",type="win.binary",repos=NULL)
 install.packages("C:/PROJECTS/SOFTWARE/OpenSource/bdm_1.0.zip", repos = NULL)
+install.packages("C:/PROJECTS/SOFTWARE/OpenSource/kobe_1.3.2.zip", repos = NULL)
 
 library(bdm)
 library(kobe)
@@ -36,7 +37,7 @@ mdl
 mdl <- compile_bdm(mdl)
 
 # mcmc fit
-mdl <- fit(mdl,dat,iter=20000,thin=100)
+mdl <- fit(mdl,dat,iter=2000,thin=10,run='run_1')
 traceplot(mdl,pars=c('r','logK'))
 histplot(mdl,pars=c('r','logK'))
 
