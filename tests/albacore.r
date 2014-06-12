@@ -37,7 +37,11 @@ mdl <- compile_bdm(mdl)
 
 # mcmc fit
 <<<<<<< HEAD
+<<<<<<< HEAD
 mdl <- fit(mdl,dat,iter=2000,thin=10,run='run_1')
+=======
+mdl <- fit(mdl,dat,iter=20000,thin=10)
+>>>>>>> parent of 6a78128... MOD: add kobe plots to IO albacore example
 =======
 mdl <- fit(mdl,dat,iter=20000,thin=10)
 >>>>>>> parent of 6a78128... MOD: add kobe plots to IO albacore example
