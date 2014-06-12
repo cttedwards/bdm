@@ -2,13 +2,16 @@
 #{{{ fit functions
 setGeneric("fit", function(.Object,data, ...) standardGeneric("fit"))
 #{{ fit bdm model to data
-setMethod("fit",signature=c("bdm","edat"),function(.Object,data,init,chains,iter,warmup,thin,method="MCMC", ...) {
+setMethod("fit",signature=c("bdm","edat"),function(.Object,data,init,chains,iter,warmup,thin,run,method="MCMC", ...) {
   
   if(missing(data)) 
     stop('No data object supplied\n')
   
   # number of data indices
   # nix <- ifelse(length(dim(data$index))>1,dim(data$index)[2],1)
+  
+  if(!missing(run))
+    .Object@run <- as.character(run) 
   
   # check data
   if(any(data$harvest<0) | any(is.na(data$harvest))) 
@@ -27,7 +30,7 @@ setMethod("fit",signature=c("bdm","edat"),function(.Object,data,init,chains,iter
       
       init.values <- list(logK   = logK,
                           r      = r,
-                          xdev   = rep(1,data$T))
+                          xdev   = rep(1,.Object@data$T))
       
       init.values
     }     
@@ -59,6 +62,8 @@ setMethod("fit",signature=c("bdm","edat"),function(.Object,data,init,chains,iter
   if(!missing(iter))      .Object@iter   <- iter
   if(!missing(thin))      .Object@thin   <- thin
   if(!missing(warmup))    .Object@warmup <- warmup else .Object@warmup <- floor(.Object@iter/2/.Object@thin)
+  
+  .Object@nsamples <- ((.Object@iter - .Object@warmup) * .Object@chains)/.Object@thin
 
   if(method=='MCMC') {
     
