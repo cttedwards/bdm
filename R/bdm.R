@@ -1,6 +1,24 @@
 
 #{{{
-setClass("bdm",contains="stanmodel",slots=list(data="list",init.func="function",init.values="list",chains="numeric",iter="numeric",warmup="numeric",thin="numeric",trace_array="array",trace="list",mpd="list",path="character",default_model="logical"))
+# class definition
+setClass("bdm",contains="stanmodel",
+                slots=list(data="list",            # edat object or list
+                           init.func="function",   # initialisation function
+                           init.values="list",     # initial values populated by init.func
+                           chains="numeric",       # number of MCMC chains
+                           iter="numeric",         # number of MCMC iterations per chain
+                           warmup="numeric",       # number of iterations under adaptive sampling
+                           thin="numeric",         # interval between recorded samples
+                           nsamples="numeric",     # total number of posterior samples recorded
+                           trace_array="array",    # array of posterior samples including warmup
+                           trace="list",           # list of posterior samples without warmup and with chains mixed
+                           mpd="list",             # mpd output from rstan::optimizing()
+                           path="character",       # optional path to stan model code file for initialisaton of non-default model
+                           run="character",        # optional label for this particular run
+                           default_model="logical" # is the default fletcher-schaefer hybrid model retained?
+                           )
+         )
+# initialisation function
 setMethod("initialize","bdm",function(.Object,path,model.code,model.name,compile,default_model) {
   
   require(rstan)
@@ -35,6 +53,8 @@ setMethod("initialize","bdm",function(.Object,path,model.code,model.name,compile
   .Object@iter   <- 2000
   .Object@thin   <- 1
   .Object@warmup <- floor(.Object@iter/2/.Object@thin)
+  
+  .Object@nsamples <- ((.Object@iter - .Object@warmup) * .Object@chains)/.Object@thin
   
   .Object@default_model <- default_model
   
@@ -87,7 +107,7 @@ bdm <- function(path,model.code,model.name='BDM',compile=FALSE) {
       sigmaPsq <- square(sigmaP);
 	  
       // compute biomass dynamics
-      x[1] <- 1.0;
+      x[1] <- 1.0 * xdev[1];
       H[1] <- fmin(exp(log(harvest[1]) - logK),0.99);
       for(t in 2:T){
         if(x[t-1]<=dmsy) x[t] <- (x[t-1] + r * x[t-1] * (1 - x[t-1]/h) - H[t-1]) * xdev[t-1];
@@ -110,7 +130,7 @@ bdm <- function(path,model.code,model.name='BDM',compile=FALSE) {
               p <- p + 1.0;
             }
           }
-          if(p>2.0) { q[i] <- exp(sigmaOsq[i] * (p-2)/(2*p) + err/p);
+          if(p>2.0) { q[i] <- exp(err/p); // exp(sigmaOsq[i] * (p-2)/(2*p) + err/p);
   	      } else q[i] <- 0.0;
         }
       }
@@ -141,7 +161,7 @@ bdm <- function(path,model.code,model.name='BDM',compile=FALSE) {
       for(t in 1:T){
       real H_; H_ <- H[t]/x[t];
         if(H_>0.95) {
-          lp__ <- lp__ - log(H_/0.95) * (1/sigmaPsq);
+          increment_log_prob(-log(H_/0.95) * (1/sigmaPsq));
         }
       }
     }
@@ -156,13 +176,16 @@ bdm <- function(path,model.code,model.name='BDM',compile=FALSE) {
       real current_depletion;
       real current_harvest_rate;
 
+      real biomass_at_msy;
+      real harvest_rate_at_msy;
+
       real observed_index_biomass[T,I];
       real observed_index_depletion[T,I];
       real predicted_index[T,I];
       
       for(t in 1:T) {
-	    biomass[t] <- x[t] * exp(logK);
-	    depletion[t] <- x[t];
+        biomass[t] <- x[t] * exp(logK);
+        depletion[t] <- x[t];
         harvest_rate[t] <- harvest[t]/exp(log(x[t]) + logK);
         if(x[t]<=dmsy) surplus_production[t] <- r * x[t] * (1 - x[t]/h) * xdev[t];
         if(x[t]> dmsy) surplus_production[t] <- g * m * x[t] * (1 - pow(x[t],(n-1))) * xdev[t];
@@ -171,6 +194,9 @@ bdm <- function(path,model.code,model.name='BDM',compile=FALSE) {
       current_biomass <- biomass[T];
       current_depletion <- x[T];
       current_harvest_rate <- harvest_rate[T];
+
+      biomass_at_msy <- dmsy * exp(logK);
+      harvest_rate_at_msy <- m / dmsy;
 
       for(i in 1:I){
         for(t in 1:T){
