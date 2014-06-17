@@ -14,7 +14,9 @@ setMethod("initialize","edat",function(.Object,index,harvest,year,n,sigmaO,sigma
 	  
       .Object$T <- T.index <- nrow(index)
       .Object$I <- ncol(index)
-
+      
+      .Object$index <- index
+      
       # renormalise indices to geometric mean
       if(renormalise) {
         renorm <- function(x) { y<-x[x>0]; x[x>0] <- y/(prod(y)^(1/length(y))); x }
@@ -54,9 +56,9 @@ setMethod("initialize","edat",function(.Object,index,harvest,year,n,sigmaO,sigma
   
   if(!missing(sigmaO)) {
     if(length(sigmaO)<.Object$I) {
+		if(length(sigmaO)>1)
+			warning('length of sigmaO is >1 but < number of indices: only first value used\n')
       sigmaO <- rep(sigmaO[1],.Object$I)
-      if(length(sigmaO)>1)
-        warning('length of sigmaO is >1 but < number of indices: only first value used\n')
     }
 	  .Object$sigmaO <- structure(sigmaO,.Dim=.Object$I)
   } else .Object$sigmaO <- structure(rep(0.2,.Object$I),.Dim=.Object$I)
