@@ -1,4 +1,4 @@
 bdm
 ===
 
-Bayesian biomass dynamic model
+Bayesian biomass dynamic model for estimation of population status from catch and abundance data
