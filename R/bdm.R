@@ -77,13 +77,11 @@ bdm <- function(path,model.code,model.name='BDM',compile=FALSE) {
     parameters {
       real<lower=3,upper=30> logK;
       real<lower=0,upper=2> r;
-      real<lower=0> xdev[T];
+      real<lower=0> x[T];
     }
     transformed parameters {
 
-      real x[T];
       real q[I];
-      real H[T];
 
       // variance terms
       real sigmaOsq[I];
@@ -105,19 +103,9 @@ bdm <- function(path,model.code,model.name='BDM',compile=FALSE) {
       for(i in 1:I)
         sigmaOsq[i] <- square(sigmaO[i]);
       sigmaPsq <- square(sigmaP);
-	  
-      // compute biomass dynamics
-      x[1] <- 1.0 * xdev[1];
-      H[1] <- fmin(exp(log(harvest[1]) - logK),0.99);
-      for(t in 2:T){
-        if(x[t-1]<=dmsy) x[t] <- (x[t-1] + r * x[t-1] * (1 - x[t-1]/h) - H[t-1]) * xdev[t-1];
-        if(x[t-1]> dmsy) x[t] <- (x[t-1] + g * m * x[t-1] * (1 - pow(x[t-1],(n-1))) - H[t-1]) * xdev[t-1];
-	      H[t] <- fmin(exp(log(harvest[t]) - logK),x[t]);
-      }
       
-      // compute catchability assuming 
+      // compute mpd catchability assuming 
       // constant sigmaO over time
-      // and uniform prior on ln(q)
       {
         real err;
         real p;
@@ -130,7 +118,7 @@ bdm <- function(path,model.code,model.name='BDM',compile=FALSE) {
               p <- p + 1.0;
             }
           }
-          if(p>2.0) { q[i] <- exp(err/p); // exp(sigmaOsq[i] * (p-2)/(2*p) + err/p);
+          if(p>2.0) { q[i] <- exp(err/p + sigmaOsq[i]/2);
   	      } else q[i] <- 0.0;
         }
       }
@@ -141,25 +129,33 @@ bdm <- function(path,model.code,model.name='BDM',compile=FALSE) {
       // estimated parameters
       // ********************
       logK ~ uniform(3.0,30.0);
-      r ~ lognormal(-1.0,0.40);
+      r ~ lognormal(-1.0,0.20);
       
-      // random deviations
-      // *****************
-      xdev ~ lognormal(log(1.0)-sigmaPsq/2,sigmaP);
+      // state equation
+      // **************
+      {
+        real H;
+        x[1] ~ lognormal(log(1.0)-sigmaPsq/2,sigmaP);
+        for(t in 2:T) {
+          H <- fmin(exp(log(harvest[t-1]) - logK),x[t-1]);
+          if(x[t-1]<=dmsy) x[t] ~ lognormal(log(x[t-1] + r * x[t-1] * (1 - x[t-1]/h) - H) - sigmaPsq/2,sigmaP);
+          if(x[t-1]> dmsy) x[t] ~ lognormal(log(x[t-1] + g * m * x[t-1] * (1 - pow(x[t-1],(n-1))) - H) - sigmaPsq/2,sigmaP);
+        }
+      }
       
       // observation equation
       // ********************
       for(i in 1:I){
         for(t in 1:T){
           if(index[t,i]>0.0 && x[t]>0.0 && q[i]>0.0)
-            index[t,i] ~ lognormal(log(q[i]*x[t])-sigmaOsq[i]/2,sigmaO[i]);
+            index[t,i] ~ lognormal(log(q[i]*x[t]) - sigmaOsq[i]/2,sigmaO[i]);
           }
       }
 
       // apply penalty for H>0.95
-      // ***************************
+      // ************************
       for(t in 1:T){
-      real H_; H_ <- H[t]/x[t];
+      real H_; H_ <- harvest[t]/exp(log(x[t]) + logK);
         if(H_>0.95) {
           increment_log_prob(-log(H_/0.95) * (1/sigmaPsq));
         }
@@ -171,6 +167,9 @@ bdm <- function(path,model.code,model.name='BDM',compile=FALSE) {
       real depletion[T];
       real harvest_rate[T];
       real surplus_production[T];
+	  
+      real epsilon_o[T,I];
+      real epsilon_p[T];
 
       real current_biomass;
       real current_depletion;
@@ -179,16 +178,25 @@ bdm <- function(path,model.code,model.name='BDM',compile=FALSE) {
       real biomass_at_msy;
       real harvest_rate_at_msy;
 
-      real observed_index_biomass[T,I];
-      real observed_index_depletion[T,I];
+      real observed_index[T,I];
       real predicted_index[T,I];
+	  
+      {
+        real H;
+        for(t in 2:T) {
+          H <- fmin(exp(log(harvest[t-1]) - logK),x[t-1]);
+          if(x[t-1]<=dmsy) epsilon_p[t-1] <- x[t]/(x[t-1] + r * x[t-1] * (1 - x[t-1]/h) - H);
+          if(x[t-1]> dmsy) epsilon_p[t-1] <- x[t]/(x[t-1] + g * m * x[t-1] * (1 - pow(x[t-1],(n-1))) - H);
+        }
+        epsilon_p[T] <- lognormal_rng(log(1.0)-sigmaPsq/2,sigmaP);
+      }
       
       for(t in 1:T) {
         biomass[t] <- x[t] * exp(logK);
         depletion[t] <- x[t];
         harvest_rate[t] <- harvest[t]/exp(log(x[t]) + logK);
-        if(x[t]<=dmsy) surplus_production[t] <- r * x[t] * (1 - x[t]/h) * xdev[t];
-        if(x[t]> dmsy) surplus_production[t] <- g * m * x[t] * (1 - pow(x[t],(n-1))) * xdev[t];
+        if(x[t]<=dmsy) surplus_production[t] <- r * x[t] * (1 - x[t]/h) * epsilon_p[t];
+        if(x[t]> dmsy) surplus_production[t] <- g * m * x[t] * (1 - pow(x[t],(n-1))) * epsilon_p[t];
       }
 
       current_biomass <- biomass[T];
@@ -201,12 +209,18 @@ bdm <- function(path,model.code,model.name='BDM',compile=FALSE) {
       for(i in 1:I){
         for(t in 1:T){
           if(index[t,i]>0.0) {
-            observed_index_biomass[t,i]   <- (index[t,i]/q[i]) * exp(logK);
-            observed_index_depletion[t,i] <- index[t,i]/q[i];
+            observed_index[t,i] <- index[t,i];
           }
           predicted_index[t,i] <- q[i]*x[t];
         }
       }
+
+      for(t in 1:T){
+        for(i in 1:I){
+          epsilon_o[t,i] <- observed_index[t,i]/predicted_index[t,i];
+        }
+      }
+
     }
   '
 

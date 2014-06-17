@@ -14,10 +14,10 @@ install.packages("C:/PROJECTS/SOFTWARE/OpenSource/bdm_1.0.zip", repos = NULL)
 library(bdm)
 
 # load data
-data(hake)
+data(hakcr)
 
 # create empirical data.frame
-dat <- edat(harvest=hake$catch,index=cbind(hake$survey,hake$cpue),year=rownames(hake))
+dat <- edat(harvest=hakcr$catch,index=cbind(hakcr$survey,hakcr$cpue),year=rownames(hakcr))
 
 # inspect r prior
 hist(r)

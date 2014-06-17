@@ -14,8 +14,8 @@ install.packages("C:/PROJECTS/SOFTWARE/OpenSource/bdm_1.0.zip", repos = NULL)
 library(bdm)
 
 # load data
-data(albacore)
-dat <- edat(harvest=albacore$catch,index=albacore$cpue,year=rownames(albacore))
+data(albio)
+dat <- edat(harvest=albio$catch,index=albio$cpue,year=rownames(albio))
 
 # initialise object
 mdl <- bdm()
