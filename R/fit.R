@@ -30,7 +30,7 @@ setMethod("fit",signature=c("bdm","edat"),function(.Object,data,init,chains,iter
       
       init.values <- list(logK   = logK,
                           r      = r,
-                          xdev   = rep(1,.Object@data$T))
+                          x      = runif(.Object@data$T,0.1,0.9)) #rep(0.8,.Object@data$T))
       
       init.values
     }     
