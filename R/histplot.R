@@ -22,7 +22,11 @@ setMethod("histplot",signature=c("bdm"), function(.Object,pars,inc_warmup=FALSE)
       i <- match(par,dimnames(.Object@trace_array)$parameters)
       if(!is.na(i)) {
         dfr.tmp <- melt(.Object@trace_array[,,i])
-        dfr <- rbind(dfr,data.frame(variable=dimnames(.Object@trace_array)$parameters[i],iteration=dfr.tmp$iterations,chain=dfr.tmp$chains,value=dfr.tmp$value))
+        if(ncol(dfr.tmp)>2) {
+          dfr <- rbind(dfr,data.frame(variable=dimnames(.Object@trace_array)$parameters[i],iteration=dfr.tmp$iterations,chain=dfr.tmp$chains,value=dfr.tmp$value))
+        } else {
+          dfr <- rbind(dfr,data.frame(variable=dimnames(.Object@trace_array)$parameters[i],iteration=1:dim(dfr.tmp)[1],chain='chain:1',value=dfr.tmp$value))
+        }
       }
     } else {
       mm <- 0
@@ -31,7 +35,11 @@ setMethod("histplot",signature=c("bdm"), function(.Object,pars,inc_warmup=FALSE)
         if(m>0) { 
           i <- match(parname,dimnames(.Object@trace_array)$parameters)
           dfr.tmp <- melt(.Object@trace_array[,,i])
-          dfr <- rbind(dfr,data.frame(variable=parname,iteration=dfr.tmp$iterations,chain=dfr.tmp$chains,value=dfr.tmp$value)) 
+          if(ncol(dfr.tmp)>2) {
+            dfr <- rbind(dfr,data.frame(variable=parname,iteration=dfr.tmp$iterations,chain=dfr.tmp$chains,value=dfr.tmp$value)) 
+          } else {
+            dfr <- rbind(dfr,data.frame(variable=parname,iteration=1:dim(dfr.tmp)[1],chain='chain:1',value=dfr.tmp$value)) 
+          }
           mm <- mm + 1
         } else {
           if(mm>0) break
