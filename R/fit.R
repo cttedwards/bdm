@@ -26,7 +26,7 @@ setMethod("fit",signature=c("bdm","edat"),function(.Object,data,init,chains,iter
       
       b    <- init.r/exp(init.logK)
       r    <- init.r * rlnorm(1,log(1)-0.04/2,0.2)
-      logK <- log(r/b)
+      logK <- max(min(log(r/b),30),3)
       
       x    <- .getx(r,logK,.Object)
       
@@ -46,6 +46,9 @@ setMethod("fit",signature=c("bdm","edat"),function(.Object,data,init,chains,iter
       if(is.list(init)) {
     		if(!is.null(init$logK)) init.logK <- init$logK else init.logK <- .getlogK(.Object)
     		if(!is.null(init$r))    init.r    <- init$r    else init.r    <- .getr(.Object)
+      }
+      if(is.function(init)) {
+        init.func <- init
       }
     }
   } else {
