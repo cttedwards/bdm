@@ -28,9 +28,11 @@ setMethod("fit",signature=c("bdm","edat"),function(.Object,data,init,chains,iter
       r    <- init.r * rlnorm(1,log(1)-0.04/2,0.2)
       logK <- log(r/b)
       
+      x    <- .getx(r,logK,.Object)
+      
       init.values <- list(logK   = logK,
                           r      = r,
-                          x      = runif(.Object@data$T,0.1,0.9)) #rep(0.8,.Object@data$T))
+                          x      = x)
       
       init.values
     }     
@@ -58,11 +60,13 @@ setMethod("fit",signature=c("bdm","edat"),function(.Object,data,init,chains,iter
   # update .Object
   .Object@init.func <- init.func
   
+  # sampling dimensions
   if(!missing(chains))    .Object@chains <- chains
   if(!missing(iter))      .Object@iter   <- iter
   if(!missing(thin))      .Object@thin   <- thin
   if(!missing(warmup))    .Object@warmup <- warmup else .Object@warmup <- floor(.Object@iter/2/.Object@thin)
   
+  # number of posterior samples
   .Object@nsamples <- ((.Object@iter - .Object@warmup) * .Object@chains)/.Object@thin
 
   if(method=='MCMC') {
@@ -87,7 +91,7 @@ setMethod("fit",signature=c("bdm","edat"),function(.Object,data,init,chains,iter
   
   .Object
 })
-#{ initial value functions for r and logK
+#{ initial value functions for r, logK and x
 .getr <- function(.Object) {
   
   # extract r from model_code
@@ -124,19 +128,23 @@ setMethod("fit",signature=c("bdm","edat"),function(.Object,data,init,chains,iter
   tt <- length(cc)
   bm <- numeric(tt)
   
+  ll <- 1e-4
+  
+  # least-squares objective
+  # function
   obj <- function(logK) {
   
     bm[1] <- 1
     for(t in 1:tt) 
-      bm[t+1] <- max(bm[t] + rr*bm[t]*(1 - bm[t]) - cc[t]/exp(logK),1e-3)
+      bm[t+1] <- max(bm[t] + rr*bm[t]*(1 - bm[t]) - cc[t]/exp(logK),ll)
     bm <- bm[-length(bm)]
   
     q <- mean(apply(ii,2,function(x) exp(mean(log(x[x>0]/bm[x>0])))))
   
-    -sum(apply(ii,2,function(x) sum(log(x[x>0]/(q*bm[x>0]))^2))) + log(bm[tt]/0.9) + sum(cc/(bm*exp(logK)) > 0.95)
+    sum(apply(ii,2,function(x) sum(log(x[x>0]/(q*bm[x>0]))^2))) + ifelse(any(bm==ll),Inf,0) + ifelse(bm[tt]>0.99,Inf,0)
   }
   
-  np <- 100
+  np <- 1000
   logK.llk <- numeric(np)
   logK.seq <- seq(3,30,length=np)
   for(i in 1:np) 
@@ -145,6 +153,23 @@ setMethod("fit",signature=c("bdm","edat"),function(.Object,data,init,chains,iter
   init.logK <- logK.seq[which.min(logK.llk)]
   
   init.logK
+}
+.getx <- function(r,logK,.Object) {
+
+  cc <- .Object@data$harvest
+  tt <- length(cc)
+  bm <- numeric(tt)
+  
+  ll <- 1e-4
+  
+  bm[1] <- 1
+  for(t in 1:tt) 
+    bm[t+1] <- max(bm[t] + r*bm[t]*(1 - bm[t]) - cc[t]/exp(logK),ll)
+  bm <- bm[-length(bm)]
+  
+  init.x <- bm
+  
+  init.x
 }
 #}
 #}}

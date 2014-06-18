@@ -34,7 +34,7 @@ mdl
 mdl <- compile_bdm(mdl)
 
 # mcmc fit
-mdl <- fit(mdl,dat,iter=20000,thin=100)
+mdl <- fit(mdl,dat,iter=5000,thin=10,chain=10)
 traceplot(mdl,pars=c('r','logK'))
 histplot(mdl,pars=c('r','logK'))
 

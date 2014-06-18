@@ -135,21 +135,30 @@ bdm <- function(path,model.code,model.name='BDM',compile=FALSE) {
       // **************
       {
         real H;
+        real mu;
         x[1] ~ lognormal(log(1.0)-sigmaPsq/2,sigmaP);
         for(t in 2:T) {
           H <- fmin(exp(log(harvest[t-1]) - logK),x[t-1]);
-          if(x[t-1]<=dmsy) x[t] ~ lognormal(log(x[t-1] + r * x[t-1] * (1 - x[t-1]/h) - H) - sigmaPsq/2,sigmaP);
-          if(x[t-1]> dmsy) x[t] ~ lognormal(log(x[t-1] + g * m * x[t-1] * (1 - pow(x[t-1],(n-1))) - H) - sigmaPsq/2,sigmaP);
+          if(x[t-1]<=dmsy) mu <- x[t-1] + r * x[t-1] * (1 - x[t-1]/h) - H;
+          if(x[t-1]> dmsy) mu <- x[t-1] + g * m * x[t-1] * (1 - pow(x[t-1],(n-1))) - H;
+          if(mu > 0.0) mu <- log(mu) - sigmaPsq/2;
+          else mu <- log(0.01) - sigmaPsq/2;
+          x[t] ~ lognormal(mu,sigmaP);
         }
       }
       
       // observation equation
       // ********************
-      for(i in 1:I){
-        for(t in 1:T){
-          if(index[t,i]>0.0 && x[t]>0.0 && q[i]>0.0)
-            index[t,i] ~ lognormal(log(q[i]*x[t]) - sigmaOsq[i]/2,sigmaO[i]);
+      {
+        real mu;
+        for(i in 1:I){
+          for(t in 1:T){
+            if(index[t,i]>0.0 && x[t]>0.0 && q[i]>0.0) {
+              mu <- log(q[i]*x[t]) - sigmaOsq[i]/2;
+              index[t,i] ~ lognormal(mu,sigmaO[i]);
+            }
           }
+        }
       }
 
       // apply penalty for H>0.95
