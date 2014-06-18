@@ -17,9 +17,10 @@ setMethod("initialize","edat",function(.Object,index,harvest,year,n,sigmaO,sigma
       
       .Object$index <- index
       
-      # renormalise indices to geometric mean
+      # renormalise indices to (geometric) mean
       if(renormalise) {
-        renorm <- function(x) { y<-x[x>0]; x[x>0] <- y/(prod(y)^(1/length(y))); x }
+        #renorm <- function(x) { y<-x[x>0]; x[x>0] <- y/(prod(y)^(1/length(y))); x }
+		renorm <- function(x) { y<-x[x>0]; x[x>0] <- y/mean(y); x }
         if(.Object$I>1) {
           .Object$index <- apply(index,2,renorm)
           cat('Re-normalised indices.\n')
