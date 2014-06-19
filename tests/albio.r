@@ -12,6 +12,7 @@ rm(list=ls())
 install.packages("C:/PROJECTS/SOFTWARE/OpenSource/bdm_1.0.zip", repos = NULL)
 
 library(bdm)
+library(kobe)
 
 # load data
 data(albio)
@@ -34,9 +35,16 @@ mdl
 mdl <- compile_bdm(mdl)
 
 # mcmc fit
-mdl <- fit(mdl,dat,iter=5000,thin=10,chain=10)
+mdl <- fit(mdl,dat,iter=5000,thin=10,chain=2)
 traceplot(mdl,pars=c('r','logK'))
 histplot(mdl,pars=c('r','logK'))
+
+# kobe plot
+assmt <- as.kobe(mdl,what=c('sims','trks','pts'))
+kobePhase(ylim=c(0,max(2,assmt[['pts']]$harvest))) + 
+  geom_path(aes(stock,harvest),data=subset(assmt[['trks']],Percentile=='50%'),col="blue",size=1) + 
+  geom_path(aes(x,y,group=level),colour="blue",data=kobeProb(assmt[['pts']]$stock,assmt[['pts']]$harvest,prob=c(0.75,.5,.25))) +
+  geom_point(aes(stock,harvest), data=subset(assmt[['trks']],Percentile=='50%' & year==unique(assmt[['pts']]$year)),col="blue",size=4)
 
 # projections
 harvest.time <- 30
@@ -47,6 +55,9 @@ mdl.projections <- project(mdl,harvest.scenarios,harvest.time,harvest_rate=FALSE
 harvest.scenarios <- c(0.10,0.15,0.20)
 mdl.projections <- project(mdl,harvest.scenarios,harvest.time,harvest_rate=TRUE)
 
+prj <- as.kobe(mdl,mdl.projections,what=c('sims','trks','pts'))
+kobePhase(subset(prj$sims,year==max(prj$sims$year))) +
+  geom_point(aes(stock,harvest,group=projection_value,col=projection_value))
 
 #######
 # END #

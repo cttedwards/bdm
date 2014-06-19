@@ -9,5 +9,6 @@ Description: Bayesian fit of a logistic surplus production model to catch and ab
 License: GNU General Public License Version 3
 VignetteBuilder: knitr
 Suggests: knitr
-Depends: R(>= 3.1.0), methods, rstan, ggplot2, reshape2
-Collate: edat.R shape.R sigmao.R sigmap.R bdm.R bdm-internal.R rdat.R rdat.iter.R rprior.R iterate.R mass.R maturity.R nmort.R size.R sr.R survivorship.R rcalc.R update_bdm.R compile_bdm.R fit.R traceplot.R histplot.R
+Depends: R(>= 3.1.0), methods, rstan, ggplot2, reshape2, plyr
+Imports: kobe(>= 1.3.2)
+Collate: edat.R shape.R sigmao.R sigmap.R bdm.R bdm-internal.R rdat.R rdat.iter.R rprior.R iterate.R mass.R maturity.R nmort.R size.R sr.R survivorship.R rcalc.R update_bdm.R compile_bdm.R fit.R project.R traceplot.R histplot.R as.kobe.R

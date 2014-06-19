@@ -1,12 +1,14 @@
 import(rstan)
 import(ggplot2)
 import(reshape2)
+import(plyr)
 exportPattern("^[[:alpha:]]+")
 exportMethods(
     "compile_bdm",
     "fit",
     "initialize",
     "iterate",
+	"project",
 	"histplot",
 	"traceplot",
 	"shape",
@@ -27,7 +29,8 @@ exportMethods(
     "sr",
     "sr<-",
     "survivorship",
-    "update_bdm" 
+    "update_bdm",
+	"as.kobe"
 )
 exportClasses(
 	 "edat",
