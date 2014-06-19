@@ -57,6 +57,9 @@ mdl.projections <- project(mdl,harvest.scenarios,harvest.time,harvest_rate=FALSE
 harvest.scenarios <- c(0.10,0.15,0.20)
 mdl.projections <- project(mdl,harvest.scenarios,harvest.time,harvest_rate=TRUE)
 
+prj <- as.kobe(mdl,mdl.projections,what=c('sims','trks','pts'))
+kobePhase(subset(prj$sims,year==max(prj$sims$year))) +
+  geom_point(aes(stock,harvest,group=projection_value,col=projection_value))
 
 #######
 # END #

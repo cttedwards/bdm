@@ -1,12 +1,30 @@
 
 #{{{ as.kobe functions
 setGeneric("as.kobe", function(.Object, ...) standardGeneric("as.kobe"))
-#{{ convert bdm object into kobe dataframe
-setMethod("as.kobe",signature=c("bdm"),function(.Object,prb=NULL,dir="",
+#{{ convert bdm object into kobe dataframe with or without projections
+setMethod("as.kobe",signature=c("bdm"),function(.Object,projection,dir="",
                                                 what=c("sims","trks","pts","smry","wrms")[1],
                                                 prob=c(0.75,0.5,.25),year=NULL,nwrms=10) {
       
-    res <- .ioBdm(.Object,what=what,prob=prob,nwrms=nwrms,year=year)
+      
+    if(missing(projection)) {
+      
+      res <- .read_bdm(.Object)
+		  res <- .io_bdm(res,what=what,prob=prob,nwrms=nwrms,year=year)
+      
+    } else {
+
+      res <- .read_bdm_projection(.Object,projection)
+      
+      res <- lapply(res,FUN=.io_bdm,what=what,prob=prob,nwrms=nwrms,year=year)
+                       
+      res <- list(trks=ldply(res, function(x) x$trks,.id='projection_value'),
+               pts =ldply(res, function(x) x$pts,.id='projection_value'),
+               smry=ldply(res, function(x) x$smry,.id='projection_value'),
+               wrms=ldply(res, function(x) x$wrms,.id='projection_value'),
+               sims=ldply(res, function(x) x$sims,.id='projection_value'))
+      }
+
     
     if (length(what)==1)
        return(res[[what]])
@@ -14,7 +32,7 @@ setMethod("as.kobe",signature=c("bdm"),function(.Object,prb=NULL,dir="",
        return(res[what]) 
   })
 #{ read MCMC stanfit output and return data.frame with headers: iter,year,stock,harvest,bmsy,fmsy 
-.readBdm <- function(.Object){
+.read_bdm <- function(.Object){
   
   years <- .Object@data$year
   niter <- .Object@nsamples
@@ -44,16 +62,59 @@ setMethod("as.kobe",signature=c("bdm"),function(.Object,prb=NULL,dir="",
   return(res)
 }
 #}
+#{ read MCMC stanfit output and projection 
+.read_bdm_projection <- function(.Object,projection){
+  
+  years <- projection$year
+  niter <- projection$nsamples
+  iters <- 1:niter
+  
+  nscenario <- length(projection$scenarios)
+  
+  res <- list()
+  for(s in 1:nscenario) {
+  
+	  res.sc <- projection$biomass[,,s]
+	  dimnames(res.sc) <- list(iter=iters,year=years)
+	  
+	  res.sc <- melt(res.sc,value.name='stock')
+	  res.sc <- data.frame(res.sc,harvest=melt(projection$harvest_rate[,,s])$value)
+	  
+	  bmsy <- .Object@trace$biomass_at_msy
+	  fmsy <- .Object@trace$harvest_rate_at_msy
+	  
+	  ref <- data.frame(iter=iters,bmsy=bmsy,fmsy=fmsy) #,projection_value=projection$scenarios[s])
+	  
+	  res.sc <- merge(res.sc,ref,by="iter")
+	  
+	  res.sc$stock   <- res.sc$stock/res.sc$bmsy
+	  res.sc$harvest <- res.sc$harvest/res.sc$fmsy
+    
+	  if(length(.Object@run)>0) {
+	    run <- .Object@run
+	    res.sc <- data.frame(run=run,res.sc)
+	  }
+  
+	  res[[s]] <- res.sc
+  }
+  
+  names(res) <- projection$scenarios
+  
+  return(res)
+}
+#}
 #{ formatting
-.ioBdm <- function(.Object,prob,what,year,nwrms){
+.io_bdm <- function(res,prob,what,year,nwrms){
     
-    if (!all(what %in% c("trks","pts","smry","wrms","sims"))) 
-      stop("what not in valid options")
-    
-    if (class(.Object) %in% "bdm")
-       res <- .readBdm(.Object) else stop(".Object not of class bdm")
-    
-    if (is.null(year)) pts=max(.Object@data$year)
+    #if (!all(what %in% c("trks","pts","smry","wrms","sims"))) 
+    #  stop("what not in valid options")
+    #
+    #if (class(.Object) %in% "bdm") {
+    #   if(missing(projection)) { res <- .read_bdm(.Object) 
+    #   } else res <- .read_bdm_projection(.Object,projection) 
+    #} else stop(".Object not of class bdm")
+    #
+    if (is.null(year)) pts <- max(res$year)
       
     trks. =NULL
     pts.  =NULL

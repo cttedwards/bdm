@@ -1,7 +1,7 @@
 
 #{{{ projection functions
 setGeneric("project", function(.Object,harvest.project, ...) standardGeneric("project"))
-#{{ project from bdm object under constant harvest or harvest rate
+#{{ project from bdm object under constant harvest or harvest rate specified as a single value across all iterations
 setMethod("project",signature=c("bdm","vector"),function(.Object,harvest.project,time.project,harvest_rate = TRUE, ...) {
   
   # dimensions
@@ -72,10 +72,13 @@ setMethod("project",signature=c("bdm","vector"),function(.Object,harvest.project
   dimnames(ep)      <- list(iter=1:n.iter,time=d.time)
   dimnames(harvest) <- list(iter=1:n.iter,time=d.time,scenario=1:n.scenarios)
   
+  biomass <- apply(x,2:3,function(y) y * exp(.Object@trace$logK))
+  dimnames(biomass) <- list(iter=1:n.iter,time=d.time,scenario=1:n.scenarios)
+  
   if(harvest_rate) {
-    list(run=.Object@run,x=x,epsilon_p=ep,harvest=harvest*x,harvest_rate=harvest)
+    list(run=.Object@run,scenarios=harvest.project,year=d.time,nsamples=n.iter,biomass=biomass,depletion=x,epsilon_p=ep,harvest=harvest*x,harvest_rate=harvest)
   } else {
-    list(run=.Object@run,x=x,epsilon_p=ep,harvest=harvest,harvest_rate=harvest/x)
+    list(run=.Object@run,scenarios=harvest.project,year=d.time,nsamples=n.iter,biomass=biomass,depletion=x,epsilon_p=ep,harvest=harvest,harvest_rate=harvest/x)
   }
 })
 #{
