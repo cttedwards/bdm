@@ -1,5 +1,5 @@
-%\VignetteIndexEntry{bdm}
-%\VignetteIndexEntry{Bayesian biomass dynamic model for fisheries stock assessment}
+%\VignetteIndexEntry{bdm-kobe}
+%\VignetteIndexEntry{Bayesian biomass dynamic model with kobe advice}
 %\VignetteEngine{knitr::knitr}
 %\VignetteDepends{ggplot2,reshape2}
 %\VignettePackage{bdm}
