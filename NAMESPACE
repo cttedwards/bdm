@@ -28,7 +28,8 @@ exportMethods(
     "sr",
     "sr<-",
     "survivorship",
-    "update_bdm" 
+    "update_bdm",
+	"as.kobe"
 )
 exportClasses(
 	 "edat",
