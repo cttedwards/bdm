@@ -38,6 +38,16 @@ mdl <- fit(mdl,dat,iter=5000,thin=10,chain=10)
 traceplot(mdl,pars=c('r','logK'))
 histplot(mdl,pars=c('r','logK'))
 
+# projections
+harvest.time <- 30
+
+harvest.scenarios <- c(10,15,20)
+mdl.projections <- project(mdl,harvest.scenarios,harvest.time,harvest_rate=FALSE)
+
+harvest.scenarios <- c(0.10,0.15,0.20)
+mdl.projections <- project(mdl,harvest.scenarios,harvest.time,harvest_rate=TRUE)
+
+
 #######
 # END #
 #######
