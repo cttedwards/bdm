@@ -7,6 +7,7 @@ exportMethods(
     "fit",
     "initialize",
     "iterate",
+	"project",
 	"histplot",
 	"traceplot",
 	"shape",
