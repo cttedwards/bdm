@@ -2,7 +2,7 @@
 #{{{ as.kobe functions
 setGeneric("as.kobe", function(.Object, ...) standardGeneric("as.kobe"))
 #{{ convert bdm object into kobe dataframe with or without projections
-setMethod("as.kobe",signature=c("bdm"),function(.Object,projection,dir="",
+setMethod("as.kobe",signature=c("bdm"),function(.Object,projection,
                                                 what=c("sims","trks","pts","smry","wrms")[1],
                                                 prob=c(0.75,0.5,.25),year=NULL,nwrms=10) {
       
@@ -62,7 +62,7 @@ setMethod("as.kobe",signature=c("bdm"),function(.Object,projection,dir="",
   return(res)
 }
 #}
-#{ read MCMC stanfit output and projection 
+#{ read MCMC stanfit output and projection (list)
 .read_bdm_projection <- function(.Object,projection){
   
   years <- projection$year
@@ -83,7 +83,7 @@ setMethod("as.kobe",signature=c("bdm"),function(.Object,projection,dir="",
 	  bmsy <- .Object@trace$biomass_at_msy
 	  fmsy <- .Object@trace$harvest_rate_at_msy
 	  
-	  ref <- data.frame(iter=iters,bmsy=bmsy,fmsy=fmsy) #,projection_value=projection$scenarios[s])
+	  ref <- data.frame(iter=iters,bmsy=bmsy,fmsy=fmsy)
 	  
 	  res.sc <- merge(res.sc,ref,by="iter")
 	  
@@ -106,14 +106,6 @@ setMethod("as.kobe",signature=c("bdm"),function(.Object,projection,dir="",
 #{ formatting
 .io_bdm <- function(res,prob,what,year,nwrms){
     
-    #if (!all(what %in% c("trks","pts","smry","wrms","sims"))) 
-    #  stop("what not in valid options")
-    #
-    #if (class(.Object) %in% "bdm") {
-    #   if(missing(projection)) { res <- .read_bdm(.Object) 
-    #   } else res <- .read_bdm_projection(.Object,projection) 
-    #} else stop(".Object not of class bdm")
-    #
     if (is.null(year)) pts <- max(res$year)
       
     trks. =NULL

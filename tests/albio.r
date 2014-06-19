@@ -13,8 +13,6 @@ install.packages("C:/PROJECTS/SOFTWARE/OpenSource/bdm_1.0.zip", repos = NULL)
 
 library(bdm)
 library(kobe)
-library(plyr)
-library(ggplot2)
 
 # load data
 data(albio)
