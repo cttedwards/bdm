@@ -39,3 +39,4 @@ exportClasses(
      "rdat.iter",
      "rprior"
 )
+export(residuals.bdm)

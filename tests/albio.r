@@ -39,6 +39,10 @@ mdl <- fit(mdl,dat,iter=5000,thin=10,chain=2)
 traceplot(mdl,pars=c('r','logK'))
 histplot(mdl,pars=c('r','logK'))
 
+# examine residual distributions
+hist(residuals(mdl)$total_error)
+hist(residuals(mdl)$process_error)
+
 # kobe plot
 assmt <- as.kobe(mdl,what=c('sims','trks','pts'))
 kobePhase(ylim=c(0,max(2,assmt[['pts']]$harvest))) + 
