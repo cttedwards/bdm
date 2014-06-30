@@ -1,7 +1,7 @@
 import(rstan)
 import(ggplot2)
-import(reshape2)
-import(plyr)
+importFrom(reshape2,melt)
+importFrom(plyr,ldply,ddply)
 exportPattern("^[[:alpha:]]+")
 exportMethods(
     "compile_bdm",
@@ -36,7 +36,6 @@ exportClasses(
 	 "edat",
      "bdm",
      "rdat",
-     "rdat.iter",
      "rprior"
 )
-export(residuals.bdm)
+S3method(residuals,bdm)
