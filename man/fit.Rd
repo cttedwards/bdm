@@ -7,16 +7,18 @@ Fit biomass dynamic model to catch and abundance data.
 Implement a Bayesian fit of the biomass dynamic model using the function \code{\link[rstan:sampling]{sampling}} in package \code{\link{rstan}}.
 }
 \usage{
-fit(x,data,init,chains = 4,iter = 2000,warmup = floor(iter/2),thin = 1, ...)
+fit(x,data,init,chains = 4,iter = 2000,warmup = floor(iter/2),thin = 1,run,method="MCMC", ...)
 }
 \arguments{
   \item{x}{An object of class \code{bdm} containing the compiled Stan model.}
   \item{data}{An object of class \code{edat} containing the data. See details.}
-  \item{init}{A list of initial values for the estimated parameters. At a minimum should contain a value for \code{logK}.}
+  \item{init}{A list of initial values for the estimated parameters or a function with no arguments that returns these values when called.}
   \item{chains}{A positive integer specifying number of parrallel markov chains.}
   \item{iter}{A positive integer specifying how many sample iterations for each chain (including warmup).}
   \item{warmup}{A positive integer specifying the number of warmup ('burnin') iterations during which the proposal disbributions are adapated to optimise the retention rate.}
   \item{thin}{A positive integer specifying the period for saving samples.}
+  \item{run}{An optional character string to label the particular run.}
+  \item{method}{The fitting method, either \code{"MCMC"} (the default) or \code{"MPD"}, implemented by the functions \code{\link[rstan:optimizing]{optimizing}} or \code{\link[rstan:sampling]{sampling}} respectively.}
   \item{\dots}{Additional arguments to sampling function. See \code{\link[rstan:sampling]{sampling}}.}
 }
 \details{
