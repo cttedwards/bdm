@@ -19,7 +19,7 @@ setClass("bdm",contains="stanmodel",
                            )
          )
 # initialisation function
-setMethod("initialize","bdm",function(.Object,path,model.code,model.name,compile,default_model) {
+setMethod("initialize","bdm",function(.Object,path,model.code,model.name,compile,default_model, ...) {
   
   require(rstan)
   
@@ -30,7 +30,7 @@ setMethod("initialize","bdm",function(.Object,path,model.code,model.name,compile
     .Object@path <- path
     .Object@model_name <- model.name
     if(compile) {
-      tmp <- stan_model(file=.Object@path)
+      tmp <- stan_model(file=.Object@path, ...)
       
       .Object@model_code <- tmp@model_code
       .Object@model_cpp  <- tmp@model_cpp
@@ -42,7 +42,7 @@ setMethod("initialize","bdm",function(.Object,path,model.code,model.name,compile
     .Object@model_name <- model.name
     .Object@path       <- ifelse(default_model,'default_model','local_declaration')
     if(compile) {
-      tmp <- stan_model(model_code=.Object@model_code)
+      tmp <- stan_model(model_code=.Object@model_code, ...)
       
       .Object@model_cpp  <- tmp@model_cpp
       .Object@dso        <- tmp@dso
@@ -62,7 +62,7 @@ setMethod("initialize","bdm",function(.Object,path,model.code,model.name,compile
   
 })
 # constructor
-bdm <- function(path,model.code,model.name='BDM',compile=FALSE) {
+bdm <- function(path,model.code,model.name='BDM',compile=FALSE, ...) {
   
   bdm_code <- '
     data {
@@ -233,9 +233,9 @@ bdm <- function(path,model.code,model.name='BDM',compile=FALSE) {
     }
   '
 
-  if(!missing(path)) { new('bdm',path=path,model.name=model.name,compile=compile,default_model=FALSE)
-	} else { if(!missing(model.code)) { new('bdm',model.code=model.code,model.name=model.name,compile=compile,default_model=FALSE)
-	} else new('bdm',model.code=bdm_code,model.name=model.name,compile=compile,default_model=TRUE)
+  if(!missing(path)) { new('bdm',path=path,model.name=model.name,compile=compile,default_model=FALSE, ...)
+	} else { if(!missing(model.code)) { new('bdm',model.code=model.code,model.name=model.name,compile=compile,default_model=FALSE, ...)
+	} else new('bdm',model.code=bdm_code,model.name=model.name,compile=compile,default_model=TRUE, ...)
 	}
 }
 #}}}

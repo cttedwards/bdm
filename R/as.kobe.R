@@ -34,7 +34,7 @@ setMethod("as.kobe",signature=c("bdm"),function(.Object,projection,
 #{ read MCMC stanfit output and return data.frame with headers: iter,year,stock,harvest,bmsy,fmsy 
 .read_bdm <- function(.Object){
   
-  years <- .Object@data$year
+  years <- .Object@data$time
   niter <- .Object@nsamples
   iters <- 1:niter
   
@@ -65,7 +65,7 @@ setMethod("as.kobe",signature=c("bdm"),function(.Object,projection,
 #{ read MCMC stanfit output and projection (list)
 .read_bdm_projection <- function(.Object,projection){
   
-  years <- projection$year
+  years <- projection$time
   niter <- projection$nsamples
   iters <- 1:niter
   

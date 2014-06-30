@@ -1,10 +1,10 @@
 
 #{{{ empirical data class
 setClass("edat",contains="list",representation(names="character"))
-setMethod("initialize","edat",function(.Object,index,harvest,year,n,sigmaO,sigmaP,renormalise=TRUE) {
+setMethod("initialize","edat",function(.Object,index,harvest,time,n,sigmao,sigmap,renormalise=TRUE) {
   
   .Object@.Data <- vector('list',8)
-  names(.Object) <- c('T','I','index','harvest','year','n','sigmaO','sigmaP')
+  names(.Object) <- c('T','I','index','harvest','time','n','sigmao','sigmap')
   
   if(!missing(index)) {
     if(any(!is.na(index))) {
@@ -47,31 +47,31 @@ setMethod("initialize","edat",function(.Object,index,harvest,year,n,sigmaO,sigma
       if(T.index!=T.harvest) 
         stop('index and catch (harvest) must have the same time dimension\n')
   
-  if(!missing(year)) {
-    .Object$year <- year
-  } else .Object$year <- 1:length(harvest)
+  if(!missing(time)) {
+    .Object$time <- time
+  } else .Object$time <- 1:length(harvest)
   
   .Object$n <- 2
   if(!missing(n))
     .Object$n <- n
   
-  if(!missing(sigmaO)) {
-    if(length(sigmaO)<.Object$I) {
-		if(length(sigmaO)>1)
-			warning('length of sigmaO is >1 but < number of indices: only first value used\n')
-      sigmaO <- rep(sigmaO[1],.Object$I)
+  if(!missing(sigmao)) {
+    if(length(sigmao)<.Object$I) {
+		if(length(sigmao)>1)
+			warning('length of sigmao is >1 but < number of indices: only first value used\n')
+      sigmao <- rep(sigmao[1],.Object$I)
     }
-	  .Object$sigmaO <- structure(sigmaO,.Dim=.Object$I)
-  } else .Object$sigmaO <- structure(rep(0.2,.Object$I),.Dim=.Object$I)
+	  .Object$sigmao <- structure(sigmao,.Dim=.Object$I)
+  } else .Object$sigmao <- structure(rep(0.2,.Object$I),.Dim=.Object$I)
   
-  if(!missing(sigmaP)) {
-    if(length(sigmaP)>1)
-      warning('length of sigmaP is >1: only first value used\n')
-	  .Object$sigmaP <- structure(sigmaP[1],.Dim=NULL)
-  } else .Object$sigmaP <- structure(0.05,.Dim=NULL)
+  if(!missing(sigmap)) {
+    if(length(sigmap)>1)
+      warning('length of sigmap is >1: only first value used\n')
+	  .Object$sigmap <- structure(sigmap[1],.Dim=NULL)
+  } else .Object$sigmap <- structure(0.05,.Dim=NULL)
 
   .Object
 })
 # constructor
-edat <- function(index,harvest,year, ...) new("edat",index,harvest,year, ...)
+edat <- function(index,harvest,time, ...) new("edat",index,harvest,time, ...)
 #}}}

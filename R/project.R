@@ -11,7 +11,7 @@ setMethod("project",signature=c("bdm","vector"),function(.Object,harvest.project
   n.scenarios  <- length(harvest.project)
   n.iter       <- .Object@nsamples
   
-  d.time <- as.numeric(.Object@data$year)
+  d.time <- as.numeric(.Object@data$time)
   d.time <- c(d.time,(d.time[n.time]+1):(d.time[n.time]+time.project))
   
   # harvest array
@@ -76,9 +76,9 @@ setMethod("project",signature=c("bdm","vector"),function(.Object,harvest.project
   dimnames(biomass) <- list(iter=1:n.iter,time=d.time,scenario=1:n.scenarios)
   
   if(harvest_rate) {
-    list(run=.Object@run,scenarios=harvest.project,year=d.time,nsamples=n.iter,biomass=biomass,depletion=x,epsilon_p=ep,harvest=harvest*x,harvest_rate=harvest)
+    list(run=.Object@run,scenarios=harvest.project,time=d.time,nsamples=n.iter,biomass=biomass,depletion=x,epsilon_p=ep,harvest=harvest*x,harvest_rate=harvest)
   } else {
-    list(run=.Object@run,scenarios=harvest.project,year=d.time,nsamples=n.iter,biomass=biomass,depletion=x,epsilon_p=ep,harvest=harvest,harvest_rate=harvest/x)
+    list(run=.Object@run,scenarios=harvest.project,time=d.time,nsamples=n.iter,biomass=biomass,depletion=x,epsilon_p=ep,harvest=harvest,harvest_rate=harvest/x)
   }
 })
 #{
