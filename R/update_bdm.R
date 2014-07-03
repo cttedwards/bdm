@@ -7,8 +7,8 @@ setMethod("update_bdm",signature=c("bdm","rprior"),function(.Object,x,compile=FA
   if(length(x@lognormal.par)==0)
     x <- .fitr(x)
   
-  logmu    <- signif(x@lognormal.par$mu,3)
-  logsigma <- signif(x@lognormal.par$sigma,3)
+  logmu    <- signif(x@lognormal.par[['E[log(x)]']],3)
+  logsigma <- signif(x@lognormal.par[['SD[log(x)]']],3)
   .Object@model_code <- sub("r.?~.?lognormal\\(.+?\\);",paste("r ~ lognormal(",logmu,",",logsigma,");",sep=""),.Object@model_code)
   
   if(plot) {
