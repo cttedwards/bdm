@@ -12,6 +12,7 @@ exportMethods(
 	"histplot",
 	"traceplot",
 	"shape",
+	"refpoints",
 	"shape<-",
 	"sigmao",
 	"sigmao<-",
