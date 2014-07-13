@@ -35,18 +35,22 @@ Charles T T Edwards \email{charles.edwards@niwa.co.nz}
 # Example calculation of r for New Zealand bluenose
 
 ## initialise life-history data object for calculation of r
-dat <- rdat(amax=60,iter=200)
+lhdat <- rdat(amax=60,iter=200)
 
 ## then life-history vectors can be assigned to each iteration
 ## with or without uncertainty
-nmort(dat)    <- list(mu=list(M=0.1))
-size(dat)     <- list(mu=list(Linf=92.5,k=0.071,t0=-0.5),cv=list(Linf=0.1,k=0.2,t0=0.5))
-mass(dat)     <- list(mu=list(a=9.63e-6,b=3.173))
-maturity(dat) <- list(mu=list(acrit=17))
-sr(dat)       <- list(type='BH',mu=list(h=0.9))
+nmort(lhdat)    <- list(mu=0.1,cv=0.05)
+size(lhdat)     <- list(mu=list(Linf=92.5,k=0.071,t0=-0.5),cv=list(Linf=0.1,k=0.2,t0=0.5))
+mass(lhdat)     <- list(mu=list(a=9.63e-6,b=3.173))
+maturity(lhdat) <- list(mu=list(acrit=17))
+sr(lhdat)       <- list(type='BH',mu=0.9)
 
 ## we can then calculate an rprior distribution
 ## using monte-carlo sampling
-hist(rr <- rcalc(dat))
+hist(rr <- rcalc(lhdat))
 
+## calculate parameters of 
+## log-normal distribution
+rr <- fit(rr)
+rr@lognormal.par
 }
