@@ -13,6 +13,7 @@ setMethod("histplot",signature=c("bdm"), function(.Object,pars,inc_warmup=FALSE)
   
   #############################################################
   # code for extraction of iterations from object@trace_array #
+  # (array with dimensions: iteration; parameter; chain)      #
   #############################################################
   dfr <- data.frame(variable=NULL,chain=NULL,value=NULL)
   
@@ -59,9 +60,10 @@ setMethod("histplot",signature=c("bdm"), function(.Object,pars,inc_warmup=FALSE)
           xlab('Parameter value') +
           ylab('Sample counts') + theme_bw()
   
-  ########################################################
-  # code for extraction of iteractions from object@trace #
-  ########################################################
+  #######################################################
+  # code for extraction of iterations from object@trace #
+  # (list of parameter arrays with all chains combined) #
+  #######################################################
   #loc <- array(dim=c(length(pars),2),dimnames=list(pars,c('i','j')))
   #for(par in pars) {
   #  m <- regexpr('\\[.+\\]',par)
