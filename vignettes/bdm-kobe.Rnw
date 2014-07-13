@@ -147,7 +147,7 @@ mdl <- update_bdm(mdl,list(a=-1.38,b=0.51,par='r'))
 mdl <- compile_bdm(mdl)
 
 # fit model
-mdl <- fit(mdl,dat,iter=2000)
+mdl <- fit(mdl,dat,iter=5000,run='run01')
 @
 
 <<plotdata,echo=FALSE,results="hide",fig.cap='Data intputs for South Atlantic albacore'>>=
@@ -163,11 +163,15 @@ rm(dat.tmp)
 @
 
 <<diagtrace,results="hide",fig.cap='Trace plots for $r$ and $ln(K)$'>>=
-traceplot(mdl,par=c('r','logK'))
+traceplot(mdl,par=c('r','logK'),inc_warmup=FALSE)
 @
 <<diaghist,results="hide",fig.cap='Posterior histograms for $r$ and $ln(K)$'>>=
 histplot(mdl,par=c('r','logK'))
 @
+<<diaghist_catchability,results="hide",fig.cap='Posterior histograms for catchability $q$'>>=
+histplot(mdl,par=c('q'))
+@
+
 
 <<datfit,echo=FALSE,results="hide",fig.cap='observed and predicted abundance indices for each fleet'>>=
 dfro <- mdl@trace$observed_index
@@ -187,7 +191,7 @@ ggplot() + stat_summary(data=dfrp,aes(x=time,y=value),fun.y=function(x) median(x
 
 \subsection{Kobe advice}
 
-It is possible to produce kobe plots by using the \code{bdm::as.kobe} function, which creates a \code{data.frame} in the appropriate format for the \kobe package. The kobe phase plot for albacore is shown in figure \ref{fig:kobeplot}. We also perform some simple projections using \code{bdm::project} and plot the distribution of values from the final year in figure \ref{fig:kobeproj}.
+It is possible to produce kobe plots by using the \code{bdm::as.kobe} function, which creates a \code{data.frame} in the appropriate format for the \kobe package. The kobe phase plot for albacore is shown in figure \ref{fig:kobeplot}. We also perform some simple projections using \code{bdm::project} and plot the distribution of values from the final year in figure \ref{fig:kobeproj}. Predicted biomass dynamics are shown in figure \ref{fig:projplots}.
 
 <<projection>>=
 # projections
@@ -208,6 +212,16 @@ kobePhase(ylim=c(0,max(2,assmt[['pts']]$harvest))) +
 prj <- as.kobe(mdl,mdl.projections,what=c('sims','trks','pts'))
 kobePhase(subset(prj$sims,year==max(prj$sims$year))) +
   geom_point(aes(stock,harvest,group=projection_value,col=projection_value))
+@
+
+<<projplots,echo=FALSE,results="hide",fig.cap='Simple projection box-plots, illustrating predicted dynamics under different harvest rate scenarios.'>>=
+par(mfrow=c(3,1))
+boxplot(mdl.projections$biomass[,,1]/1e6,outline=F,main=paste('Harvest rate:',harvest.scenarios[1]),ylab='Million tonnes')
+abline(v=mdl@data$T,col=4,lty=2)
+boxplot(mdl.projections$biomass[,,2]/1e6,outline=F,main=paste('Harvest rate:',harvest.scenarios[2]),ylab='Million tonnes')
+abline(v=mdl@data$T,col=4,lty=2)
+boxplot(mdl.projections$biomass[,,3]/1e6,outline=F,main=paste('Harvest rate:',harvest.scenarios[3]),ylab='Million tonnes')
+abline(v=mdl@data$T,col=4,lty=2)
 @
 
 \clearpage
