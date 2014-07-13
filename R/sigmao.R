@@ -3,7 +3,7 @@
 setGeneric("sigmao", function(x, ...)
   standardGeneric("sigmao"))
 setMethod("sigmao",signature(x="edat"),
-          function(x) return(x[['sigmaO']])
+          function(x) return(x[['sigmao']])
 )
 #}}}
 
@@ -19,7 +19,7 @@ setMethod("sigmao<-",
                 warning('length of input vector is >1 but < number of indices: only first value used\n')
               value <- rep(value[1],x$I)
             }
-            x$sigmaO <- structure(value,.Dim=x$I)        
+            x$sigmao <- structure(value,.Dim=x$I)        
             
             x
           }
