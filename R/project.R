@@ -40,7 +40,7 @@ setMethod("project",signature=c("bdm","vector"),function(.Object,harvest.project
   ep[,1:n.time] <- .Object@trace$epsilon_p
   
   # process error sigma
-  ep.sigma <- .Object@data$sigmaP
+  ep.sigma <- .Object@data$sigmap
   
   # default process error correlation
   # Thorson (2014) CJFAS
@@ -76,9 +76,9 @@ setMethod("project",signature=c("bdm","vector"),function(.Object,harvest.project
   dimnames(biomass) <- list(iter=1:n.iter,time=d.time,scenario=1:n.scenarios)
   
   if(harvest_rate) {
-    list(run=.Object@run,scenarios=harvest.project,time=d.time,nsamples=n.iter,biomass=biomass,depletion=x,epsilon_p=ep,harvest=harvest*x,harvest_rate=harvest)
+    list(run=.Object@run,scenarios=harvest.project,time=d.time,nsamples=n.iter,biomass=biomass,depletion=x,epsilon_p=ep,harvest=harvest*biomass,harvest_rate=harvest)
   } else {
-    list(run=.Object@run,scenarios=harvest.project,time=d.time,nsamples=n.iter,biomass=biomass,depletion=x,epsilon_p=ep,harvest=harvest,harvest_rate=harvest/x)
+    list(run=.Object@run,scenarios=harvest.project,time=d.time,nsamples=n.iter,biomass=biomass,depletion=x,epsilon_p=ep,harvest=harvest,harvest_rate=harvest/biomass)
   }
 })
 #{
