@@ -84,8 +84,8 @@ bdm <- function(path,model.code,model.name='BDM',compile=FALSE, ...) {
       real q[I];
 
       // variance terms
-      real sigmaosq[I];
-      real sigmapsq;
+      real sigmao2[I];
+      real sigmap2;
 
       // fletcher-schaefer
       // parameters
@@ -101,8 +101,8 @@ bdm <- function(path,model.code,model.name='BDM',compile=FALSE, ...) {
 
       // variance terms
       for(i in 1:I)
-        sigmaosq[i] <- square(sigmao[i]);
-      sigmapsq <- square(sigmap);
+        sigmao2[i] <- square(sigmao[i]);
+      sigmap2 <- square(sigmap);
       
       // compute mpd catchability assuming 
       // constant sigmao over time
@@ -118,7 +118,7 @@ bdm <- function(path,model.code,model.name='BDM',compile=FALSE, ...) {
               p <- p + 1.0;
             }
           }
-          if(p>2.0) { q[i] <- exp(err/p + sigmaosq[i]/2);
+          if(p>2.0) { q[i] <- exp(err/p + sigmao2[i]/2);
   	      } else q[i] <- 0.0;
         }
       }
@@ -136,13 +136,13 @@ bdm <- function(path,model.code,model.name='BDM',compile=FALSE, ...) {
       {
         real H;
         real mu;
-        x[1] ~ lognormal(log(1.0)-sigmapsq/2,sigmap);
+        x[1] ~ lognormal(log(1.0)-sigmap2/2,sigmap);
         for(t in 2:T) {
           H <- fmin(exp(log(harvest[t-1]) - logK),x[t-1]);
           if(x[t-1]<=dmsy) mu <- x[t-1] + r * x[t-1] * (1 - x[t-1]/h) - H;
           if(x[t-1]> dmsy) mu <- x[t-1] + g * m * x[t-1] * (1 - pow(x[t-1],(n-1))) - H;
-          if(mu > 0.0) mu <- log(mu) - sigmapsq/2;
-          else mu <- log(0.01) - sigmapsq/2;
+          if(mu > 0.0) mu <- log(mu) - sigmap2/2;
+          else mu <- log(0.01) - sigmap2/2;
           x[t] ~ lognormal(mu,sigmap);
         }
       }
@@ -154,7 +154,7 @@ bdm <- function(path,model.code,model.name='BDM',compile=FALSE, ...) {
         for(i in 1:I){
           for(t in 1:T){
             if(index[t,i]>0.0 && x[t]>0.0 && q[i]>0.0) {
-              mu <- log(q[i]*x[t]) - sigmaosq[i]/2;
+              mu <- log(q[i]*x[t]) - sigmao2[i]/2;
               index[t,i] ~ lognormal(mu,sigmao[i]);
             }
           }
@@ -166,7 +166,7 @@ bdm <- function(path,model.code,model.name='BDM',compile=FALSE, ...) {
       for(t in 1:T){
       real H_; H_ <- harvest[t]/exp(log(x[t]) + logK);
         if(H_>0.95) {
-          increment_log_prob(-log(H_/0.95) * (1/sigmapsq));
+          increment_log_prob(-log(H_/0.95) * (1/sigmap2));
         }
       }
     }
@@ -184,6 +184,7 @@ bdm <- function(path,model.code,model.name='BDM',compile=FALSE, ...) {
       real current_depletion;
       real current_harvest_rate;
 
+	  real msy;
       real biomass_at_msy;
       real harvest_rate_at_msy;
 
@@ -197,7 +198,7 @@ bdm <- function(path,model.code,model.name='BDM',compile=FALSE, ...) {
           if(x[t-1]<=dmsy) epsilon_p[t-1] <- x[t]/(x[t-1] + r * x[t-1] * (1 - x[t-1]/h) - H);
           if(x[t-1]> dmsy) epsilon_p[t-1] <- x[t]/(x[t-1] + g * m * x[t-1] * (1 - pow(x[t-1],(n-1))) - H);
         }
-        epsilon_p[T] <- lognormal_rng(log(1.0)-sigmapsq/2,sigmap);
+        epsilon_p[T] <- lognormal_rng(log(1.0)-sigmap2/2,sigmap);
       }
       
       for(t in 1:T) {
@@ -212,6 +213,7 @@ bdm <- function(path,model.code,model.name='BDM',compile=FALSE, ...) {
       current_depletion <- x[T];
       current_harvest_rate <- harvest_rate[T];
 
+	  msy <- m * exp(logK);
       biomass_at_msy <- dmsy * exp(logK);
       harvest_rate_at_msy <- m / dmsy;
 
