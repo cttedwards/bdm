@@ -1,4 +1,4 @@
-\name{fit}
+﻿\name{fit}
 \alias{fit}
 \title{
 Fit biomass dynamic model to catch and abundance data.

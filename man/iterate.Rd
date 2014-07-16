@@ -1,4 +1,4 @@
-\name{iterate}
+﻿\name{iterate}
 \alias{iterate}
 \title{
 Add iterative dimension to an \code{rdat} object

@@ -1,4 +1,4 @@
-\name{rcalc}
+﻿\name{rcalc}
 \alias{rcalc}
 \title{
 Calculate intrinsic growth rate

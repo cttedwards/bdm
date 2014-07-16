@@ -1,4 +1,4 @@
-\name{bdm-class}
+﻿\name{bdm-class}
 \Rdversion{1.1}
 \docType{class}
 \alias{bdm-class}

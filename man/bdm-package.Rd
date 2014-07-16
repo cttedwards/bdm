@@ -1,4 +1,4 @@
-\name{bdm-package}
+﻿\name{bdm-package}
 \alias{bdm-package}
 \docType{package}
 \title{

@@ -1,4 +1,4 @@
-\name{sigma}
+﻿\name{sigma}
 \alias{sigma}
 \alias{sigmao}
 \alias{sigmap}

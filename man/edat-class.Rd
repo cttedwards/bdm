@@ -1,4 +1,4 @@
-\name{edat-class}
+﻿\name{edat-class}
 \Rdversion{1.1}
 \docType{class}
 \alias{edat}

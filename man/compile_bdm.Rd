@@ -1,4 +1,4 @@
-\name{compile_bdm}
+﻿\name{compile_bdm}
 \alias{compile_bdm}
 \title{
 Compile Stan model code in \code{bdm} object.

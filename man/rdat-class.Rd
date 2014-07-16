@@ -1,4 +1,4 @@
-\name{rdat-class}
+﻿\name{rdat-class}
 \Rdversion{1.1}
 \docType{class}
 \alias{rdat-class}

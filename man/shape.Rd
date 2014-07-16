@@ -1,4 +1,4 @@
-\name{shape}
+﻿\name{shape}
 \alias{shape}
 \alias{shape<-}
 \title{

@@ -1,4 +1,4 @@
-\name{residuals.bdm}
+﻿\name{residuals.bdm}
 \alias{residuals.bdm}
 \title{
 Extract residuals from \code{bdm} model fit.

@@ -1,4 +1,4 @@
-\name{project}
+﻿\name{project}
 \alias{project}
 \title{
 Projection function for \code{bdm} class object

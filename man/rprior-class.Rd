@@ -1,4 +1,4 @@
-\name{rprior-class}
+﻿\name{rprior-class}
 \Rdversion{1.1}
 \docType{class}
 \alias{rprior-class}

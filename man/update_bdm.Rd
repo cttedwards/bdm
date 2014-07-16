@@ -1,4 +1,4 @@
-\name{update_bdm}
+﻿\name{update_bdm}
 \alias{update_bdm}
 \title{
 Update prior distributions in \code{bdm} object

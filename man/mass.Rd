@@ -1,4 +1,4 @@
-\name{mass}
+﻿\name{mass}
 \alias{mass}
 \alias{mass<-}
 \title{

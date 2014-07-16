@@ -1,4 +1,4 @@
-\name{size}
+﻿\name{size}
 \alias{size}
 \alias{size<-}
 \title{

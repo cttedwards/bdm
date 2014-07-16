@@ -1,4 +1,4 @@
-\name{nmort}
+﻿\name{nmort}
 \alias{nmort}
 \alias{nmort<-}
 \title{
