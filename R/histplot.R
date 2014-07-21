@@ -2,9 +2,7 @@
 #{{{ histogram diagnostic plot
 setGeneric("histplot", function(.Object,pars,inc_warmup=FALSE, ...) standardGeneric("histplot"))
 setMethod("histplot",signature=c("bdm"), function(.Object,pars,inc_warmup=FALSE) {
-  
-  require(ggplot2)
-  
+    
   if(missing(pars)) {
     if(.Object@default_model) 
       pars <- c('r','logK','lp__')

@@ -2,9 +2,6 @@
 #{{{ plot traces
 setMethod("traceplot",signature=list(object="bdm"),function(object, pars, inc_warmup = TRUE, ask = FALSE, ...) {
   
-  require(ggplot2)
-  require(reshape2)
-  
   if(missing(pars)) {
     if(object@default_model) 
       pars <- c('r','logK','lp__')

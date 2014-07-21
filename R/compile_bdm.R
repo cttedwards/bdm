@@ -2,9 +2,7 @@
 #{{{ compile stan model in bdm object
 setGeneric("compile_bdm", function(.Object, ...) standardGeneric("compile_bdm"))
 setMethod("compile_bdm",signature="bdm",function(.Object) {
-  
-  require(rstan)
-  
+    
   if(.Object@path!='default_model' & .Object@path!='local_declaration') {
     tmp <- stan_model(file=.Object@path)
     .Object@model_code <- tmp@model_code

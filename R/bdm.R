@@ -20,9 +20,7 @@ setClass("bdm",contains="stanmodel",
          )
 # initialisation function
 setMethod("initialize","bdm",function(.Object,path,model.code,model.name,compile,default_model, ...) {
-  
-  require(rstan)
-  
+    
   if(missing(model.name)) 
     model.name <- 'BDM'
   
