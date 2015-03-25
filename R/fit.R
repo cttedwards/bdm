@@ -2,7 +2,7 @@
 #{{{ fit functions
 setGeneric("fit", function(.Object,data, ...) standardGeneric("fit"))
 #{{ fit bdm model to data
-setMethod("fit",signature=c("bdm","edat"),function(.Object,data,init,chains,iter,warmup,thin,run,method="MCMC", ...) {
+setMethod("fit",signature=c("bdm","list"),function(.Object,data,init,chains,iter,warmup,thin,run,method="MCMC", ...) {
   
   if(missing(data)) 
     stop('No data object supplied\n')

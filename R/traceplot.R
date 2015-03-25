@@ -1,6 +1,6 @@
 
 #{{{ plot traces
-setMethod("traceplot",signature=list(object="bdm"),function(object, pars, inc_warmup = TRUE, ask = FALSE, ...) {
+setMethod("traceplot",signature="bdm",function(object, pars, inc_warmup = TRUE, ask = FALSE, ...) {
   
   if(missing(pars)) {
     if(object@default_model) 

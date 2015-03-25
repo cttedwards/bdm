@@ -9,12 +9,12 @@ Returns shape information from an \code{edat} object or assigns a value to that 
 }
 \usage{
 shape(object,par)
-shape(object,par) <- data
+shape(object) <- value
 }
 \arguments{
   \item{object:}{An \code{edat} class object}
-  \item{par:}{A character string of either \code{'n'} or \code{'phi'}. Defaults to \code{'n'}. See Details.}
-	\item{data:}{A numeric value}
+  \item{par:}{A character string of either \code{'n'} or \code{'phi'}. Defaults to \code{'phi'}. See Details.}
+  \item{value:}{A numeric value specifying the value of \code{'phi'} i.e. the depletion at MSY.}
 }
 \details{
 The shape parameter determines the depletion at MSY, and can be specified directly as \eqn{n} or via the parameter \eqn{\phi}:

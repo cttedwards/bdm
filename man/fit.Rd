@@ -1,4 +1,4 @@
-﻿\name{fit}
+\name{fit}
 \alias{fit}
 \title{
 Fit biomass dynamic model to catch and abundance data.
@@ -11,7 +11,7 @@ fit(x,data,init,chains = 4,iter = 2000,warmup = floor(iter/2),thin = 1,run,metho
 }
 \arguments{
   \item{x}{An object of class \code{bdm} containing the compiled Stan model.}
-  \item{data}{An object of class \code{edat} containing the data. See details.}
+  \item{data}{An object of class \code{list} or \code{\link[bdm:edat]{edat}} containing the data.}
   \item{init}{A list of initial values for the estimated parameters or a function with no arguments that returns these values when called.}
   \item{chains}{A positive integer specifying number of parrallel markov chains.}
   \item{iter}{A positive integer specifying how many sample iterations for each chain (including warmup).}

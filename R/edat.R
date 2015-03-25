@@ -73,5 +73,5 @@ setMethod("initialize","edat",function(.Object,index,harvest,time,n,sigmao,sigma
   .Object
 })
 # constructor
-edat <- function(index,harvest,time, ...) new("edat",index,harvest,time, ...)
+edat <- function(index,harvest, ...) new("edat",index,harvest, ...)
 #}}}
