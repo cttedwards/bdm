@@ -12,10 +12,10 @@ vignette: >
 ---
 
 ```{r, echo = FALSE}
-knitr::opts_chunk$set(fig.path='fig/bdm-examples-', fig.width=6, tidy=TRUE, tidy.opts=list(blank=TRUE, width.cutoff=80), message=FALSE, warning=FALSE, collapse = TRUE, comment = "#>")
+knitr::opts_chunk$set(fig.path='fig/bdm-examples-', fig.width=6, tidy=TRUE, tidy.opts=list(blank=TRUE, width.cutoff=70), message=FALSE, warning=FALSE, collapse = TRUE, comment = "#>")
 ```
 
-# Example applications of the `bdm` package
+# Example applications of the `bdm` R-package
 
 ```{r, results='hide'}
 library(bdm)
@@ -23,16 +23,13 @@ library(bdm)
 
 ## Chatham Rise Hake
 
-The model is fitted to data from the chatham rise hake fishery in New Zealand, which consists of catches, a commerical abundance index and a survey index. 
+The model is fitted to data from the chatham rise hake fishery in New Zealand, which consists of catches, a commerical abundance index and a survey index. The data are used to initialise an empirical data object (`edat`) that, by default, renormalises the indices to a geometric mean of one. See `?edat` for details.
 
-```{r, results='hide'}
-# load data
+
+```{r hakcr-data, results='hide', fig.cap='Chatham rise hake data'}
 data(hakcr)
 dat <- edat(harvest=hakcr$catch,index=cbind(hakcr$survey,hakcr$cpue),time=rownames(hakcr))
-```
-
-```{r, hakcr-data, echo=FALSE, fig.cap='Chatham rise hake data'}
-plot(1:10)
+plot(dat)
 ```
 
 ### Development of a prior for $r$
