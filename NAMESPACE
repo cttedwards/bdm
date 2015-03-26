@@ -40,3 +40,4 @@ exportClasses(
      "rprior"
 )
 S3method(residuals,bdm)
+S3method(plot,edat)
