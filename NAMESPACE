@@ -11,6 +11,7 @@ exportMethods(
 	"project",
 	"histplot",
 	"traceplot",
+	"figplot",
 	"shape",
 	"refpoints",
 	"shape<-",
@@ -41,3 +42,4 @@ exportClasses(
 )
 S3method(residuals,bdm)
 S3method(plot,edat)
+S3method(plot,rprior)

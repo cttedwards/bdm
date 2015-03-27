@@ -3,7 +3,7 @@
 setGeneric("shape", function(x,par, ...)
   standardGeneric("shape"))
 setMethod("shape",signature(x="edat",par="missing"),
-          function(x,par) {return(x[['phi']])}
+          function(x,par) {return((1/x[['n']])^(1/(x[['n']]-1)))}
 )
 setMethod("shape",signature(x="edat",par="character"),
           function(x,par) {

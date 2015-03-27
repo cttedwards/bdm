@@ -12,7 +12,7 @@ vignette: >
 ---
 
 ```{r, echo = FALSE}
-knitr::opts_chunk$set(fig.path='fig/bdm-examples-', fig.width=6, tidy=TRUE, tidy.opts=list(blank=TRUE, width.cutoff=70), message=FALSE, warning=FALSE, collapse = TRUE, comment = "#>")
+knitr::opts_chunk$set(fig.path='fig/bdm-examples-', fig.width=6, tidy=TRUE, tidy.opts=list(blank=TRUE, width.cutoff=75), message=FALSE, warning=FALSE, collapse = TRUE, comment = "#>")
 ```
 
 # Example applications of the `bdm` R-package
@@ -25,7 +25,6 @@ library(bdm)
 
 The model is fitted to data from the chatham rise hake fishery in New Zealand, which consists of catches, a commerical abundance index and a survey index. The data are used to initialise an empirical data object (`edat`) that, by default, renormalises the indices to a geometric mean of one. See `?edat` for details.
 
-
 ```{r hakcr-data, results='hide', fig.cap='Chatham rise hake data'}
 data(hakcr)
 dat <- edat(harvest=hakcr$catch,index=cbind(hakcr$survey,hakcr$cpue),time=rownames(hakcr))
@@ -34,3 +33,63 @@ plot(dat)
 
 ### Development of a prior for $r$
 Life history data are available, allowing us to populate an object of the `rdat` class. Monte-carlo samples are generated, and application of the `rcalc` function to this class of object calcuates values of $r$ for each iteration, producing an object of the `rprior` class. Finally, there is a `fit` function used to parameterise a log-normal distribution, and thereby to create an informative prior for the intrinsic growth rate. The estimated parameter values can be found in `object@lognormal.par`.
+
+```{r hakrprior, results='hide', fig.cap='Prior for $r$ generated from life-history data for chatham rise hake.'}
+# initialise lh data object for calculation of r with uncertainty
+lhdat <- rdat(amax=100,iter=200)
+
+# then life-history vectors can be assigned to each iteration
+# with or without uncertainty
+nmort(lhdat)    <- list(mu=0.18)
+maturity(lhdat) <- c(0.0,0.01,0.02,0.06,0.14,0.28,0.50,0.72,0.86,0.94,0.98,0.99,1.00)
+size(lhdat)     <- list(mu=list(Linf=106.5,k=0.229,t0=0.01))
+mass(lhdat)     <- list(mu=list(a=1.88e-9,b=3.305))
+sr(lhdat)       <- list(type='BH',mu=0.90,cv=0.10)
+
+# calculate r prior and fit log-normal distribution
+r <- fit(rcalc(lhdat))
+plot(r)
+```
+
+### Estimation of depletion
+The model is initialised using the `bdm` command, with no arguments. Arguments can be supplied in the form or alternative model code, but by default initialisation loads a generalised surplus production model, which will be used for this example. Following initialisation of the model, the prior information on $r$, contained in the `rprior` object, can be loaded using the `update_bdm` function, which takes as input the `bdm` and `rprior` objects. This function updates the model code directly, following which it must be compiled.
+
+```{r, results='hide'}
+mdl <- bdm()
+mdl <- update_bdm(mdl,r,compile=TRUE)
+```
+
+The default generalised surplus production model allows the depletion at maxium sustainable yield (MSY) to be fixed by the user. The depletion at MSY ($\phi$) forms part of the model inputs encoded in the `edat` object and can be accessed or assigned using the `shape` function. For chatham rise hake we assume that MSY occurs at 40\% of the carrying capacity (i.e. $\phi=0.4$). 
+
+```{r} 
+shape(dat) <- 0.4
+```
+
+The model can then be run using the `fit` function, which makes use of the R-package `rstan` to implement an MCMC fit.
+
+```{r, results='hide'}
+mdl <- fit(mdl,dat)
+```
+
+Trace and posterior histogram plots can be produced using the `traceplot` and `histplot` functions.
+
+```{r haktrace, fig.cap='Traceplots for chatham rise hake fit.'}
+traceplot(mdl)
+```
+```{r hakhist, fig.cap='Posterior histograms for chatham rise hake fit.'}
+histplot(mdl,par=c('r','logK','q'))
+```
+
+### Model outputs
+
+We can plot model outputs using the `figplot` function, which by default plots the depletion trajectory. Currently it can also be used to visualise fits to the index data.
+
+```{r hakdep, fig.cap='Estimated depletion for chatham rise hake.'}
+figplot(mdl)
+```
+
+Finally we can use the function `refpoints` to extract the reference point information from the fitted model object.
+
+```{r, results = "asis"}
+pander::pandoc.table(data.frame(lapply(refpoints(mdl),median)))
+```

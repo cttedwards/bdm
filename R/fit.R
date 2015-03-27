@@ -177,20 +177,8 @@ setMethod("fit",signature=c("bdm","list"),function(.Object,data,init,chains,iter
 #}
 #}}
 #{{ fit log-normal distribution to monte-carlo r values
-setMethod("fit",signature=c("rprior","missing"),function(.Object,plot=TRUE, ...) { 
-  
-  .Object <- .fitr(.Object)
-  
-  logmu    <- .Object@lognormal.par[['E[log(x)]']]
-  logsigma <- .Object@lognormal.par[['SD[log(x)]']]
-  
-  if(plot) {
-  	windows()
-  	hist(.Object@.Data,freq=FALSE,xlab='r',ylab='',yaxt='n',main='')
-  	curve(dlnorm(x,logmu,logsigma),col=2,add=T)
-  }
-  
-  .Object
+setMethod("fit",signature=c("rprior","missing"),function(.Object, ...) { 
+  .fitr(.Object)
 })
 #{ fitting function
 .fitr <- function(.Object) {
