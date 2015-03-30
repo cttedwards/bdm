@@ -1,10 +1,11 @@
 ---
-title: "BDM Examples"
+title: "Example applications of `bdm`"
 author: "Charles T T Edwards (NIWA, Wellington, New Zealand)"
 date: "`r Sys.Date()`"
 output:
   rmarkdown::html_vignette:
     fig_caption: yes
+    toc: yes
 vignette: >
   %\VignetteIndexEntry{bdm-examples}
   %\VignetteEngine{knitr::rmarkdown}
@@ -15,13 +16,13 @@ vignette: >
 knitr::opts_chunk$set(fig.path='fig/bdm-examples-', fig.width=6, tidy=TRUE, tidy.opts=list(blank=TRUE, width.cutoff=75), message=FALSE, warning=FALSE, collapse = TRUE, comment = "#>")
 ```
 
-# Example applications of the `bdm` R-package
+Example applications of the `bdm` R-package are given here, based on data from fisheries in New Zealand.
 
 ```{r, results='hide'}
 library(bdm)
 ```
 
-## Chatham Rise Hake
+# Chatham Rise Hake
 
 The model is fitted to data from the chatham rise hake fishery in New Zealand, which consists of catches, a commerical abundance index and a survey index. The data are used to initialise an empirical data object (`edat`) that, by default, renormalises the indices to a geometric mean of one. See `?edat` for details.
 
@@ -31,7 +32,7 @@ dat <- edat(harvest=hakcr$catch,index=cbind(hakcr$survey,hakcr$cpue),time=rownam
 plot(dat)
 ```
 
-### Development of a prior for $r$
+## Development of a prior for $r$
 Life history data are available, allowing us to populate an object of the `rdat` class. Monte-carlo samples are generated, and application of the `rcalc` function to this class of object calcuates values of $r$ for each iteration, producing an object of the `rprior` class. Finally, there is a `fit` function used to parameterise a log-normal distribution, and thereby to create an informative prior for the intrinsic growth rate. The estimated parameter values can be found in `object@lognormal.par`.
 
 ```{r hakrprior, results='hide', fig.cap='Prior for $r$ generated from life-history data for chatham rise hake.'}
@@ -51,7 +52,7 @@ r <- fit(rcalc(lhdat))
 plot(r)
 ```
 
-### Estimation of depletion
+## Estimation of depletion
 The model is initialised using the `bdm` command, with no arguments. Arguments can be supplied in the form or alternative model code, but by default initialisation loads a generalised surplus production model, which will be used for this example. Following initialisation of the model, the prior information on $r$, contained in the `rprior` object, can be loaded using the `update_bdm` function, which takes as input the `bdm` and `rprior` objects. This function updates the model code directly, following which it must be compiled.
 
 ```{r, results='hide'}
@@ -80,16 +81,91 @@ traceplot(mdl)
 histplot(mdl,par=c('r','logK','q'))
 ```
 
-### Model outputs
+## Model outputs
 
-We can plot model outputs using the `figplot` function, which by default plots the depletion trajectory. Currently it can also be used to visualise fits to the index data.
+We can plot model outputs using the `dynplot` function, which by default plots the `depletion` trajectory over time. Currently it can also be used to visualise `biomass`, `surplus_production`, and the `harvest_rate`.
 
 ```{r hakdep, fig.cap='Estimated depletion for chatham rise hake.'}
-figplot(mdl)
+dynplot(mdl)
 ```
 
-Finally we can use the function `refpoints` to extract the reference point information from the fitted model object.
+Plotting functions `traceplot`, `histplot` and `dynplot` return graphical objects from the `ggplot2` package and can be modified before they are printed. For example, to add a title to the plot of surplus production and change the y-axis one could type:
 
-```{r, results = "asis"}
+```{r, fig.show='hide'}
+gg <- dynplot(mdl, pars='surplus_production')
+gg <- gg + ggtitle('Surplus Production') + coord_cartesian(ylim=c(0,0.5))
+print(gg)
+```
+
+We can use the function `refpoints` to extract the reference point information from the fitted model object as a `list` that contains `msy`, `depletion_at_msy` (which is equal to $\phi$), `biomass_at_msy` and `harvest_rate_at_msy`. These reference points are functions of $r$, $K$ and $\phi$, and therefore (with the exception of $\phi$ itself) have a posterior distribution. We can extract the median values and write them in a table using `pander::pandoc.table`: 
+
+```{r hakrefpts, results = "asis"}
 pander::pandoc.table(data.frame(lapply(refpoints(mdl),median)))
 ```
+
+Similarly, the function `status` can be used to access posterior distributions of `current_biomass`, `current_depletion` and `current_harvest_rate`, which correspond to the final assessment year, i.e. `dat$time[dat$T]`. We could easily plot these as histograms, using for example:
+
+```{r, fig.show='hide'}
+sta <- status(mdl)
+hist(sta$current_depletion)
+```
+
+It is possible to produce kobe plots by using the `as.kobe` function, which creates a `data.frame` in the appropriate format for the kobe package. 
+
+```{r}
+assmt <- as.kobe(mdl, what=c('sims','trks','pts'))
+```
+
+The kobe phase plot is produced using the `kobe::kobePhase` function.
+
+```{r kobeplot, results="hide",fig.cap='Kobe plot of current stock status.'}
+library(kobe)
+kobePhase(subset(assmt$sims,year==max(assmt$sims$year))) +
+  geom_point(aes(stock,harvest), alpha=0.1)
+```
+
+# Chatham Rise Orange Roughy
+
+```{r orhcr-data, results='hide', fig.cap='Chatham rise orange roughy data'}
+data(orhcr)
+dat <- edat(harvest=orhcr$catch,index=as.matrix(orhcr[,-1]),time=rownames(orhcr))
+plot(dat)
+```
+
+
+```{r orhrprior, results='hide', fig.cap='Prior for $r$ generated from life-history data for chatham rise orange roughy.'}
+# initialise lh data object for calculation of r with uncertainty
+lhdat <- rdat(amax=130,iter=200)
+
+# then life-history vectors can be assigned to each iteration
+# with or without uncertainty
+nmort(lhdat)    <- list(mu=0.045,cv=0.2)
+maturity(lhdat) <- list(mu=list(acrit=35.67,delta=1.55))
+size(lhdat)     <- list(mu=list(Linf=37.78,k=0.059,t0=-0.491))
+mass(lhdat)     <- list(mu=list(a=8.0e-2,b=2.75))
+sr(lhdat)       <- list(type='BH',mu=0.75,cv=0.10)
+
+# calculate r prior and fit log-normal distribution
+r <- fit(rcalc(lhdat))
+plot(r)
+```
+
+```{r, results='hide'}
+mdl <- bdm()
+mdl <- update_bdm(mdl,r,compile=TRUE)
+```
+
+```{r, results='hide'}
+mdl <- fit(mdl,dat)
+```
+
+Trace and posterior histogram plots produced using the `traceplot` and `histplot` functions.
+
+```{r orhtrace, fig.cap='Traceplots for chatham rise orange roughy fit.'}
+traceplot(mdl,par=c('r','logK'))
+```
+```{r orhhist, fig.cap='Posterior histograms for chatham rise orange roughy fit.'}
+histplot(mdl,par=c('r','logK'))
+```
+
+

@@ -58,9 +58,9 @@ setMethod("traceplot",signature="bdm",function(object, pars, inc_warmup = TRUE, 
   gg <- gg + geom_line(aes(x=iteration,y=value,col=chain)) + 
     facet_wrap(~variable,scales='free_y') +
     xlab('Iteration') +
-    ylab('Parameter value') + theme_bw()
+    ylab('Parameter value') + .theme_bdm()
   
-  suppressMessages(print(gg))
+  return(gg)
   
 })
 #}}}

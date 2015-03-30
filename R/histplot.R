@@ -56,7 +56,7 @@ setMethod("histplot",signature=c("bdm"), function(.Object,pars,inc_warmup=FALSE)
           geom_histogram(aes(x=value,fill=chain),position='stack') + 
           facet_wrap(~variable,scales='free_x') +
           xlab('Parameter value') +
-          ylab('Sample counts') + theme_bw()
+          ylab('Sample counts') + .theme_bdm()
   
   #######################################################
   # code for extraction of iterations from object@trace #
@@ -101,6 +101,6 @@ setMethod("histplot",signature=c("bdm"), function(.Object,pars,inc_warmup=FALSE)
   #        xlab('Parameter value') +
   #        ylab('Sample counts') + theme_bw()
   
-  suppressMessages(suppressWarnings(print(gg)))
+  return(gg)
 })
 #}}}
