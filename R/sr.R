@@ -23,8 +23,6 @@ setMethod("sr<-",
                 if(x@sr=='BH') hmax <- 1
                 if(x@sr=='RK') hmax <- 165
                 
-                # numerically serach for Beta distribution parameters
-                # that give required mean and cv
                 bdist.mu <- function(alpha,beta) alpha/(alpha+beta)
                 bdist.sd <- function(alpha,beta) sqrt(alpha*beta / ((alpha+beta)^2 * (alpha+beta+1)))
                 
@@ -36,14 +34,8 @@ setMethod("sr<-",
                 }
                 
                 par.opt <- optim(c(3,2),obj)$par
-                cat('optimised mean and cv:',round(sr.mu(par.opt[1],par.opt[2]),2),';',round(sr.cv(par.opt[1],par.opt[2]),2),'\ngiving Beta distribution parameters alpha =',round(par.opt[1],2), 'and beta =',round(par.opt[2],2),'\n')
+                cat('optimised mean and cv:',round(sr.mu(par.opt[1],par.opt[2]),2),';',round(sr.cv(par.opt[1],par.opt[2]),2),'\n')
                 
-                # export Beta distribution parameters to global
-                # environment
-                .alpha <<- par.opt[1]
-                .beta  <<- par.opt[2]
-                
-                # simulate steepness values
                 x@lhdat[['h']][] <- 0.2 + rbeta(x@iter,par.opt[1],par.opt[2]) * (hmax - 0.2)
               
               } else {
