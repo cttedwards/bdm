@@ -12,6 +12,7 @@ exportMethods(
 	"histplot",
 	"traceplot",
 	"dynplot",
+	"idxplot",
 	"shape",
 	"refpoints",
 	"status",
