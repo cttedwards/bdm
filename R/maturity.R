@@ -49,7 +49,9 @@ setMethod("maturity<-",
             
             mat.mu <- value
             if(length(mat.mu)<x@amax)
-              mat.mu[(length(mat.mu)+1):x@amax] <- rep(mat.mu[length(mat.mu)],x@amax-length(mat.mu))
+                mat.mu[(length(mat.mu)+1):x@amax] <- rep(mat.mu[length(mat.mu)],x@amax-length(mat.mu))
+            if(length(mat.mu)>x@amax)
+                mat.mu <- mat.mu[1:x@amax]
             
             x@lhdat[['maturity']] <- apply(x@lhdat[['maturity']],2,function(x) mat.mu)
             
