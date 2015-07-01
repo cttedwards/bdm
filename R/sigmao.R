@@ -25,4 +25,19 @@ setMethod("sigmao<-",
           }
 )
 #}}
+#{{ numeric
+setMethod("sigmao<-",
+          signature(x="edat",value="matrix"),
+          function(x,i,j, ...,value) {
+              
+              if(any(dim(value) != dim(x$index))) {
+                warning('dimensions do not match index dimensions\n')
+              } else {
+                x$sigmao <- structure(value, .Dim = dim(x$index))        
+              }
+              
+              x
+          }
+)
+#}}
 #}}}

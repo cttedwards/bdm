@@ -103,7 +103,8 @@ bdm <- function(path,model.code,model.name='BDM',compile=FALSE, ...) {
       sigmap2 <- square(sigmap);
       
       // compute mpd catchability assuming 
-      // constant sigmao over time
+      // constant sigmao over time and a
+      // uniform prior on q
       {
         real err;
         real p;
