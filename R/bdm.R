@@ -129,7 +129,6 @@ bdm <- function(path,model.code,model.name='BDM',compile=FALSE, ...) {
       // ********************
       logK ~ uniform(3.0,30.0);
       r ~ lognormal(-1.0,0.20);
-	  increment_log_prob(-logK);
       
       // state equation
       // **************
