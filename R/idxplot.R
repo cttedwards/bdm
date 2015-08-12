@@ -3,12 +3,12 @@
 setGeneric("idxplot", function(.Object, labels, ...) standardGeneric("idxplot"))
 setMethod("idxplot",signature=c("bdm"), function(.Object, labels, ...) {
   
-  nidx <- .Object@data[['I']]
-  time <- .Object@data[['time']]
+  nidx     <- .Object@data[['I']]
+  time     <- .Object@data[['time']]
   nsamples <- .Object@nsamples
   
   if(missing(labels))
-      labels <- paste('index:',1:nidx,sep='')
+      labels <- paste('index:', 1:nidx, sep='')
       
   #######################################################
   # code for extraction of iterations from object@trace #

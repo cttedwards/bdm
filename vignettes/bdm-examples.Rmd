@@ -72,13 +72,16 @@ The model can then be run using the `fit` function, which makes use of the R-pac
 mdl <- fit(mdl,dat)
 ```
 
-Trace and posterior histogram plots can be produced using the `traceplot` and `histplot` functions.
+Trace, posterior histogram and cumulative density plots can be produced using the `traceplot`, `histplot` and `cumsumplot` functions.
 
 ```{r haktrace, fig.cap='Traceplots for chatham rise hake fit.'}
 traceplot(mdl)
 ```
 ```{r hakhist, fig.cap='Posterior histograms for chatham rise hake fit.'}
 histplot(mdl,par=c('r','logK','q'))
+```
+```{r hakcumsum, fig.cap='Cumulative posterior denisty plot for chatham rise hake fit.'}
+cumsumplot(mdl,par=c('r','logK'))
 ```
 
 ## Model outputs
