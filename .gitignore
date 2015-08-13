@@ -1,3 +1,6 @@
 inst/doc
 vignettes/fig
 *.html
+*.Rproj.user
+*.Rproj
+.Rbuildignore
