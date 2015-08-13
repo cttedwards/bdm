@@ -55,14 +55,16 @@ setMethod("initialize","edat",function(.Object,index,harvest,time,n,sigmao,sigma
   if(!missing(n))
     .Object$n <- n
   
+  sigmao.dim    <- c(.Object$T,.Object$I)
+  sigmao.length <- .Object$T * .Object$I
   if(!missing(sigmao)) {
-    if(length(sigmao)<.Object$I) {
+    if(length(sigmao) < sigmao.length) {
 		if(length(sigmao)>1)
-			warning('length of sigmao is >1 but < number of indices: only first value used\n')
-      sigmao <- rep(sigmao[1],.Object$I)
+			warning('dimensions for sigmao do not match dimensions for indices\n')
+      sigmao <- rep(sigmao[1], sigmao.length)
     }
-	  .Object$sigmao <- structure(sigmao,.Dim=.Object$I)
-  } else .Object$sigmao <- structure(rep(0.2,.Object$I * .Object$T),.Dim=c(.Object$T,.Object$I))
+	  .Object$sigmao <- structure(sigmao, .Dim = sigmao.dim)
+  } else .Object$sigmao <- structure(rep(0.2, sigmao.length),.Dim = sigmao.dim)
   
   if(!missing(sigmap)) {
     if(length(sigmap)>1)
