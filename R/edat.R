@@ -1,7 +1,7 @@
 
 #{{{ empirical data class
 setClass("edat",contains="list",representation(names="character"))
-setMethod("initialize","edat",function(.Object,index,harvest,time,n,sigmao,sigmap,renormalise=TRUE) {
+setMethod("initialize","edat",function(.Object,index,harvest,time,n,sigmao,sigmap,renormalise=FALSE) {
   
   .Object@.Data <- vector('list',8)
   names(.Object) <- c('T','I','index','harvest','time','n','sigmao','sigmap')
@@ -23,10 +23,10 @@ setMethod("initialize","edat",function(.Object,index,harvest,time,n,sigmao,sigma
 		renorm <- function(x) { y<-x[x>0]; x[x>0] <- y/mean(y); x }		# arithmetic mean
         if(.Object$I>1) {
           .Object$index <- apply(index,2,renorm)
-          cat('Re-normalised indices.\n')
+          message('Re-normalised indices')
         } else {
           .Object$index <- renorm(index)
-          cat('Re-normalised index.\n')
+          message('Re-normalised index')
         }
       }
     }
@@ -35,7 +35,7 @@ setMethod("initialize","edat",function(.Object,index,harvest,time,n,sigmao,sigma
   if(!missing(harvest)) {
     if(any(!is.na(harvest))) {
     
-      harvest[which(is.na(harvest))] <- -1
+      harvest[which(is.na(harvest))] <- 0
       
       .Object$T       <- T.harvest <- length(harvest)
       .Object$harvest <- harvest
@@ -59,11 +59,11 @@ setMethod("initialize","edat",function(.Object,index,harvest,time,n,sigmao,sigma
   sigmao.length <- .Object$T * .Object$I
   if(!missing(sigmao)) {
     if(length(sigmao) < sigmao.length) {
-		if(length(sigmao)>1)
-			warning('dimensions for sigmao do not match dimensions for indices\n')
-      sigmao <- rep(sigmao[1], sigmao.length)
+		if(sigmao.length %% length(sigmao) != 0)
+			stop('dimensions for sigmao do not match dimensions for indices\n')
+      sigmao <- matrix(sigmao, sigmao.dim[1], sigmao.dim[2], byrow = TRUE)
     }
-	  .Object$sigmao <- structure(sigmao, .Dim = sigmao.dim)
+	.Object$sigmao <- structure(sigmao, .Dim = sigmao.dim)
   } else .Object$sigmao <- structure(rep(0.2, sigmao.length),.Dim = sigmao.dim)
   
   if(!missing(sigmap)) {
