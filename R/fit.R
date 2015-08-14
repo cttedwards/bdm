@@ -28,7 +28,7 @@ setMethod("fit",signature=c("bdm","list"),function(.Object,data,init,chains,iter
       r    <- init.r * rlnorm(1,log(1)-0.04/2,0.2)
       logK <- max(min(log(r/b),30),3)
       
-      x    <- .getx(r,logK,.Object)
+      x    <- getx(data, r, logK)
       
       init.values <- list(logK   = logK,
                           r      = r,
@@ -39,13 +39,13 @@ setMethod("fit",signature=c("bdm","list"),function(.Object,data,init,chains,iter
     
     if(missing(init)) {
       
-      init.r    <- .getr(.Object)
-      init.logK <- .getlogK(.Object)
+      init.r    <- getr(.Object)
+      init.logK <- getlogK(data, r = init.r)
   	
     } else {
       if(is.list(init)) {
-    		if(!is.null(init$logK)) init.logK <- init$logK else init.logK <- .getlogK(.Object)
-    		if(!is.null(init$r))    init.r    <- init$r    else init.r    <- .getr(.Object)
+          if(!is.null(init$r))    init.r    <- init$r    else init.r    <- getr(.Object)
+    	  if(!is.null(init$logK)) init.logK <- init$logK else init.logK <- getlogK(data, r = init.r)
       }
       if(is.function(init)) {
         init.func <- init
@@ -95,7 +95,7 @@ setMethod("fit",signature=c("bdm","list"),function(.Object,data,init,chains,iter
   .Object
 })
 #{ initial value functions for r, logK and x
-.getr <- function(.Object) {
+getr <- function(.Object) {
   
   # extract r from model_code
   
@@ -119,15 +119,13 @@ setMethod("fit",signature=c("bdm","list"),function(.Object,data,init,chains,iter
   
   init.r
 }
-.getlogK <- function(.Object) {
+getlogK <- function(data, r) {
   
   # get logK through grid search
   # assuming a logistic production model
   
-  rr <- .getr(.Object)
-  
-  ii <- .Object@data$index
-  cc <- .Object@data$harvest
+  ii <- data$index
+  cc <- data$harvest
   tt <- length(cc)
   bm <- numeric(tt)
   
@@ -139,7 +137,7 @@ setMethod("fit",signature=c("bdm","list"),function(.Object,data,init,chains,iter
   
     bm[1] <- 1
     for(t in 1:tt) 
-      bm[t+1] <- max(bm[t] + rr*bm[t]*(1 - bm[t]) - cc[t]/exp(logK),ll)
+      bm[t+1] <- max(bm[t] + r*bm[t]*(1 - bm[t]) - cc[t]/exp(logK),ll)
     bm <- bm[-length(bm)]
   
     q <- mean(apply(ii,2,function(x) exp(mean(log(x[x>0]/bm[x>0])))))
@@ -157,9 +155,9 @@ setMethod("fit",signature=c("bdm","list"),function(.Object,data,init,chains,iter
   
   init.logK
 }
-.getx <- function(r,logK,.Object) {
-
-  cc <- .Object@data$harvest
+getx <- function(data, r, logK) {
+    
+  cc <- data$harvest
   tt <- length(cc)
   bm <- numeric(tt)
   
