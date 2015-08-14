@@ -1,4 +1,8 @@
-
+#'
+#' @title Estimate initial value for logK using prior mean value for the intrinsic growth rate
+#' 
+#' @export
+#' 
 getlogK <- function(data, r) {
     
     # get logK through grid search

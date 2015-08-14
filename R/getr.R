@@ -1,3 +1,8 @@
+#'
+#' @title Extract prior mean value for the intrinsic growth rate from the model code
+#' 
+#' @export
+#' 
 getr <- function(.Object) {
     
     # extract r from model_code

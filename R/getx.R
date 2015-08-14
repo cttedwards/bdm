@@ -1,3 +1,8 @@
+#'
+#' @title Estimate initial depletion values
+#' 
+#' @export
+#' 
 getx <- function(data, r, logK) {
     
     cc <- data$harvest
