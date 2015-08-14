@@ -55,7 +55,7 @@ setMethod("cumsumplot",signature=c("bdm"), function(.Object,pars,inc_warmup=FALS
   dfr <- plyr::ddply(dfr, .(variable,chain), summarize, value = value[order(value)], cumsum = (1:length(chain))/length(chain))
   
   gg <- ggplot(dfr) + 
-          geom_line(aes(x=value,y=cumsum,col=chain)) + 
+          geom_line(aes(x=value,y=cumsum,col=chain),size=1.5) + 
           facet_wrap(~variable,scales='free_x') +
           xlab('Parameter value') +
           ylab('Cumulative Sum') + .theme_bdm()

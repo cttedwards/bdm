@@ -11,15 +11,20 @@ setMethod("sigmao",signature(x="edat"),
 setGeneric("sigmao<-", function(x,i,j, ...,value) standardGeneric("sigmao<-"))
 #{{ numeric
 setMethod("sigmao<-",
-          signature(x="edat",value="numeric"),
+          signature(x = "edat", value = "numeric"),
           function(x,i,j, ...,value) {
             
-            if(length(value)<x$I) {
-              if(length(value)>1)
-                warning('length of input vector is >1 but < number of indices: only first value used\n')
-              value <- rep(value[1],x$I)
-            }
-            x$sigmao <- structure(value,.Dim=x$I)        
+              sigmao.dim    <- c(x$T, x$I)
+              sigmao.length <- x$T * x$I
+              
+              if(length(value) < sigmao.length) {
+                  if(sigmao.length %% length(value) != 0)
+                      stop('dimensions for sigmao do not match dimensions for indices\n')
+                  value <- matrix(value, sigmao.dim[1], sigmao.dim[2], byrow = TRUE)
+              }
+            x$sigmao <- structure(value, .Dim = sigmao.dim)   
+            
+            .Object$sigmao[.Object$index == -1] <- -1
             
             x
           }
