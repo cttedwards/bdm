@@ -97,10 +97,6 @@ setMethod("fit",signature=c("bdm","list"),function(.Object,data,init,chains,iter
 #}}
 #{{ fit log-normal distribution to monte-carlo r values
 setMethod("fit",signature=c("rprior","missing"),function(.Object, ...) { 
-  .fitr(.Object)
-})
-#{ fitting function
-.fitr <- function(.Object) {
   
   x <- .Object@.Data
   if(!length(x)>2) stop('need >2 r values')
@@ -124,7 +120,7 @@ setMethod("fit",signature=c("rprior","missing"),function(.Object, ...) {
   .Object@lognormal.par <- list('E[log(x)]'=mu,'SD[log(x)]'=sigma,'E[x]'=theta,'VAR[x]'=nu,'CV[x]'=cv)
   return(.Object)
   
-}
+})
 #}
 #}}
 #}}}
