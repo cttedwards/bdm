@@ -22,7 +22,9 @@ setMethod("sigmao<-",
                       stop('dimensions for sigmao do not match dimensions for indices\n')
                   value <- matrix(value, sigmao.dim[1], sigmao.dim[2], byrow = TRUE)
               }
-            x$sigmao <- structure(value, .Dim = sigmao.dim)        
+            x$sigmao <- structure(value, .Dim = sigmao.dim)   
+            
+            .Object$sigmao[.Object$index == -1] <- -1
             
             x
           }

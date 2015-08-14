@@ -65,6 +65,7 @@ setMethod("initialize","edat",function(.Object,index,harvest,time,n,sigmao,sigma
     }
 	.Object$sigmao <- structure(sigmao, .Dim = sigmao.dim)
   } else .Object$sigmao <- structure(rep(0.2, sigmao.length),.Dim = sigmao.dim)
+  .Object$sigmao[.Object$index == -1] <- -1
   
   if(!missing(sigmap)) {
     if(length(sigmap)>1)
