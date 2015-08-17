@@ -1,68 +1,28 @@
-
+#' @title Create bdm object
+#' 
+#' @description Initialise biomass dynamic model (bdm) class object
+#' 
+#' @export
+#' 
+#' @include bdm-initialize.R
+#'
 #{{{
-# class definition
-setClass("bdm",contains="stanmodel",
-                slots=list(data="list",            # edat object or list
-                           init.func="function",   # initialisation function
-                           init.values="list",     # initial values populated by init.func
-                           chains="numeric",       # number of MCMC chains
-                           iter="numeric",         # number of MCMC iterations per chain
-                           warmup="numeric",       # number of iterations under adaptive sampling
-                           thin="numeric",         # interval between recorded samples
-                           nsamples="numeric",     # total number of posterior samples recorded
-                           trace_array="array",    # array of posterior samples including warmup
-                           trace="list",           # list of posterior samples without warmup and with chains mixed
-                           mpd="list",             # mpd output from rstan::optimizing()
-                           path="character",       # optional path to stan model code file for initialisaton of non-default model
-                           run="character",        # optional label for this particular run
-                           default_model="logical" # is the default fletcher-schaefer hybrid model retained?
-                           )
-         )
-# initialisation function
-setMethod("initialize","bdm",function(.Object,path,model.code,model.name,compile,default_model, ...) {
-    
-  if(missing(model.name)) 
-    model.name <- 'BDM'
-  
-  if(!missing(path)) {
-    .Object@path <- path
-    .Object@model_name <- model.name
-    if(compile) {
-      tmp <- stan_model(file=.Object@path, ...)
-      
-      .Object@model_code <- tmp@model_code
-      .Object@model_cpp  <- tmp@model_cpp
-      .Object@dso        <- tmp@dso
-    }
-  }
-  if(!missing(model.code)) {
-    .Object@model_code <- model.code
-    .Object@model_name <- model.name
-    .Object@path       <- ifelse(default_model,'default_model','local_declaration')
-    if(compile) {
-      tmp <- stan_model(model_code=.Object@model_code, ...)
-      
-      .Object@model_cpp  <- tmp@model_cpp
-      .Object@dso        <- tmp@dso
-    }
-  }
-  
-  .Object@chains <- 4
-  .Object@iter   <- 2000
-  .Object@thin   <- 1
-  .Object@warmup <- floor(.Object@iter/2/.Object@thin)
-  
-  .Object@nsamples <- ((.Object@iter - .Object@warmup) * .Object@chains)/.Object@thin
-  
-  .Object@default_model <- default_model
-  
-  .Object
-  
-})
 # constructor
-bdm <- function(path,model.code,model.name='BDM',compile=FALSE, ...) {
-  
-    bdm_code <- '
+bdm <- function(path, model.code, model.name = 'BDM', compile = FALSE, ...) {
+    if (!missing(path)) { 
+        new('bdm', path = path, model.name = model.name, compile = compile, default_model = FALSE, ...)
+    } else { 
+        if (!missing(model.code)) { 
+            new('bdm', model.code = model.code, model.name = model.name, compile = compile, default_model = FALSE, ...)
+        } else {
+                new('bdm', model.code = .bdm_code, model.name = model.name, compile = compile, default_model = TRUE, ...)
+        }
+    }
+}
+#}}}
+#{{{
+# default model
+.bdm_code <- '
     data {
     int T;
     int I;
@@ -238,10 +198,4 @@ bdm <- function(path,model.code,model.name='BDM',compile=FALSE, ...) {
     
     }
 '
-
-  if(!missing(path)) { new('bdm',path=path,model.name=model.name,compile=compile,default_model=FALSE, ...)
-	} else { if(!missing(model.code)) { new('bdm',model.code=model.code,model.name=model.name,compile=compile,default_model=FALSE, ...)
-	} else new('bdm',model.code=bdm_code,model.name=model.name,compile=compile,default_model=TRUE, ...)
-	}
-}
 #}}}
