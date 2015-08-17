@@ -1,8 +1,12 @@
-
-#{{{ fit functions
-setGeneric("fit", function(.Object,data, ...) standardGeneric("fit"))
-#{{ fit bdm model to data
-setMethod("fit",signature = c("bdm","list"),function(.Object,data,init,chains,iter,warmup,thin,run,method = "MCMC", ...) {
+#'
+#' @title Fit bdm model
+#' 
+#' @export
+#' 
+#' @include fit-generic.R
+#' 
+# S4 method for S4 bdm class object
+setMethod("fit",signature = c("bdm","list"), function(.Object,data,init,chains,iter,warmup,thin,run,method = "MCMC", ...) {
   
   if (missing(data)) 
     stop('No data object supplied\n')
@@ -14,7 +18,7 @@ setMethod("fit",signature = c("bdm","list"),function(.Object,data,init,chains,it
     .Object@run <- as.character(run) 
   
   # check data
-  if (any(data$harvest<0) | any(is.na(data$harvest))) 
+  if (any(data$harvest < 0) | any(is.na(data$harvest))) 
     stop('missing catch (harvest) data is not allowed\n')
   .Object@data <- lapply(data,function(x) x)
     
@@ -94,5 +98,3 @@ setMethod("fit",signature = c("bdm","list"),function(.Object,data,init,chains,it
   
   .Object
 })
-#}}
-
