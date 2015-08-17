@@ -3,6 +3,5 @@
 #' 
 #' @export
 #' 
-
 # S4 generic function
 setGeneric("fit", function(.Object, ...) standardGeneric("fit"))

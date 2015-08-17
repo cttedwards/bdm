@@ -3,6 +3,5 @@
 #' 
 #' @export
 #' 
-
 # S3 generic function
 getr <- function(x, ...) UseMethod("getr")
