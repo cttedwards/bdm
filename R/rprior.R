@@ -1,16 +1,12 @@
-
-#{{{ rprior class
-setClass("rprior",contains="numeric",slots=list(lognormal.par="list"))
-setMethod("initialize","rprior",function(.Object,x) {
-  
-  if(missing(x)) .Object@.Data <- numeric()
-  else {
-    if(length(x)>1) .Object@.Data <- as.numeric(x)
-    else            .Object@.Data <- numeric(x)
-  }
-  .Object
-  
-})
+#' @title Create rprior object
+#' 
+#' @description Initialise rprior class object
+#' 
+#' @export
+#' 
+#' @include rprior-initialize.R
+#'
+#{{{
 # constructor
-rprior <- function(x=0L) new("rprior",x)
+rprior <- function(x = 0L) new("rprior", x)
 #}}}
