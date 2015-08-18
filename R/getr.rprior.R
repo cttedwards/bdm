@@ -9,7 +9,9 @@
 getr.rprior <- function(.Object) {
     
     x <- .Object@.Data
-    if (!length(x) > 2) stop('need >2 r values')
+    if (!length(x) > 2) {
+        stop('rprior object should contain vector of r values')
+    }
     
     # transform to normal
     y <- log(x)
