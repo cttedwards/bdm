@@ -18,7 +18,7 @@ setMethod("update_bdm",signature=c("bdm","rprior"),function(.Object,x,compile=FA
   }
   
   if(compile)
-    .Object <- compile_bdm(.Object)
+    .Object <- compile(.Object)
   
   .Object
 })
