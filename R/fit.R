@@ -32,7 +32,7 @@ setMethod("fit", signature = c("bdm", "list"), function(.Object, data, init, cha
       r    <- init.r * rlnorm(1,log(1)-0.04/2,0.2)
       logK <- max(min(log(r/b),30),3)
       
-      x    <- getx(data, r, logK)
+      x    <- getx(.Object, r, logK)
       
       init.values <- list(logK    =  logK,
                           r       =  r,
@@ -44,12 +44,12 @@ setMethod("fit", signature = c("bdm", "list"), function(.Object, data, init, cha
     if (missing(init)) {
       
       init.r    <- getr(.Object)[['E[r]']]
-      init.logK <- getlogK(data, r  =  init.r)
+      init.logK <- getlogK(.Object, r  =  init.r)
   	
     } else {
       if (is.list(init)) {
           if (!is.null(init$r))    init.r    <- init$r    else init.r    <- getr(.Object)[['E[r]']]
-    	  if (!is.null(init$logK)) init.logK <- init$logK else init.logK <- getlogK(data, r  =  init.r)
+    	  if (!is.null(init$logK)) init.logK <- init$logK else init.logK <- getlogK(.Object, r  =  init.r)
       }
       if (is.function(init)) {
         init.func <- init
