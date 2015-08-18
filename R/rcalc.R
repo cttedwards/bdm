@@ -12,13 +12,13 @@ setMethod("rcalc", signature = "rdat", function(.Object, ...) {
   prior <- new('rprior',n)
   
   for (i in 1:n)
-    prior[i] <- .rcalc(.iter(.Object,i))
+    prior[i] <- rcalc(iteration(.Object, i))
   
   return(prior)
   
 })
 
-.rcalc <- function(.Object) {
+setMethod("rcalc", signature = "rdatIter", function(.Object, ...) {
   
   # survivorship
   l <- .Object@lhdat[['survivorship']]
@@ -46,11 +46,7 @@ setMethod("rcalc", signature = "rdat", function(.Object, ...) {
   # return intrinsic growth rate
   return(r)
   
-}
+})
 
-.iter <- function(.Object,i) {
-  x <- new('rdat.iter',amax = .Object@amax,sr = list(type = .Object@sr))
-  x@lhdat <- lapply(.Object@lhdat,function(x) x[,i]) 
-  return(x)
-}
+
 #}}}
