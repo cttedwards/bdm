@@ -8,5 +8,5 @@
 #'
 #{{{
 # constructor
-rdat <- function(amax, iter=1, ...) new("rdat", amax, iter, ...)
+rdat <- function(amax, iter = 1, ...) new("rdat", amax, iter, ...)
 #}}}
