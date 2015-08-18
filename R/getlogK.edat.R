@@ -3,7 +3,9 @@
 #' 
 #' @export
 #' 
-getlogK <- function(data, r) {
+#' @include getlogK-generic.R
+#' 
+getlogK.edat <- function(data, r) {
     
     # get logK through grid search
     # assuming a logistic production model
