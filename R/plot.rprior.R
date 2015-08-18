@@ -1,8 +1,14 @@
+#'
+#' @title Plot data
+#' 
+#' @export
+#' 
+# S3 method for S4 rprior class object
 plot.rprior <- function(.Object, ...)
 {
   logmu    <- .Object@lognormal.par[['E[log(x)]']]
   logsigma <- .Object@lognormal.par[['SD[log(x)]']]
   
-  hist(.Object@.Data,freq=FALSE,xlab='r',ylab='',yaxt='n',main='')
-  curve(dlnorm(x,logmu,logsigma),col=2,lwd=2,add=T)
+  hist(.Object@.Data,freq = FALSE,xlab = 'r', ylab = '', yaxt = 'n', main = '')
+  curve(dlnorm(x, logmu, logsigma), col = 2, lwd = 2, add = TRUE)
 }
