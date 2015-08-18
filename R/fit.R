@@ -6,7 +6,7 @@
 #' @include fit-generic.R
 #' 
 # S4 method for S4 bdm class object
-setMethod("fit",signature = c("bdm","list"), function(.Object,data,init,chains,iter,warmup,thin,run,method = "MCMC", ...) {
+setMethod("fit", signature = c("bdm", "list"), function(.Object, data, init, chains, iter, warmup, thin, run, method = "MCMC", ...) {
   
   if (missing(data)) 
     stop('No data object supplied\n')
