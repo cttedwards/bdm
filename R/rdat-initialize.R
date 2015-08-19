@@ -5,7 +5,7 @@
 #' @include rdat-class.R
 #'
 # initialisation function
-setMethod("initialize","rdat",function(.Object, amax, iter, nmort, growth, mass, sr, maturity, rdat) {
+setMethod("initialize", "rdat", function(.Object, amax, iter, nmort, growth, mass, sr, maturity, rdat) {
     
     if (!missing(rdat)) {
         

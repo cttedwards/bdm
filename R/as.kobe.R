@@ -1,4 +1,8 @@
-
+#'
+#' @title as.kobe function
+#' 
+#' @export
+#' @include bdm-class.R
 #{{{ as.kobe functions
 setGeneric("as.kobe", function(.Object, ...) standardGeneric("as.kobe"))
 #{{ convert bdm object into kobe dataframe with or without projections

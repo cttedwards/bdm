@@ -1,4 +1,7 @@
-
+#'
+#' @title edat
+#' 
+#' @export
 #{{{ empirical data class
 setClass("edat",contains="list",representation(names="character"))
 setMethod("initialize","edat",function(.Object,index,harvest,time,n,sigmao,sigmap,renormalise=FALSE) {

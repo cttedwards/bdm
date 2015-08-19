@@ -1,4 +1,7 @@
-
+#'
+#' @title Mass function
+#' 
+#' @export
 #{{{ accessor function
 setGeneric("mass", function(x, ...)
   standardGeneric("mass"))

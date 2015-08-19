@@ -1,4 +1,7 @@
-
+#'
+#' @title Shape function
+#' 
+#' @export
 #{{{ accessor function
 setGeneric("shape", function(x,par, ...)
   standardGeneric("shape"))

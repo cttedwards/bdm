@@ -1,4 +1,7 @@
-
+#'
+#' @title Process error function
+#' 
+#' @export
 #{{{ accessor function
 setGeneric("sigmao", function(x, ...)
   standardGeneric("sigmao"))

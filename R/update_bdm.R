@@ -1,4 +1,7 @@
-
+#'
+#' @title Update function
+#' 
+#' @export
 #{{{ update prior distributions for r or logK in bdm model object
 setGeneric("update_bdm", function(.Object,x, ...) standardGeneric("update_bdm"))
 #{{ rprior object

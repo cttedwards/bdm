@@ -1,4 +1,7 @@
-
+#'
+#' @title Projection function
+#' 
+#' @export
 #{{{ projection functions
 setGeneric("project", function(.Object,harvest.project, ...) standardGeneric("project"))
 #{{ project from bdm object under constant harvest or harvest rate specified as a single value across all iterations

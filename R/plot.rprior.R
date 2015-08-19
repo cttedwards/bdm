@@ -1,9 +1,8 @@
 #'
-#' @title Plot data
+#' @title Plot rprior
 #' 
+#' @method plot rprior
 #' @export
-#' 
-# S3 method for S4 rprior class object
 plot.rprior <- function(.Object, ...)
 {
   logmu    <- .Object@lognormal.par[['E[log(x)]']]

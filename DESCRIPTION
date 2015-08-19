@@ -5,11 +5,79 @@ Version: 1.0
 Date: 2015-03-24
 Author: Charles T T Edwards
 Maintainer: Charles T T Edwards <charles.edwards@niwa.co.nz>
-Description: Bayesian fit of a logistic surplus production model to catch and abundance data using Hamiltonian MCMC
+Description: Bayesian fit of a logistic surplus production model to catch and
+    abundance data using Hamiltonian MCMC
 License: GNU General Public License Version 3
 VignetteBuilder: knitr
-Suggests: knitr,
+Suggests:
+    knitr,
     testthat
-Depends: R(>= 3.1.0), methods, rstan, ggplot2, reshape2, plyr
-Imports: kobe(>= 1.3.2)
-Collate: edat.R shape.R sigmao.R sigmap.R bdm.R bdm-internal.R rdat.R rdat.iter.R rprior.R iterate.R mass.R maturity.R nmort.R size.R sr.R survivorship.R rcalc.R update_bdm.R compile_bdm.R fit.R project.R traceplot.R histplot.R cumsumplot.R dynplot.R idxplot.R theme_bdm.R as.kobe.R refpoints.R status.R residuals.bdm.R plot.edat.R plot.rprior.R onLoad.R
+Depends:
+    R(>= 3.1.0),
+    methods,
+    rstan,
+    ggplot2,
+    reshape2,
+    plyr
+Imports:
+    kobe(>= 1.3.2)
+Collate:
+    'bdm-class.R'
+    'as.kobe.R'
+    'bdm-initialize.R'
+    'bdm-internal.R'
+    'bdm.R'
+    'compile.R'
+    'cumsumplot-generic.R'
+    'ggtheme.R'
+    'cumsumplot.bdm.R'
+    'dynplot-generic.R'
+    'dynplot.bdm.R'
+    'edat.R'
+    'fit-generic.R'
+    'fit.R'
+    'getlogK-generic.R'
+    'getlogK.bdm.R'
+    'getlogK.edat.R'
+    'getr-generic.R'
+    'getr.bdm.R'
+    'getr.rprior.R'
+    'getx-generic.R'
+    'getx.bdm.R'
+    'getx.edat.R'
+    'histplot-generic.R'
+    'histplot.bdm.R'
+    'idxplot-generic.R'
+    'idxplot.bdm.R'
+    'rdat-class.R'
+    'rdat-initialize.R'
+    'iterate.R'
+    'iteration-generic.R'
+    'iteration.rdat.R'
+    'mass.R'
+    'maturity.R'
+    'nmort.R'
+    'onAttach.R'
+    'plot.edat.R'
+    'plot.rprior.R'
+    'project.R'
+    'rcalc-generic.R'
+    'rdatIter-class.R'
+    'rcalc.R'
+    'rdat.R'
+    'rdatIter-initialize.R'
+    'rdatIter.R'
+    'refpoints.R'
+    'residuals.bdm.R'
+    'rprior-class.R'
+    'rprior-initialize.R'
+    'rprior.R'
+    'shape.R'
+    'sigmao.R'
+    'sigmap.R'
+    'size.R'
+    'sr.R'
+    'status.R'
+    'survivorship.R'
+    'traceplot.R'
+    'update_bdm.R'

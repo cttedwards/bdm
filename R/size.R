@@ -1,4 +1,7 @@
-
+#'
+#' @title Size function
+#' 
+#' @export
 #{{{ accessor function
 setGeneric("size", function(x, ...)
   standardGeneric("size"))

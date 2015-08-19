@@ -1,4 +1,7 @@
-
+#'
+#' @title Survivorship accessor function
+#' 
+#' @export
 #{{{ accessor function
 setGeneric("survivorship", function(x, ...)
   standardGeneric("survivorship"))

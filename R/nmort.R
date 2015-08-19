@@ -1,4 +1,7 @@
-
+#'
+#' @title Natural mortality function
+#' 
+#' @export
 #{{{ accessor function
 setGeneric("nmort", function(x, ...)
   standardGeneric("nmort"))

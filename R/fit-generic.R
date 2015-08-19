@@ -4,4 +4,4 @@
 #' @export
 #' 
 # S4 generic function
-setGeneric("fit", function(.Object, ...) standardGeneric("fit"))
+setGeneric("fit", function(.Object, data, ...) standardGeneric("fit"))

@@ -1,4 +1,4 @@
-#'
+#' @title ggtheme
 #' @export
 #' 
 ggtheme <- function(base_size = 12, base_family = "") 

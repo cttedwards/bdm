@@ -4,6 +4,8 @@
 #' @export
 #' 
 #' @include rcalc-generic.R
+#' @include rdat-class.R
+#' @include rdatIter-class.R
 #' 
 # S4 method for S4 rdat class object
 setMethod("rcalc", signature = "rdat", function(.Object, ...) {

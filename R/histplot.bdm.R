@@ -109,5 +109,5 @@ histplot.bdm <- function(.Object, pars, inc_warmup  =  FALSE) {
   #        ylab('Sample counts') + ggtheme()
   
   return(gg)
-})
+}
 #}}}

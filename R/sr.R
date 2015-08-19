@@ -1,4 +1,7 @@
-
+#'
+#' @title Stock-recruitment function
+#' 
+#' @export
 #{{{ accessor function
 setGeneric("sr", function(x, ...)
   standardGeneric("sr"))

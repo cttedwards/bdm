@@ -1,3 +1,7 @@
+#'
+#' @title Extract residuals
+#' 
+#' @export
 residuals.bdm <- function(object,log=TRUE, ...) {
   
  total_error    <- object@trace[['epsilon_o']]

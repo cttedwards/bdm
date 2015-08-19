@@ -1,4 +1,7 @@
-
+#'
+#' @title Extract Status estimates
+#' 
+#' @export
 #{{{ refrence point accessor function
 setGeneric("status", function(object, ...)
   standardGeneric("status"))

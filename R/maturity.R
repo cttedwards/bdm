@@ -1,4 +1,7 @@
-
+#'
+#' @title Maturity function
+#' 
+#' @export
 #{{{ accessor function
 setGeneric("maturity", function(x, ...)
   standardGeneric("maturity"))

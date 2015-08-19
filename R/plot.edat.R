@@ -1,11 +1,10 @@
 #'
 #' @title Plot data
 #' 
-#' @export
-#' 
 #' @include ggtheme.R
 #' 
-# S3 method for S4 edat class object
+#' @method plot edat
+#' @export
 plot.edat <- function(object, ...)
 {
 
@@ -13,7 +12,7 @@ plot.edat <- function(object, ...)
 	harvest <- object[['harvest']]
     index   <- object[['index']]
     
-    index[index<0] <- NA
+    index[index < 0] <- NA
     
     plt <- rainbow(dim(index)[2])
     
@@ -31,7 +30,7 @@ plot.edat <- function(object, ...)
     }
     
     gg <- gg + 
-        facet_grid(label~., scales = 'free_y') + 
+        facet_grid(label ~ ., scales = 'free_y') + 
         xlab('Time') +
 	    ylab('') + 
         ggtheme()
