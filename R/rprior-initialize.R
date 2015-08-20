@@ -1,10 +1,6 @@
-
-#' @title Initialize rprior object
-#' 
-#' @description Method to initialize rprior class object
-#' 
-#' @include rprior-class.R
 #'
+#' @include rprior-class.R
+#' 
 setMethod("initialize", "rprior", function(.Object, x) {
     
     if (missing(x)) .Object@.Data <- numeric()
