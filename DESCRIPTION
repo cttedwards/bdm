@@ -1,11 +1,11 @@
 Package: bdm
 Type: Package
-Title: Bayesian biomass dynamic model of population dynamics
+Title: Bayesian biomass dynamics model
 Version: 1.0
 Date: 2015-03-24
 Author: Charles T T Edwards
 Maintainer: Charles T T Edwards <charles.edwards@niwa.co.nz>
-Description: Bayesian fit of a logistic surplus production model to catch and
+Description: Bayesian fit of a generalised production model to catch and
     abundance data using Hamiltonian MCMC
 License: GNU General Public License Version 3
 VignetteBuilder: knitr
@@ -28,27 +28,22 @@ Collate:
     'bdm-internal.R'
     'bdm.R'
     'compile.R'
-    'cumsumplot-generic.R'
     'ggtheme.R'
-    'cumsumplot.bdm.R'
-    'dynplot-generic.R'
-    'dynplot.bdm.R'
+    'cumsumplot.R'
+    'dynplot.R'
     'edat.R'
     'fit-generic.R'
     'fit.R'
     'getlogK-generic.R'
     'getlogK.bdm.R'
     'getlogK.edat.R'
-    'getr-generic.R'
-    'getr.bdm.R'
-    'getr.rprior.R'
+    'getr.R'
     'getx-generic.R'
     'getx.bdm.R'
     'getx.edat.R'
     'histplot-generic.R'
     'histplot.bdm.R'
-    'idxplot-generic.R'
-    'idxplot.bdm.R'
+    'idxplot.R'
     'rdat-class.R'
     'rdat-initialize.R'
     'iterate.R'
