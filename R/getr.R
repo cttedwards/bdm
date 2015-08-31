@@ -5,14 +5,14 @@
 #' 
 #' By default the \pkg{bdm} package assumes that the prior on intrinsic growth rate can be described by a log-normal distribution with parameters \eqn{\mu} and \eqn{\sigma}, which correspond to the mean and standard deviation of \eqn{\ln(r)}.
 #' 
-#' @param x an object of the appropriate class
+#' @param object an object of the appropriate class
 #' 
 #' @return A list containing the elements \code{'E[log(r)]'} (equal to \eqn{\mu}), \code{'SD[log(r)]'} (equal to \eqn{\sigma}), \code{'E[r]'}, \code{'VAR[r]'} and \code{'CV[r]'}.
 #' 
 #' @export
 #' 
 # S3 generic function
-getr <- function(x, ...) UseMethod("getr")
+getr <- function(object, ...) UseMethod("getr")
 #'
 #' @rdname getr
 #' 
