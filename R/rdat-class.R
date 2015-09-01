@@ -7,6 +7,6 @@
 #' @slot iter the number of Monte-Carlo iterations used for generating a distribution of \eqn{r} values
 #' @slot amax the maximum age for each life-history data vector
 #' @slot sr the type of stock-recruitment relationship used, either Beverton-Holt (\code{'BH'}) or Ricker (\code{'RK'})
-#' @slot lhdat list of of data matrices containing life-history data-at-age, specifically, mass, maturity, natural mortality and survivorship, as well as a vector of steepness values
+#' @slot lhdat list of data matrices containing life-history data-at-age, specifically, mass, maturity, natural mortality and survivorship, as well as a vector of steepness values
 #' 
-setClass("rdat", representation(iter = "numeric", amax = "numeric", sr = "character", lhdat = "list"))
+setClass("rdat", slots = list(iter = "numeric", amax = "numeric", sr = "character", lhdat = "list"))

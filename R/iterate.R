@@ -20,10 +20,10 @@
 #' @include rdat-class.R
 #' @export
 #' 
-#{{{ 
 setGeneric("iterate", function(object, iter, ...)
   standardGeneric("iterate"))
+#' @rdname iterate
+#' @export
 setMethod("iterate", signature(object = "rdat",iter = "numeric"),
           function(object, iter) new('rdat', rdat = object, iter = iter)
 )
-#}}}

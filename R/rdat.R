@@ -1,6 +1,10 @@
 #'
 #' @rdname rdat-class
 #' 
+#' @param amax the assumed maximum age
+#' @param iter the number of iterations
+#' @param ... additional arguments \code{nmort}, \code{growth}, \code{mass}, \code{sr} and \code{maturity} that can be optionally specified at initialisation of the object
+#' 
 #' @examples
 #' # initialise rdat object
 #' amax <- 100
@@ -14,16 +18,12 @@
 #' sr(dat)       <- list(type='BH',mu=list(h=0.9))
 #' maturity(dat) <- list(mu=list(acrit=8))
 #' 
-#' @seealso See the appropriate documentation in \code{\link{mass}}, \code{\link{maturity}}, \code{\link{nmort}}, \code{\link{size}}, \code{\link{sr}} and \code{\link{survivorship}}. See documentation for \code{\link{rcalc}} on how to calculate \eqn{r}. Use \code{\link{iterate}} to increase the number of iterations after the object has been created.
+#' @seealso See the appropriate documentation in \code{\link{mass}}, \code{\link{maturity}}, \code{\link{nmort}}, \code{\link{size}}, \code{\link{sr}} and \code{\link{survivorship}} for how these are specified, accessed and assigned. See documentation for \code{\link{rcalc}} on how to calculate \eqn{r} from an \code{rdat} object. Use \code{\link{iterate}} to increase the number of iterations after the object has been created. Use \code{\link{iteration}} to access a particular iteration.
 #'
 #' @include rdat-class.R
 #' @export
 #' 
-#'
-#{{{
-# constructor
 rdat <- function(amax, iter = 1, ...) new("rdat", amax, iter, ...)
-#}}}
 setMethod("initialize", "rdat", function(.Object, amax, iter, nmort, growth, mass, sr, maturity, rdat) {
     
     if (!missing(rdat)) {
