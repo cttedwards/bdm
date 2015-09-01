@@ -24,7 +24,6 @@ Imports:
 Collate:
     'bdm-class.R'
     'as.kobe.R'
-    'bdm-initialize.R'
     'bdm.R'
     'compile.R'
     'ggtheme.R'
