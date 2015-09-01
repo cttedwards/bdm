@@ -17,8 +17,8 @@
 #' # iterate existing object:
 #' dat <- iterate(dat, iter = 200)
 #' 
-#' @export
 #' @include rdat-class.R
+#' @export
 #' 
 #{{{ 
 setGeneric("iterate", function(object, iter, ...)
