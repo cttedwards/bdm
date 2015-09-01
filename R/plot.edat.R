@@ -1,11 +1,25 @@
 #'
-#' @title Plot data
+#' Plot index and harvest data
+#' 
+#' This function provides a \code{plot} method for the \code{edat} object class. It returns a \code{ggplot} object that can be assigned and manipulated using functions provided by \pkg{ggplot2}.
+#' 
+#' @param object an \code{\link{edat}} object class
+#' 
+#' @examples
+#' # load Indian Ocean albacore data
+#' data(albio)
+#' 
+#' # create edat object
+#' dat <- edat(harvest = albio$catch, index = albio$cpue, time = rownames(albio))
+#' 
+#' # plot
+#' plot(dat)
 #' 
 #' @include ggtheme.R
 #' 
 #' @method plot edat
 #' @export
-plot.edat <- function(object, ...)
+plot.edat <- function(object)
 {
 
 	time    <- as.numeric(object[['time']])
