@@ -6,10 +6,11 @@
 #' 
 #' # inspect Stan model code
 #' mdl@@model_code
-#'
-#' @export
 #' 
 #' @include bdm-class.R
+#' @include compile.R
+#' 
+#' @export
 #'
 #{{{
 # constructor
@@ -20,7 +21,7 @@ bdm <- function(path, model.code, model.name = '', compile = FALSE, ...) {
         if (!missing(model.code)) { 
             new('bdm', model.code = model.code, model.name = model.name, compile = compile, default_model = FALSE, ...)
         } else {
-                new('bdm', model.code = .bdm_code, model.name = model.name, compile = compile, default_model = TRUE, ...)
+                new('bdm', model.code = bdm_default, model.name = model.name, compile = compile, default_model = TRUE, ...)
         }
     }
 }
@@ -40,7 +41,7 @@ setMethod("initialize", "bdm", function(.Object, path, model.code, model.name, c
     }
     if (!missing(model.code)) {
         .Object@path       <- ifelse(default_model, 'default_model', 'local_declaration')
-        .Object@model_name <- ifelse(model.name == '', 'bdm', model.name)
+        .Object@model_name <- ifelse(model.name == '', noquote(deparse(model.code)), model.name)
         .Object@model_code <- model.code
         if (compile) {
             tmp <- stan_model(model_code = .Object@model_code, ...)
@@ -64,7 +65,7 @@ setMethod("initialize", "bdm", function(.Object, path, model.code, model.name, c
 })
 #{{{
 # default model
-.bdm_code <- '
+bdm_default <- '
     data {
         int T;
         int I;
