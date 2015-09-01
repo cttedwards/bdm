@@ -1,15 +1,9 @@
-#' @title Initialise \code{rprior} class object for \code{bdm} package
 #' 
-#' @description An S4 object class containing a prior distribution for the intrinsic growth rate \eqn{r}. It includes both a numeric vector for values generated using Monte Carlo methods and a list of parameters describing the associated log-normal distribution.
+#' @rdname rprior-class
 #' 
-#' @param x either an integer number or numeric vector
-#' 
-#' @details If \code{length(x)>1} then the function creates an object containing values of \code{x}, otherwise it creates a vector of zero's of length equal to \code{x}.
+#' @param x either an integer specifiying the length of an empty vector or a vector of \eqn{r} values
 #' 
 #' @examples
-#' # create empty object
-#' r <- rprior()
-#'
 #' # create object containing
 #' # vector of r values
 #' iter <- 100
@@ -19,9 +13,19 @@
 #' x <- rlnorm(iter,log(mu)-sd^2/2,sd)
 #' r <- rprior(x)
 #' 
-#' @include rprior-initialize.R
 #' @export
 #'
+#' @include rprior-class.R
+#' 
 #{{{
-rprior <- function(x = 0L) new("rprior", x)
+rprior <- function(x, ...) new("rprior", x, ...)
 #}}}
+setMethod("initialize", "rprior", function(.Object, x) {
+    
+    if (missing(x)) .Object@.Data <- numeric()
+    else {
+        if (length(x) > 1) .Object@.Data <- as.numeric(x)
+        else               .Object@.Data <- numeric(x)
+    }
+    .Object
+})
