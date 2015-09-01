@@ -1,6 +1,8 @@
 #'
 #' @title Mass function
 #' 
+#' @include rdat-class.R
+#' 
 #' @export
 #{{{ accessor function
 setGeneric("mass", function(x, ...)

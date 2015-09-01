@@ -1,6 +1,8 @@
 #'
 #' @title Size function
 #' 
+#' @include rdat-class.R
+#' 
 #' @export
 #{{{ accessor function
 setGeneric("size", function(x, ...)

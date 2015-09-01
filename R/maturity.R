@@ -1,6 +1,8 @@
 #'
 #' @title Maturity function
 #' 
+#' @include rdat-class.R
+#' 
 #' @export
 #{{{ accessor function
 setGeneric("maturity", function(x, ...)

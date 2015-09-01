@@ -1,6 +1,8 @@
 #'
 #' @title Natural mortality function
 #' 
+#' @include rdat-class.R
+#' 
 #' @export
 #{{{ accessor function
 setGeneric("nmort", function(x, ...)

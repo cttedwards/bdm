@@ -1,6 +1,8 @@
 #'
 #' @title Stock-recruitment function
 #' 
+#' @include rdat-class.R
+#' 
 #' @export
 #{{{ accessor function
 setGeneric("sr", function(x, ...)
