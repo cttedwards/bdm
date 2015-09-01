@@ -16,9 +16,9 @@
 #' 
 #' @seealso See the appropriate documentation in \code{\link{mass}}, \code{\link{maturity}}, \code{\link{nmort}}, \code{\link{size}}, \code{\link{sr}} and \code{\link{survivorship}}. See documentation for \code{\link{rcalc}} on how to calculate \eqn{r}. Use \code{\link{iterate}} to increase the number of iterations after the object has been created.
 #'
+#' @include rdat-class.R
 #' @export
 #' 
-#' @include rdat-class.R
 #'
 #{{{
 # constructor
