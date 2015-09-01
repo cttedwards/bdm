@@ -1,7 +1,7 @@
 #'
 #' Compile stan model code in \code{bdm} object
 #' 
-#' This function calls \code{rstan::stan_model} to compile the model
+#' This function calls \code{rstan::stan_model} to compile the model.
 #' 
 #' @param object a \code{bdm} class object that contains the model code in \code{object@@model_code}
 #' @param ... additional arguments to \code{stan_model}
@@ -13,13 +13,13 @@
 #' # compile Stan model code
 #' mdl <- compile(mdl)
 #' 
-#' @return a \code{bdm} class object with a compiled DSO in \code{object@@dso}
+#' @return A \code{bdm} class object with a compiled DSO in \code{object@@dso}.
 #' 
 #' @seealso See the \href{https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started}{RStan Quick Start Guide} to ensure that \code{\link{rstan}} is installed correctly before compilation.
 #' 
 #' @export
 #' 
-compile <- function(object, ...) UseMethod("compile", ...)
+compile <- function(object, ...) UseMethod("compile")
 #'
 #' @rdname compile
 #' 
