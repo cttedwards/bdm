@@ -2,11 +2,28 @@
 % Please edit documentation in R/iterate.R
 \name{iterate}
 \alias{iterate}
-\title{Add iterations to existing rdat object}
+\title{Add iterations to existing \code{rdat} object}
 \usage{
-iterate(x, iter, ...)
+iterate(object, iter, ...)
+}
+\arguments{
+\item{object}{existing \code{rdat} object}
+
+\item{iter}{number of iterations}
+}
+\value{
+Returns an \code{rdat} object with life-history data replicated \code{iter} times
 }
 \description{
+This function will add an iteration dimension to the life-history data contained in an \code{rdat} object.
+}
+\examples{
+# initialise data object for calculation of r
+dat <- rdat(amax = 30, iter = 1)
 
+# to generate monte-carlo iterations first either
+# re-initialise 'rdat' object using more iterations or
+# iterate existing object:
+dat <- iterate(dat, iter = 200)
 }
 
