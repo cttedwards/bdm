@@ -1,11 +1,10 @@
 #'
-#' @title Plot cumulative sum of MCMC chain
+#' Plot cumulative sum of MCMC chain
 #' 
-#' @description Plots the cumulative sum of ordered posterior samples from an MCMC chain contained within a \code{bdm} class object.
+#' Plots the cumulative sum of ordered posterior samples from an MCMC chain contained within a \code{bdm} class object.
 #' 
 #' @export
 #' 
-# S3 generic function
 cumsumplot <- function(x, ...) UseMethod("cumsumplot")
 #' 
 #' @rdname cumsumplot
