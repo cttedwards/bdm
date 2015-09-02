@@ -12,11 +12,12 @@ setMethod("size",signature(object = "rdat"),function(object) return(object@lhdat
 
 #{{{ assignment function
 #' @rdname size
-setGeneric("size<-", function(x,i,j, ...,value) standardGeneric("size<-"))
+#' @export
+setGeneric("size<-", function(x,value) standardGeneric("size<-"))
 #{{ list
 #' @rdname size
 setMethod("size<-",
-          signature(x = "rdat",value = "list"),
+          signature(x = "rdat", value = "list"),
           function(x, value) {
             
             Linf.mu <- value$mu$Linf
@@ -59,11 +60,11 @@ setMethod("size<-",
 #{{ numeric
 #' @rdname size
 setMethod("size<-",
-          signature(x="rdat",value="numeric"),
-          function(x,value) {
+          signature(x = "rdat", value = "numeric"),
+          function(x, value) {
             
             size.mu <- value
-            if(length(size.mu)<x@amax) 
+            if(length(size.mu) < x@amax) 
               stop('length of size-at-age vector must equal number of age classes\n')
             
             x@lhdat[['size']] <- apply(x@lhdat[['size']],2,function(x) size.mu)
