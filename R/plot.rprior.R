@@ -19,15 +19,18 @@
 #' # plot
 #' plot(r)
 #' 
+#' @include getr.R
 #' @include ggtheme.R
 #' 
 #' @method plot edat
 #' @export
 plot.rprior <- function(object, ...)
 {
-  logmu    <- object@lognormal.par[['E[log(x)]']]
-  logsigma <- object@lognormal.par[['SD[log(x)]']]
-  
-  hist(object@.Data, freq = FALSE, xlab = 'r', ylab = '', yaxt = 'n', main = '', ...)
-  curve(dlnorm(x, logmu, logsigma), col = 2, lwd = 2, add = TRUE)
+    lognormal.par <- getr(object)
+    
+    logmu    <- lognormal.par[['E[log(r)]']]
+    logsigma <- lognormal.par[['SD[log(r)]']]
+    
+    hist(object@.Data, freq = FALSE, xlab = 'r', ylab = '', yaxt = 'n', main = '', ...)
+    curve(dlnorm(x, logmu, logsigma), col = 2, lwd = 2, add = TRUE)
 }
