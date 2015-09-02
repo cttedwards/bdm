@@ -1,23 +1,23 @@
 #'
-#' @title Size function
+#' Access or assign size at age in \code{rdat} object
 #' 
 #' @include rdat-class.R
 #' 
-#' @export
 #{{{ accessor function
-setGeneric("size", function(x, ...)
-  standardGeneric("size"))
-setMethod("size",signature(x="rdat"),
-          function(x) return(x@lhdat$size)
-)
+#' @export
+setGeneric("size", function(object, ...) standardGeneric("size"))
+#' @rdname size
+setMethod("size",signature(object = "rdat"),function(object) return(object@lhdat$size))
 #}}}
 
 #{{{ assignment function
+#' @rdname size
 setGeneric("size<-", function(x,i,j, ...,value) standardGeneric("size<-"))
 #{{ list
+#' @rdname size
 setMethod("size<-",
-          signature(x="rdat",value="list"),
-          function(x,i,j, ...,value) {
+          signature(x = "rdat",value = "list"),
+          function(x, value) {
             
             Linf.mu <- value$mu$Linf
             k.mu    <- value$mu$k
@@ -57,9 +57,10 @@ setMethod("size<-",
 )
 #}}
 #{{ numeric
+#' @rdname size
 setMethod("size<-",
           signature(x="rdat",value="numeric"),
-          function(x,i,j, ...,value) {
+          function(x,value) {
             
             size.mu <- value
             if(length(size.mu)<x@amax) 
