@@ -1,9 +1,11 @@
 #'
 #' Access or assign size at age
 #' 
-#' This function can be used to access or assign the size at age in an \code{\link{rdat}} object. Assignment can be of a list or numeric vector. When a list is assigned it should provide the parameters of the von Bertalanffy growth function: \deqn{Size = max(Linf * (1 - exp(-k*(Age-t0))),0).} namely \code{Linf}, \code{k} and \code{t0}. 
+#' This function can be used to access or assign the size at age in an \code{\link{rdat}} object. 
 #' 
-#' Uncertainty accross iterations in the \code{rdat} object can be included by providing either an overall coefficient of variation (\code{cv}) or a \code{cv} for each of the parameters. Overall uncertainty is assumed to be log-normal with \eqn{\sigma = \sqrt{ln(1+cv^2)}}. Parameter uncertainty is assumed to be normal.
+#' Assignment can be of a list or numeric vector. When a list is assigned it should provide the parameters of the von Bertalanffy growth function: \deqn{Size = max(Linf * (1 - exp(-k*(Age-t0))),0).} namely \code{Linf}, \code{k} and \code{t0}. 
+#' 
+#' Uncertainty accross iterations in the \code{rdat} object can be included by providing either an overall coefficient of variation (\code{cv}) or a \code{cv} for each of the parameters. Overall uncertainty is assumed to be log-normal with \eqn{\sigma = \sqrt{ln(1+cv^2)}}. Parameter uncertainty is assumed to be normal with \eqn{\sigma = \mu * cv}.
 #' 
 #' When assigning a numeric vector it is assumed that each replicate is identical.
 #' 
@@ -33,7 +35,7 @@
 #' size(dat)
 #' 
 #' # assignment via list
-#' size(dat) <- list(mu=list(Linf = 100, k = 0.08, t0 = -0.5))
+#' size(dat) <- list(mu=list(Linf = Linf, k = k, t0 = t0))
 #' size(dat)
 #' 
 #' # increase number of iterations
