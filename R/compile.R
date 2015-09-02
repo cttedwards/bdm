@@ -27,21 +27,11 @@ compile <- function(object, ...) UseMethod("compile")
 #' 
 compile.bdm <- function(object, ...) {
     
-  if (object@path != 'default_model' & object@path != 'local_declaration') {
-    tmp <- stan_model(file = object@path, ...)
-    object@model_code <- tmp@model_code
-  } else {
-    if (length(object@model_code) > 0) {
-          tmp <- stan_model(model_code = object@model_code, ...)
-          object@path  <- ifelse(object@default_model,'default_model','local_declaration')
-    } else {
-        stop('compilation error; check object@path and object@model_code\n')
-    }
-  }
-  
-  object@model_cpp  <- tmp@model_cpp
-  object@dso        <- tmp@dso
-  
-  object
+    tmp <- stan_model(model_code = object@model_code, model_name = object@model_name,...)
+    
+    object@model_cpp  <- tmp@model_cpp
+    object@dso        <- tmp@dso
+    
+    object
   
 }
