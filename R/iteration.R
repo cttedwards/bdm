@@ -17,7 +17,7 @@ iteration <- function(object, ...) UseMethod("iteration")
 #' @export
 #'
 iteration.rdat <- function(object, iter = 1) {
-    x <- rdatIter(amax = object@amax, sr = object@sr)
+    x <- new('rdatIter', amax = object@amax, sr = object@sr)
     x@lhdat <- lapply(object@lhdat, function(x) x[,iter]) 
     return(x)
 }
