@@ -57,7 +57,7 @@ The model is initialised using the `bdm` command, with no arguments. Arguments c
 
 ```{r, results='hide'}
 mdl <- bdm()
-mdl <- update_bdm(mdl,r,compile=TRUE)
+mdl <- update_prior(mdl,r,compile=TRUE)
 ```
 
 The default generalised surplus production model allows the depletion at maxium sustainable yield (MSY) to be fixed by the user. The depletion at MSY ($\phi$) forms part of the model inputs encoded in the `edat` object and can be accessed or assigned using the `shape` function. For chatham rise hake we assume that MSY occurs at 40\% of the carrying capacity (i.e. $\phi=0.4$). 
@@ -78,10 +78,10 @@ Trace, posterior histogram and cumulative density plots can be produced using th
 traceplot(mdl)
 ```
 ```{r hakhist, fig.cap='Posterior histograms for chatham rise hake fit.'}
-histplot(mdl,par=c('r','logK','q'))
+histplot(mdl,par = c('r','logK','q'))
 ```
 ```{r hakcumsum, fig.cap='Cumulative posterior denisty plot for chatham rise hake fit.'}
-cumsumplot(mdl,par=c('r','logK'))
+cumsumplot(mdl,par = c('r','logK'))
 ```
 
 ## Model outputs
@@ -95,7 +95,7 @@ dynplot(mdl)
 Plotting functions `traceplot`, `histplot` and `dynplot` return graphical objects from the `ggplot2` package and can be modified before they are printed. For example, to add a title to the plot of surplus production and change the y-axis one could type:
 
 ```{r, fig.show='hide'}
-gg <- dynplot(mdl, pars='surplus_production')
+gg <- dynplot(mdl, pars = 'surplus_production')
 gg <- gg + ggtitle('Surplus Production')
 print(gg)
 ```
@@ -170,7 +170,7 @@ plot(r)
 
 ```{r, results='hide'}
 mdl <- bdm()
-mdl <- update_bdm(mdl,r,compile=TRUE)
+mdl <- update_prior(mdl,r,compile = TRUE)
 ```
 
 ```{r, results='hide'}
@@ -379,7 +379,7 @@ This new formulation includes a revision of our assumptions regarding the proces
 
 ```{r, results='hide'}
 mdl <- bdm(model.code = orh_code)
-mdl <- compile_bdm(mdl)
+mdl <- compile(mdl)
 ```
 
 This new model can again be viewed by examining the object:
