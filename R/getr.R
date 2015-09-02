@@ -65,23 +65,29 @@ getr.rprior <- function(object) {
         stop('rprior object should contain vector of r values')
     }
     
-    # transform to normal
-    y <- log(x)
+    if (length(object@lognormal.par) == 0) {
+        
+        # transform to normal
+        y <- log(x)
+        
+        # estimate parameters of
+        # normal distribution log(x)
+        mu     <- mean(y)
+        sigma  <- sd(y)
+        sigma2 <- sigma^2
+        
+        # estimate parameters of
+        # log-normal distribution
+        theta <- exp(mu + sigma2/2)
+        nu    <- exp(2*mu + sigma2)*(exp(sigma2) - 1)
+        cv    <- sqrt(exp(sigma2) - 1)
+        
+        # assign
+        object@lognormal.par <- list('E[log(r)]' = mu, 'SD[log(r)]' = sigma, 'E[r]' = theta, 'VAR[r]' = nu, 'CV[r]' = cv)
+        
+    } 
     
-    # estimate parameters of
-    # normal distribution log(x)
-    mu     <- mean(y)
-    sigma  <- sd(y)
-    sigma2 <- sigma^2
-    
-    # estimate parameters of
-    # log-normal distribution
-    theta <- exp(mu + sigma2/2)
-    nu    <- exp(2*mu + sigma2)*(exp(sigma2) - 1)
-    cv    <- sqrt(exp(sigma2) - 1)
-    
-    # return
-    list('E[log(r)]' = mu, 'SD[log(r)]' = sigma, 'E[r]' = theta, 'VAR[r]' = nu, 'CV[r]' = cv)
+    object@lognormal.par
     
 }
 
