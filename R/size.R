@@ -1,7 +1,11 @@
 #'
 #' Access or assign size at age
 #' 
-#' This function can be used to access or assign the size at age in an \code{\link{rdat}} object. Assignment can be of a list or numeric vector. When a list is assigned it should provide the parameters of the von Bertalanffy growth function: \deqn{Size = max(Linf * (1 - exp(-k*(Age-t0))),0).} namely \code{Linf}, \code{k} and \code{t0}. Uncertainty accross iterations in the \code{rdat} object can be included by providing either an overall coefficient of variation (\code{cv}) or a \code{cv} for each of the parameters. When assigning a numeric vector it is assumed that each replicate is identical.
+#' This function can be used to access or assign the size at age in an \code{\link{rdat}} object. Assignment can be of a list or numeric vector. When a list is assigned it should provide the parameters of the von Bertalanffy growth function: \deqn{Size = max(Linf * (1 - exp(-k*(Age-t0))),0).} namely \code{Linf}, \code{k} and \code{t0}. 
+#' 
+#' Uncertainty accross iterations in the \code{rdat} object can be included by providing either an overall coefficient of variation (\code{cv}) or a \code{cv} for each of the parameters. Overall uncertainty is assumed to be log-normal with \eqn{\sigma = \sqrt{ln(1+cv^2)}}. Parameter uncertainty is assumed to be normal.
+#' 
+#' When assigning a numeric vector it is assumed that each replicate is identical.
 #' 
 #' @param object a \code{\link{rdat}} object
 #' @param value either a named \code{list} or \code{numeric} vector 
@@ -73,8 +77,8 @@ setMethod("size<-",
             if (!is.null(value$cv)) {
               if (is.list(value$cv)) {
                 if (!is.null(value$cv$Linf)) {
-                  Linf.sd <- sqrt(log(1 + value$cv$Linf^2))
-                  Linf <- Linf.mu * rlnorm(object@iter,-Linf.sd^2/2,Linf.sd) 
+                  Linf.sd <- value$cv$Linf * Linf.mu
+                  Linf <- rnorm(object@iter,Linf.mu,Linf.sd)
                 } else Linf <- rep(Linf.mu,object@iter)
                 
                 if (!is.null(value$cv$k)) {
@@ -85,7 +89,6 @@ setMethod("size<-",
                 if (!is.null(value$cv$t0)) {
                   t0.sd <- abs(value$cv$t0 * t0.mu)
                   t0 <- rnorm(object@iter,t0.mu,t0.sd)
-                  t0[t0 > 0] <- t0.mu
                 } else t0 <- rep(t0.mu,object@iter)
                 
                 for (i in 1:object@iter)
