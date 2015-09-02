@@ -1,11 +1,33 @@
 #'
-#' @title Fit bdm model
+#' Fit \code{bdm} model
+#' 
+#' Execute a model fit using \pkg{rstan}.
+#' 
+#' By default a Bayesian fit is executed through a call to \code{\link[rstan]{sampling}}, which implements an MCMC algorithm. The initial values are obtained through calls to \code{\link{getr}}, \code{\link{getlogK}} and \code{\link{getx}}. Default values for \code{chains}, \code{iter}, \code{warmup} and \code{thin} follow those for \pkg{rstan}.
+#' 
+#' @include bdm-class.R
 #' 
 #' @export
 #' 
-#' @include fit-generic.R
+setGeneric("fit", function(.Object, data, ...) standardGeneric("fit"))
+#'
+#' @rdname fit
 #' 
-# S4 method for S4 bdm class object
+#' @param .Object a \code{bdm} model object
+#' @param data an \code{edat} or \code{list} object containing the model inputs
+#' @param init an initialisation function that should take no arguments and return a named list of intial values for the estimated parameters
+#' @param chains number of MCMC chains
+#' @param iter number of iterations per chain
+#' @param warmup number of iterations to be discarded
+#' @param thin sampling interval from chains
+#' @param run optional character vector to label the run
+#' @param method either \code{'MCMC'} to implement a call to \code{sampling} or \code{'MPD'} for a call to \code{optimizing}
+#' @param ... further arguments to \code{sampling} or \code{optimizing}
+#' 
+#' @return Returns a \code{bdm} object containing parameter estimates.
+#' 
+#' @export
+#' 
 setMethod("fit", signature = c("bdm", "list"), function(.Object, data, init, chains, iter, warmup, thin, run, method = "MCMC", ...) {
   
   if (missing(data)) 
