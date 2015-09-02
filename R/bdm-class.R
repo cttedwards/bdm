@@ -11,12 +11,12 @@
 #' @slot thin The period of sampling from each chain. Defaults to \code{thin = 1}.
 #' @slot nsamples The resultant number of samples retained from the sample run. Equal to \code{((iter-warmup)*chains)/thin}.
 #' @slot trace \code{list} holding the processed samples from \code{\link[rstan:extract]{extract(..., permuted = TRUE, inc_warmup = FALSE)}}.
-#' @slot trace_array \code{array} holding the processed samples from \code{\link[rstan:extract]{extract(..., permuted = FALSE, inc_warmup = TRUE)}}. This should rarely be needed for direct access but is used for diagnostic trace plots.
+#' @slot trace_array \code{array} holding the processed samples from \code{\link[rstan:extract]{extract(..., permuted = FALSE, inc_warmup = TRUE)}}. This should rarely be needed for direct access but is used for diagnostic plots.
 #' @slot mpd List containing output from maximum posterior density fit using \code{\link[rstan:sampling]{optimizing}}.
 #' @slot path Optional path to stan model text file for initialisation of non-default model. This is analagous to the \code{file} argument in \code{\link[rstan:stan_model]{stan_model}}.
 #' @slot run \code{character} string containing an optional label for this particular run.
 #' @slot default_model \code{logical} value indicating whether the default model is retained in this particular intialisation. This specifically disables functions that are designed to work only on the default model.
-#' @slot model_name \code{character} string giving the model name. Defaults to "BDM".
+#' @slot model_name \code{character} string giving the model name.
 #' @slot model_code the model code in the Stan modelling language.
 #' @slot model_cpp translation of Stan code into C++.
 #' @slot dso Object of class \code{cxxdso} holding the compiled C++ code as a dynamic shared object.
