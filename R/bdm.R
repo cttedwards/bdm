@@ -2,53 +2,46 @@
 #' 
 #' @examples
 #' # initialise default model object
-#' mdl <- bdm(compile = TRUE)
+#' mdl <- bdm()
 #' 
 #' # inspect Stan model code
-#' mdl@@model_code
+#' mdl
 #' 
 #' @include bdm-class.R
-#' @include compile.R
 #' 
 #' @export
 #'
-#{{{
-# constructor
 bdm <- function(path, model.code, model.name = '', compile = FALSE, ...) {
     if (!missing(path)) { 
+        model.name <- ifelse(model.name == '', sub("\\.[^.]*$", "", basename(path)), model.name)
         new('bdm', path = path, model.name = model.name, compile = compile, default_model = FALSE, ...)
     } else { 
         if (!missing(model.code)) { 
+            model.name <- ifelse(model.name == '', deparse(substitute(model.code)), model.name)
             new('bdm', model.code = model.code, model.name = model.name, compile = compile, default_model = FALSE, ...)
         } else {
-                new('bdm', model.code = bdm_default, model.name = model.name, compile = compile, default_model = TRUE, ...)
+            model.name <- ifelse(model.name == '', 'bdm default', model.name)
+            new('bdm', model.code = bdm_default, model.name = model.name, compile = compile, default_model = TRUE, ...)
         }
     }
 }
-#}}}
 setMethod("initialize", "bdm", function(.Object, path, model.code, model.name, compile, default_model, ...) {
     
     if (!missing(path)) {
         .Object@path       <- path
-        .Object@model_name <- ifelse(model.name == '', sub("\\.[^.]*$", "", basename(path)), model.name)
+        .Object@model_name <- model.name
         .Object@model_code <- paste(readLines(path, warn = FALSE), collapse = '\n')
-        if (compile) {
-            tmp <- stan_model(file = .Object@path, ...)
-            
-            .Object@model_cpp  <- tmp@model_cpp
-            .Object@dso        <- tmp@dso
-        }
     }
     if (!missing(model.code)) {
         .Object@path       <- ifelse(default_model, 'default_model', 'local_declaration')
-        .Object@model_name <- ifelse(model.name == '', noquote(deparse(model.code)), model.name)
+        .Object@model_name <- model.name
         .Object@model_code <- model.code
-        if (compile) {
-            tmp <- stan_model(model_code = .Object@model_code, ...)
-            
-            .Object@model_cpp  <- tmp@model_cpp
-            .Object@dso        <- tmp@dso
-        }
+    }
+    if (compile) {
+        tmp <- stan_model(model_code = .Object@model_code, model_name = .Object@model_name, ...)
+        
+        .Object@model_cpp  <- tmp@model_cpp
+        .Object@dso        <- tmp@dso
     }
     
     .Object@chains <- 4

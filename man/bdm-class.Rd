@@ -52,10 +52,10 @@ This is the primary object class for the \pkg{bdm} package, containting all the 
 }}
 \examples{
 # initialise default model object
-mdl <- bdm(compile = TRUE)
+mdl <- bdm()
 
 # inspect Stan model code
-mdl@model_code
+mdl
 }
 \seealso{
 See the \href{https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started}{RStan Quick Start Guide} to ensure that \code{\link{rstan}} is installed correctly before compilation. See \code{\link[rstan]{stanmodel}} for details of the superclass. See \code{\link[rstan:sampling]{sampling}} for further details on \code{chains}, \code{iter}, \code{warmup} and \code{thin}.
