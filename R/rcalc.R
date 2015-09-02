@@ -1,14 +1,24 @@
 #'
-#' @title Calculate r from numerical solution to Euler-Lotka equation
+#' Calculate the intrinsic growth rate
 #' 
-#' @export
+#' A value for the intrinsic growth rate \eqn{r} is calculated using life-history data as a numerical solution to the Euler-Lotka equation.
 #' 
-#' @include rcalc-generic.R
 #' @include rdat-class.R
 #' @include rdatIter-class.R
 #' 
-# S4 method for S4 rdat class object
-setMethod("rcalc", signature = "rdat", function(.Object, ...) {
+#' @export
+#' 
+setGeneric("rcalc", function(.Object, ...) standardGeneric("rcalc"))
+#'
+#' @rdname rcalc
+#' 
+#' @param .Object an \code{rdat} object
+#' 
+#' @return A \code{\link{rprior}} class object containing a vector of values for \eqn{r}.
+
+#' @export
+#' 
+setMethod("rcalc", signature = "rdat", function(.Object) {
   
   n <- .Object@iter
   prior <- new('rprior',n)
@@ -19,8 +29,7 @@ setMethod("rcalc", signature = "rdat", function(.Object, ...) {
   return(prior)
   
 })
-
-setMethod("rcalc", signature = "rdatIter", function(.Object, ...) {
+setMethod("rcalc", signature = "rdatIter", function(.Object) {
   
   # survivorship
   l <- .Object@lhdat[['survivorship']]

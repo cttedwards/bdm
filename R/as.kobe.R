@@ -1,20 +1,34 @@
 #'
-#' @title as.kobe function
+#' Convert a \code{bdm} object to a format suitable for the \pkg{kobe} package
+#' 
+#' The \pkg{kobe} package can be used to produce diagnostic outputs concerning status of the stock relative to MSY-based reference points.
+#' 
+#' @include bdm-class.R
 #' 
 #' @export
-#' @include bdm-class.R
 #{{{ as.kobe functions
 setGeneric("as.kobe", function(.Object, ...) standardGeneric("as.kobe"))
+#'
+#' @rdname as.kobe
+#' 
+#' @param .Object a \code{bdm} class object
+#' @param projection an optional \code{list} containing results from a call to \code{\link{project}}
+#' @param what,prob,year,nwrms see documentation for the \pkg{kobe} package
+#' 
+#' @examples
+#' vignette('bdm-examples')
+#' 
+#' @export
 #{{ convert bdm object into kobe dataframe with or without projections
-setMethod("as.kobe",signature=c("bdm"),function(.Object,projection,
+setMethod("as.kobe",signature=c("bdm"),function(.Object, projection,
                                                 what=c("sims","trks","pts","smry","wrms")[1],
-                                                prob=c(0.75,0.5,.25),year=NULL,nwrms=10) {
+                                                prob=c(0.75,0.5,.25), year = NULL, nwrms=10) {
       
       
-    if(missing(projection)) {
+    if (missing(projection)) {
       
       res <- .read_bdm(.Object)
-      res <- .io_bdm(res,what=what,prob=prob,nwrms=nwrms,year=year)
+      res <- .io_bdm(res,what = what,prob = prob,nwrms = nwrms,year = year)
       
     } else {
 
