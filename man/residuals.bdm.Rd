@@ -6,7 +6,15 @@
 \usage{
 \method{residuals}{bdm}(object, log = TRUE, ...)
 }
-\description{
+\arguments{
+\item{object}{an \code{\link{bdm}} object class}
 
+\item{log}{a \code{logical} indicating whether residuals should be returned on a log scale}
+}
+\value{
+Returns a list containing the process error and total error (observation plus process error) residuals.
+}
+\description{
+This function will extract the residual error values following a default model fit.
 }
 

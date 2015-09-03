@@ -32,7 +32,7 @@ This is the primary object class for the \pkg{bdm} package, containting all the 
 
 \item{\code{trace}}{\code{list} holding the processed samples from \code{\link[rstan:extract]{extract(..., permuted = TRUE, inc_warmup = FALSE)}}.}
 
-\item{\code{trace_array}}{\code{array} holding the processed samples from \code{\link[rstan:extract]{extract(..., permuted = FALSE, inc_warmup = TRUE)}}. This should rarely be needed for direct access but is used for diagnostic trace plots.}
+\item{\code{trace_array}}{\code{array} holding the processed samples from \code{\link[rstan:extract]{extract(..., permuted = FALSE, inc_warmup = TRUE)}}. This should rarely be needed for direct access but is used for diagnostic plots.}
 
 \item{\code{mpd}}{List containing output from maximum posterior density fit using \code{\link[rstan:sampling]{optimizing}}.}
 
@@ -42,7 +42,7 @@ This is the primary object class for the \pkg{bdm} package, containting all the 
 
 \item{\code{default_model}}{\code{logical} value indicating whether the default model is retained in this particular intialisation. This specifically disables functions that are designed to work only on the default model.}
 
-\item{\code{model_name}}{\code{character} string giving the model name. Defaults to "BDM".}
+\item{\code{model_name}}{\code{character} string giving the model name.}
 
 \item{\code{model_code}}{the model code in the Stan modelling language.}
 
