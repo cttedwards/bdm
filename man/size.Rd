@@ -31,7 +31,7 @@ size(object) <- value
 }}
 }
 \value{
-Accessor function returns a matrix of size-at-age across iterations. Assignment function populates the matrix across iterations. If assignment is of a numeric vector of if no \code{cv} is provided then each iteration is identical.
+Accessor function returns a matrix of size-at-age across iterations. Assignment function populates the matrix across iterations.
 }
 \description{
 This function can be used to access or assign the size at age in an \code{\link{rdat}} object.
@@ -46,7 +46,7 @@ When assigning a numeric vector it is assumed that each replicate is identical.
 \examples{
 amax <- 30
 Linf <- 100
-k    <- 0.08
+k    <- 0.1
 t0   <- -0.5
 
 # initialize rdat object

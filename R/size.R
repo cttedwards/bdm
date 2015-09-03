@@ -18,13 +18,13 @@
 #'  \item{\code{cv}}{optional single numeric value or a list containing parameters \code{Linf}, \code{k} and \code{t0} representing their coefficients of variation}
 #' }
 #' 
-#' @return Accessor function returns a matrix of size-at-age across iterations. Assignment function populates the matrix across iterations. If assignment is of a numeric vector of if no \code{cv} is provided then each iteration is identical.
+#' @return Accessor function returns a matrix of size-at-age across iterations. Assignment function populates the matrix across iterations.
 #' 
 #' @examples
 #' 
 #' amax <- 30
 #' Linf <- 100
-#' k    <- 0.08
+#' k    <- 0.1
 #' t0   <- -0.5
 #' 
 #' # initialize rdat object
