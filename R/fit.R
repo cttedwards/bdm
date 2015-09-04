@@ -8,7 +8,6 @@
 #' @include bdm-class.R
 #' 
 #' @export
-#' 
 setGeneric("fit", function(.Object, data, ...) standardGeneric("fit"))
 #'
 #' @rdname fit
@@ -22,12 +21,24 @@ setGeneric("fit", function(.Object, data, ...) standardGeneric("fit"))
 #' @param thin sampling interval from chains
 #' @param run optional character vector to label the run
 #' @param method either \code{'MCMC'} to implement a call to \code{sampling} or \code{'MPD'} for a call to \code{optimizing}
-#' @param ... further arguments to \code{sampling} or \code{optimizing}
+#' @param ... further arguments to \code{rstan::sampling} or \code{rstan::optimizing}
 #' 
-#' @return Returns a \code{bdm} object containing parameter estimates.
+#' @return Returns a \code{bdm} object containing parameter estimates. For a Bayesian fit posterior samples are contained in \code{.Object@@trace}.
+#' 
+#' @examples
+#' 
+#' # get some data
+#' data(hakcr)
+#' dat <- edat(harvest = hakcr$catch,index = cbind(hakcr$survey, hakcr$cpue))
+#' 
+#' # initialize and fit default model
+#' mdl <- bdm(compile = TRUE)
+#' mdl <- fit(mdl, dat)
+#' 
+#' # check convergence
+#' traceplot(mdl)
 #' 
 #' @export
-#' 
 setMethod("fit", signature = c("bdm", "list"), function(.Object, data, init, chains, iter, warmup, thin, run, method = "MCMC", ...) {
   
   if (missing(data)) 
@@ -51,7 +62,7 @@ setMethod("fit", signature = c("bdm", "list"), function(.Object, data, init, cha
     init.func <- function() { 
       
       b    <- init.r/exp(init.logK)
-      r    <- init.r * rlnorm(1,log(1)-0.04/2,0.2)
+      r    <- init.r * rlnorm(1,log(1) - 0.04/2,0.2)
       logK <- max(min(log(r/b),30),3)
       
       x    <- getx(.Object, r, logK)

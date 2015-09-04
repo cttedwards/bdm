@@ -96,19 +96,15 @@ setMethod("nmort<-",
               }
             }
             
-            # calculate survivorship (assuming constant M-at-age)
+            # calculate survivorship
             object@lhdat[['survivorship']] <- object@lhdat[['M']]
-            object@lhdat[['survivorship']] <- apply(object@lhdat[['survivorship']],2,function(y) {  m <- y; 
-                                                                                          y[1] <- 1;
-                                                                                          for (a in 2:object@amax)
-                                                                                            y[a] <- y[a - 1]*exp(-m[a - 1]);
-                                                                                          y
-                                                                                         })
-            # calculate survivorship (for age dependent M)
-            #for(i in 1:object@iter)
-            #  for(a in 1:object@amax)
-            #    object@lhdat[['survivorship']][a,i] <- exp(-sum(object@lhdat[['M']][1:a,i]))
-            
+            object@lhdat[['survivorship']] <- apply(object@lhdat[['survivorship']],2,function(y) {  
+                                                                                            m <- y; 
+                                                                                            y[1] <- 1;
+                                                                                            for (a in 2:object@amax)
+                                                                                                y[a] <- y[a - 1]*exp(-m[a - 1]);
+                                                                                            y
+                                                                                            })
             object
           }
 )
@@ -125,10 +121,16 @@ setMethod("nmort<-",
             
             object@lhdat[['M']] <- apply(object@lhdat[['M']],2,function(y) M.mu)
                         
-            # recalculate survivorship
-            for (i in 1:object@iter)
-              for (a in 1:object@amax)
-                object@lhdat[['survivorship']][a,i] <- exp(-sum(object@lhdat[['M']][1:a,i]))
+            # calculate survivorship
+            object@lhdat[['survivorship']] <- object@lhdat[['M']]
+            object@lhdat[['survivorship']] <- apply(object@lhdat[['survivorship']],2,
+                                                    function(y) {  
+                                                                    m <- y; 
+                                                                    y[1] <- 1;
+                                                                    for (a in 2:object@amax)
+                                                                        y[a] <- y[a - 1]*exp(-m[a - 1]);
+                                                                    y
+                                                                })
             
             object
           }

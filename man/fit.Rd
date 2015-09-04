@@ -16,7 +16,7 @@ fit(.Object, data, ...)
 
 \item{data}{an \code{edat} or \code{list} object containing the model inputs}
 
-\item{...}{further arguments to \code{sampling} or \code{optimizing}}
+\item{...}{further arguments to \code{rstan::sampling} or \code{rstan::optimizing}}
 
 \item{init}{an initialisation function that should take no arguments and return a named list of intial values for the estimated parameters}
 
@@ -33,7 +33,7 @@ fit(.Object, data, ...)
 \item{method}{either \code{'MCMC'} to implement a call to \code{sampling} or \code{'MPD'} for a call to \code{optimizing}}
 }
 \value{
-Returns a \code{bdm} object containing parameter estimates.
+Returns a \code{bdm} object containing parameter estimates. For a Bayesian fit posterior samples are contained in \code{.Object@trace}.
 }
 \description{
 Execute a model fit using \pkg{rstan}.
@@ -42,5 +42,17 @@ Execute a model fit using \pkg{rstan}.
 }
 \details{
 By default a Bayesian fit is executed through a call to \code{\link[rstan]{sampling}}, which implements an MCMC algorithm. The initial values are obtained through calls to \code{\link{getr}}, \code{\link{getlogK}} and \code{\link{getx}}. Default values for \code{chains}, \code{iter}, \code{warmup} and \code{thin} follow those for \pkg{rstan}.
+}
+\examples{
+# get some data
+data(hakcr)
+dat <- edat(harvest = hakcr$catch,index = cbind(hakcr$survey, hakcr$cpue))
+
+# initialize and fit default model
+mdl <- bdm(compile = TRUE)
+mdl <- fit(mdl, dat)
+
+# check convergence
+traceplot(mdl)
 }
 

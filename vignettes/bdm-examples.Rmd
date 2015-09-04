@@ -180,13 +180,13 @@ mdl <- fit(mdl,dat)
 Trace and posterior histogram plots produced using the `traceplot` and `histplot` functions.
 
 ```{r orhtrace, fig.cap='Traceplots for chatham rise orange roughy fit.'}
-traceplot(mdl,par=c('r','logK'))
+traceplot(mdl,par = c('r','logK'))
 ```
 ```{r orhhist, fig.cap='Posterior histograms for chatham rise orange roughy fit.'}
-histplot(mdl,par=c('r','logK'))
+histplot(mdl,par = c('r','logK'))
 ```
 
-This currently represents a standard application, but in some situations it may be necessary to modify the model itself. For example, we might want to create a model that estimates the process erro. This is illustrated here using the same Orange Roughy example.
+This currently represents a standard application, but in some situations it may be necessary to modify the model itself. For example, we might want to create a model that estimates the process error. This is illustrated here using the same Orange Roughy example.
 
 ## Uploading a new model
 
@@ -394,14 +394,14 @@ If a new model is loaded into the `bdm` object, it is no-longer the default mode
 mdl@default_model 
 ```
 
-This means that some of the standard functions will not work, one of which is the initialisation function, that provides initial, sensible values for the MCMC algorithm. If the new model were to be run without an initialisation function, it will produce an error. This is a conservative, error checking mechanism. 
+This means that some of the standard functions will not work, one of which is the initialisation function, that provides initial, sensible values for the MCMC algorithm. If the new model were to be run without an initialisation function, it will produce an error.
 
 To construct a new inititialisation function we can use some of the functions that are implemented for the default model:
 
 ```{r}
-init.r <- getr(mdl)
+init.r    <- getr(mdl)
 init.logK <- getlogK(dat, r = init.r)
-init.x <- getx(dat, r = init.r, logK = init.logK)
+init.x    <- getx(dat, r = init.r, logK = init.logK)
 ```
 
 These values can be used to create the initialisation function that must return a list of initial values:
@@ -414,7 +414,7 @@ mdl <- fit(mdl, dat, init = init.func)
 histplot(mdl,par=c('r','logK','sigmap2'))
 ```
 
-We note that the model is uanble to resolve a value for `logK`, and estiamates an excessively high value for `sigmap2`. It would therefore be considered to have failed as an assessment. This can be most easily seen from the catchability traces:
+We note that the model is unable to resolve a value for `logK`, and estiamates an excessively high value for `sigmap2`. It would therefore be considered to have failed as an assessment. This can be most easily seen from the catchability traces:
 
 ```{r neworhtrace, fig.cap='Catchability trace plots plots for chatham rise orange roughy fit using the new non-default model'}
 traceplot(mdl,par='q')

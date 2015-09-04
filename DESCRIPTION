@@ -44,7 +44,6 @@ Collate:
     'mass.R'
     'maturity.R'
     'nmort.R'
-    'onAttach.R'
     'plot.edat.R'
     'plot.rprior.R'
     'project.R'
@@ -64,3 +63,4 @@ Collate:
     'survivorship.R'
     'traceplot.R'
     'update_prior.R'
+    'zzz.R'

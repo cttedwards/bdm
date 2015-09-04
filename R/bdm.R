@@ -184,6 +184,7 @@ bdm_default <- '
         real current_harvest_rate;
         
         real msy;
+        real depletion_at_msy;
         real biomass_at_msy;
         real harvest_rate_at_msy;
         
@@ -213,6 +214,7 @@ bdm_default <- '
         current_harvest_rate <- harvest_rate[T];
         
         msy <- m * exp(logK);
+        depletion_at_msy <- dmsy;
         biomass_at_msy <- dmsy * exp(logK);
         harvest_rate_at_msy <- m / dmsy;
         
