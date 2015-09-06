@@ -24,7 +24,10 @@
 #' # get median reference point estimates
 #' lapply(refpoints(mdl), median)
 #' 
+#' @export
 refpoints <- function(object, ...) UseMethod("refpoints")
+#' 
+#' @rdname refpoints
 #' @export
 refpoints.bdm <- function(object) {
     return(list(msy = object@trace$msy,

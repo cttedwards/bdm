@@ -4,7 +4,6 @@
 #' Plots the estimated abundance index dynamics over time against the observed values
 #' 
 #' @export
-#' 
 idxplot <- function(x, ...) UseMethod("idxplot")
 #'
 #' @rdname idxplot
@@ -13,10 +12,9 @@ idxplot <- function(x, ...) UseMethod("idxplot")
 #' 
 #' @return Returns a \code{ggplot} object that can be displayed or assigned and manuipulated using further arguments from the \pkg{ggplot2} package.
 #' 
-#' @export
-#' 
 #' @include ggtheme.R
 #' 
+#' @export
 idxplot.bdm <- function(x, labels) {
     
     nidx     <- x@data[['I']]

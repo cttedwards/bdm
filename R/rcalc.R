@@ -5,6 +5,7 @@
 #' 
 #' @include rdat-class.R
 #' @include rdatIter-class.R
+#' @include getr.R
 #' 
 #' @export
 #' 
@@ -25,6 +26,8 @@ setMethod("rcalc", signature = "rdat", function(.Object) {
   
   for (i in 1:n)
     prior[i] <- rcalc(iteration(.Object, i))
+  
+  prior@lognormal.par <- getr(prior)
   
   return(prior)
   

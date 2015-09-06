@@ -10,13 +10,11 @@
 #' @param logK an assumed value for the carrying capacity \eqn{ln(K)}
 #' 
 #' @export
-#' 
-# S3 generic function
 getx <- function(object, ...) UseMethod("getx")
 #' 
 #' @rdname getx
-#' @export
 #' 
+#' @export
 getx.bdm <- function(object, r, logK) {
     
     if (missing(r))
@@ -41,8 +39,8 @@ getx.bdm <- function(object, r, logK) {
 }
 #' 
 #' @rdname getx
-#' @export
 #' 
+#' @export
 getx.edat <- function(object, r, logK) {
     
     cc <- object$harvest

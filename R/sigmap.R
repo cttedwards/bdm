@@ -27,16 +27,20 @@
 #' sigmap(dat)
 #' 
 #{{{ accessor function
+#'
 #' @export
 setGeneric("sigmap", function(object, ...) standardGeneric("sigmap"))
+#'
 #' @rdname sigmap
 setMethod("sigmap",signature(object = "edat"),function(object) return(object[['sigmap']]))
 #}}}
 
 #{{{ assignment function
+#'
 #' @rdname sigmap
 #' @export
 setGeneric("sigmap<-", function(object,value, ...) standardGeneric("sigmap<-"))
+#'
 #' @rdname sigmap
 setMethod("sigmap<-",
           signature(object = "edat",value = "numeric"),

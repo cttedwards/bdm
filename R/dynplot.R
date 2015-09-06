@@ -6,8 +6,6 @@
 #' Depletion is measured as the biomass over the carrying capacity, harvest rate is the catch over the estimated biomass, and surplus production is the production function multiplied by the process error residual. 
 #' 
 #' @export
-#' 
-# S3 generic
 dynplot <- function(x, ...) UseMethod("dynplot")
 #'
 #' @rdname dynplot
@@ -15,11 +13,10 @@ dynplot <- function(x, ...) UseMethod("dynplot")
 #' @param pars character vector of model parameters to be plotted. Must be one or more of \code{'depletion'}, \code{'biomass'}, \code{'harvest_rate'} or \code{'surplus_production'}. Defaults to \code{pars = 'depletion'}.
 #' 
 #' @return Returns a \code{ggplot} object that can be displayed or assigned and manuipulated using further arguments from the \pkg{ggplot2} package.
-#' 
-#' @export
-#' 
+#'  
 #' @include ggtheme.R
 #' 
+#' @export
 dynplot.bdm <- function(x, pars) {
     
     if (missing(pars)) {

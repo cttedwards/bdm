@@ -18,13 +18,11 @@
 #' @seealso See the \href{https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started}{RStan Quick Start Guide} to ensure that \code{\link{rstan}} is installed correctly before compilation.
 #' 
 #' @export
-#' 
 compile <- function(object, ...) UseMethod("compile")
 #'
 #' @rdname compile
 #' 
 #' @export
-#' 
 compile.bdm <- function(object, ...) {
     
     tmp <- stan_model(model_code = object@model_code, model_name = object@model_name,...)

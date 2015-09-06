@@ -10,14 +10,10 @@
 #' @return A list containing the elements \code{'E[log(r)]'} (equal to \eqn{\mu}), \code{'SD[log(r)]'} (equal to \eqn{\sigma}), \code{'E[r]'}, \code{'VAR[r]'} and \code{'CV[r]'}.
 #' 
 #' @export
-#' 
-# S3 generic function
 getr <- function(object, ...) UseMethod("getr")
 #'
 #' @rdname getr
-#' 
 #' @export
-#' 
 getr.bdm <- function(object) {
     
     # extract r from model_code

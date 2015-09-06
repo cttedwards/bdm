@@ -13,10 +13,10 @@ histplot <- function(object, ...) UseMethod("histplot")
 #' @param inc_warmup logical value indicating whether MCMC warmup should be included in the plot.
 #' 
 #' @return Returns a \code{ggplot} object that can be displayed or assigned and manuipulated using further arguments from the \pkg{ggplot2} package.
-#' @export
 #' 
 #' @include ggtheme.R
 #' 
+#' @export
 histplot.bdm <- function(object, pars, inc_warmup  =  FALSE) {
     
   if (missing(pars)) {

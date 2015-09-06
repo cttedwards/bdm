@@ -15,7 +15,6 @@
 #' @include ggtheme.R
 #' 
 #' @export
-#' 
 setMethod("traceplot", signature = "bdm",function(object, pars, inc_warmup = TRUE, ask = FALSE, ...) {
   
   if (missing(pars)) {

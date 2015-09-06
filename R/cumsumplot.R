@@ -4,7 +4,6 @@
 #' Plots the cumulative sum of ordered posterior samples from an MCMC chain contained within a \code{bdm} class object.
 #' 
 #' @export
-#' 
 cumsumplot <- function(x, ...) UseMethod("cumsumplot")
 #' 
 #' @rdname cumsumplot
@@ -13,10 +12,10 @@ cumsumplot <- function(x, ...) UseMethod("cumsumplot")
 #' @param inc_warmup logical value indicating whether MCMC warmup should be included in the plot.
 #' 
 #' @return Returns a \code{ggplot} object that can be displayed or assigned and manuipulated using further arguments from the \pkg{ggplot2} package.
-#' @export
 #' 
 #' @include ggtheme.R
 #' 
+#' @export
 cumsumplot.bdm <- function(x, pars, inc_warmup = FALSE) {
     
     if (missing(pars)) {

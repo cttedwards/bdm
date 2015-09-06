@@ -22,7 +22,7 @@
 #' @include getr.R
 #' @include ggtheme.R
 #' 
-#' @method plot edat
+#' @method plot rprior
 #' @export
 plot.rprior <- function(object, ...)
 {

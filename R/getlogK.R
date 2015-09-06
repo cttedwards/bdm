@@ -7,14 +7,12 @@
 #' 
 #' @param object an object of the appropriate class
 #' @param r an assumed value for the intrinsic growth rate \eqn{r}
+#'
 #' @export
-#' 
-# S3 generic function
 getlogK <- function(object, ...) UseMethod("getlogK")
 #' 
 #' @rdname getlogK
 #' @export
-#' 
 getlogK.bdm <- function(object, r) {
     
     if (missing(r))
@@ -57,7 +55,6 @@ getlogK.bdm <- function(object, r) {
 #' 
 #' @rdname getlogK
 #' @export
-#' 
 getlogK.edat <- function(object, r) {
     
     # get logK through grid search
