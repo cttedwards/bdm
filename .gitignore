@@ -1,5 +1,7 @@
 inst/doc
 vignettes/fig
+vignettes/*.R
+vignettes/.build.timestamp
 man/*.Rd
 *.html
 *.Rproj
