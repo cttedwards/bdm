@@ -62,5 +62,5 @@ Collate:
     'status.R'
     'survivorship.R'
     'traceplot.R'
-    'update_prior.R'
+    'updatePrior.R'
     'zzz.R'

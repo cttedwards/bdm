@@ -12,10 +12,10 @@
 #' dat <- rdat(amax,iter)
 #' 
 #' # assign life-history data
-#' nmort(dat)    <- list(mu=list(M=0.18))
+#' nmort(dat)    <- list(mu=0.18)
 #' size(dat)     <- list(mu=list(Linf=106.5,k=0.229,t0=0.01)) 
 #' mass(dat)     <- list(mu=list(a=1.7e-9,b=3.328))
-#' sr(dat)       <- list(type='BH',mu=list(h=0.9))
+#' sr(dat)       <- list(type='BH',mu=0.9)
 #' maturity(dat) <- list(mu=list(acrit=8))
 #' 
 #' @seealso See the appropriate documentation in \code{\link{mass}}, \code{\link{maturity}}, \code{\link{nmort}}, \code{\link{size}}, \code{\link{sr}} and \code{\link{survivorship}} for how these are specified, accessed and assigned. See documentation for \code{\link{rcalc}} on how to calculate \eqn{r} from an \code{rdat} object. Use \code{\link{iterate}} to increase the number of iterations after the object has been created. Use \code{\link{iteration}} to access a particular iteration.

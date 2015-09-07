@@ -10,8 +10,6 @@
 #' @export
 setGeneric("fit", function(.Object, data, ...) standardGeneric("fit"))
 #'
-#' @rdname fit
-#' 
 #' @param .Object a \code{bdm} model object
 #' @param data an \code{edat} or \code{list} object containing the model inputs
 #' @param init an initialisation function that should take no arguments and return a named list of intial values for the estimated parameters
@@ -38,7 +36,7 @@ setGeneric("fit", function(.Object, data, ...) standardGeneric("fit"))
 #' # check convergence
 #' traceplot(mdl)
 #' 
-#' @export
+#' @rdname fit
 setMethod("fit", signature = c("bdm", "list"), function(.Object, data, init, chains, iter, warmup, thin, run, method = "MCMC", ...) {
   
   if (missing(data)) 

@@ -9,20 +9,19 @@
 #{{{ as.kobe functions
 setGeneric("as.kobe", function(.Object, ...) standardGeneric("as.kobe"))
 #'
-#' @rdname as.kobe
-#' 
 #' @param .Object a \code{bdm} class object
 #' @param projection an optional \code{list} containing results from a call to \code{\link{project}}
 #' @param what,prob,year,nwrms see documentation for the \pkg{kobe} package
 #' 
 #' @examples
+#' # see vignette
 #' vignette('bdm-examples')
 #' 
-#' @export
+#' @rdname as.kobe
 #{{ convert bdm object into kobe dataframe with or without projections
-setMethod("as.kobe",signature=c("bdm"),function(.Object, projection,
-                                                what=c("sims","trks","pts","smry","wrms")[1],
-                                                prob=c(0.75,0.5,.25), year = NULL, nwrms=10) {
+setMethod("as.kobe",signature = c("bdm"),function(.Object, projection,
+                                                  what=c("sims","trks","pts","smry","wrms")[1],
+                                                  prob=c(0.75,0.5,.25), year = NULL, nwrms=10) {
       
       
     if (missing(projection)) {

@@ -8,6 +8,7 @@
 #' 
 #' @return Returns a list containing the process error and total error (observation plus process error) residuals.
 #' 
+#' @importFrom stats residuals
 #' @method residuals bdm
 #' @export
 residuals.bdm <- function(object, log = TRUE, ...) {

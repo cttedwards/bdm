@@ -46,11 +46,11 @@ setMethod("shape",signature(object = "edat"),
 #{{{ assignment function
 #' @rdname shape
 #' @export
-setGeneric("shape<-", function(object, value, ...) standardGeneric("shape<-"))
+setGeneric("shape<-", function(object, ..., value) standardGeneric("shape<-"))
 #' @rdname shape
 setMethod("shape<-",
           signature(object = "edat", value = "numeric"),
-          function(object, value, par = "phi") {
+          function(object, par = "phi", value) {
             
             if (par == "phi") {
                 if (value <= 0 | value >= 1)

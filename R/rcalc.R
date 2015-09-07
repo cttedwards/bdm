@@ -8,17 +8,13 @@
 #' @include getr.R
 #' 
 #' @export
-#' 
 setGeneric("rcalc", function(.Object, ...) standardGeneric("rcalc"))
 #'
-#' @rdname rcalc
-#' 
 #' @param .Object an \code{rdat} object
 #' 
 #' @return A \code{\link{rprior}} class object containing a vector of values for \eqn{r}.
-
-#' @export
 #' 
+#' @rdname rcalc
 setMethod("rcalc", signature = "rdat", function(.Object) {
   
   n <- .Object@iter
@@ -61,6 +57,4 @@ setMethod("rcalc", signature = "rdatIter", function(.Object) {
   return(r)
   
 })
-
-
 #}}}

@@ -6,7 +6,6 @@
 #' @export
 cumsumplot <- function(x, ...) UseMethod("cumsumplot")
 #' 
-#' @rdname cumsumplot
 #' @param x \code{bdm} class object.
 #' @param pars character vector of model parameters to be plotted. Defaults to \code{pars = c('r','logK','lp__')}.
 #' @param inc_warmup logical value indicating whether MCMC warmup should be included in the plot.
@@ -15,6 +14,7 @@ cumsumplot <- function(x, ...) UseMethod("cumsumplot")
 #' 
 #' @include ggtheme.R
 #' 
+#' @rdname cumsumplot
 #' @export
 cumsumplot.bdm <- function(x, pars, inc_warmup = FALSE) {
     

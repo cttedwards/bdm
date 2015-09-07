@@ -15,7 +15,8 @@
 #' survivorship(dat)
 #' 
 #{{{ accessor function
-setGeneric("survivorship", function(object, ...) standardGeneric("survivorship"))
 #' @export
+setGeneric("survivorship", function(object, ...) standardGeneric("survivorship"))
+#' @rdname survivorship
 setMethod("survivorship",signature(object = "rdat"), function(object) return(object@lhdat$survivorship))
 #}}}

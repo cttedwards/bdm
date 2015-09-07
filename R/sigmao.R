@@ -51,7 +51,7 @@ setMethod("sigmao",signature(object = "edat"), function(object) return(object[['
 #{{{ assignment functions
 #' @rdname sigmao
 #' @export
-setGeneric("sigmao<-", function(object, value, ...) standardGeneric("sigmao<-"))
+setGeneric("sigmao<-", function(object, value) standardGeneric("sigmao<-"))
 #{{ numeric
 #' @rdname sigmao
 setMethod("sigmao<-",
@@ -64,12 +64,17 @@ setMethod("sigmao<-",
               if (length(value) < sigmao.length) {
                   if (sigmao.length %% length(value) != 0)
                       stop('dimensions for sigmao do not match dimensions for indices\n')
+                  if (length(value) == 1)
+                      value <- matrix(value, sigmao.dim[1], sigmao.dim[2])
                   if (length(value) == sigmao.dim[1])
                       value <- matrix(value, sigmao.dim[1], sigmao.dim[2], byrow = FALSE)
                   if (length(value) == sigmao.dim[2])
                       value <- matrix(value, sigmao.dim[1], sigmao.dim[2], byrow = TRUE)
+              } else {
+                  stop('dimensions for sigmao do not match dimensions for indices\n')
               }
-            object$sigmao <- structure(value, .Dim = sigmao.dim)   
+              
+            object$sigmao <- value  
             
             object$sigmao[object$index == -1] <- -1
             
@@ -85,9 +90,9 @@ setMethod("sigmao<-",
               
               if (any(dim(value) != dim(object$index))) {
                 stop('dimensions do not match index dimensions\n')
-              } else {
-                object$sigmao <- structure(value, .Dim = dim(object$index))        
-              }
+              } 
+                
+              object$sigmao <- value     
               
               object$sigmao[object$index == -1] <- -1
               

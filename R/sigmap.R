@@ -39,7 +39,7 @@ setMethod("sigmap",signature(object = "edat"),function(object) return(object[['s
 #'
 #' @rdname sigmap
 #' @export
-setGeneric("sigmap<-", function(object,value, ...) standardGeneric("sigmap<-"))
+setGeneric("sigmap<-", function(object, value) standardGeneric("sigmap<-"))
 #'
 #' @rdname sigmap
 setMethod("sigmap<-",

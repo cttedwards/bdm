@@ -17,7 +17,7 @@
 #' 
 #' @include ggtheme.R
 #' 
-#' @method plot edat
+#' @importFrom graphics plot
 #' @export
 plot.edat <- function(object)
 {

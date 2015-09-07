@@ -22,6 +22,7 @@
 #' @include getr.R
 #' @include ggtheme.R
 #' 
+#' @importFrom graphics plot
 #' @method plot rprior
 #' @export
 plot.rprior <- function(object, ...)
