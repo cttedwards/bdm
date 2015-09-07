@@ -1,11 +1,33 @@
-plot.edat <- function(object, ...)
+#'
+#' Plot index and harvest data
+#' 
+#' This function provides a \code{plot} method for the \code{edat} object class. It returns a \code{ggplot} object that can be assigned and manipulated using functions provided by \pkg{ggplot2}.
+#' 
+#' @param object an \code{\link{edat}} object class
+#' 
+#' @examples
+#' # load Indian Ocean albacore data
+#' data(albio)
+#' 
+#' # create edat object
+#' dat <- edat(harvest = albio$catch, index = albio$cpue, time = rownames(albio))
+#' 
+#' # plot
+#' plot(dat)
+#' 
+#' @include ggtheme.R
+#' 
+#' @import ggplot2
+#' @importFrom graphics plot
+#' @export
+plot.edat <- function(object)
 {
 
 	time    <- as.numeric(object[['time']])
 	harvest <- object[['harvest']]
     index   <- object[['index']]
     
-    index[index<0] <- NA
+    index[index < 0] <- NA
     
     #plt <- rainbow(dim(index)[2])
     
@@ -13,20 +35,20 @@ plot.edat <- function(object, ...)
     plt <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 	
 	gg <- ggplot() + 
-        geom_bar(data=data.frame(time=time,value=harvest,label='Harvest'),aes(time,value), stat='identity', fill="#999999")
+        geom_bar(data = data.frame(time = time,value = harvest,label = 'Harvest'),aes(time,value), stat = 'identity', fill = "#999999")
 	
-    for(i in 1:dim(index)[2]) {
-        dfr <- data.frame(time=time,value=index[,i],label='Index')
+    for (i in 1:dim(index)[2]) {
+        dfr <- data.frame(time = time,value = index[,i],label = 'Index')
         gg <- gg + 
-            geom_point(data=dfr,aes(time,value),col=plt[i], size=4) +
-            geom_line(data=dfr,aes(time,value),col=plt[i], size=1.5)
+            geom_point(data = dfr,aes(time,value),col = plt[i], size = 4) +
+            geom_line(data = dfr,aes(time,value),col = plt[i], size = 1.5)
     }
     
     gg <- gg + 
-        facet_grid(label~., scales = 'free_y') + 
+        facet_grid(label ~ ., scales = 'free_y') + 
         xlab('Time') +
 	    ylab('') + 
-        .theme_bdm()
+        ggtheme()
     
 	return(gg)
 }

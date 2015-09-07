@@ -1,46 +1,107 @@
-
+#'
+#' Projection function
+#' 
+#' This function can be used to project the default \pkg{bdm} model forward in time assuming a constant catch (harvest) or harvest rate. Multiple alternative scenarios can be run simultaneously.
+#' 
+#' Model parameter values are sampled from the joint posterior distribution and a projection is performed for each sample. A correlated random walk of process error terms is assumed during the projection.
+#' 
+#' @param object a \code{bdm} class object containing a fit to the default model
+#' @param harvest.project a constant harvest or harvest rate as a vector across alternative scenarios
+#' @param time.project number of time steps for future projection
+#' @param harvest_rate a \code{logical} value indicating whether or not \code{harvest.project} refers to the harvest (catch) or harvest rate (catch over biomass)
+#'
+#' @return Returns a \code{list} containing the elements:
+#' \describe{
+#'  \item{\code{run}}{optional run label that will match the corresponding \code{object@@run}}
+#'  \item{\code{scenarios}}{vector of harvest or harvest rate scenarios}
+#'  \item{\code{time}}{complete series of time step labels}
+#'  \item{\code{nsamples}}{number of posterior samples equal to \code{object@@nsamples}}
+#'  \item{\code{biomass}}{array of biomass values with dimensions (iteration, time, scenario)}
+#'  \item{\code{depletion}}{array of depletion values with dimensions (iteration, time, scenario)}
+#'  \item{\code{epsilon_p}}{process error residual matrix}
+#'  \item{\code{harvest}}{catch time series array}
+#'  \item{\code{harvest_rate}}{harvest rate time series array}
+#' }
+#' 
+#' @examples
+#' 
+#' # get some data
+#' data(hakcr)
+#' dat <- edat(harvest = hakcr$catch,index = cbind(hakcr$survey, hakcr$cpue))
+#' 
+#' # initialize and fit default model
+#' mdl <- bdm(compile = TRUE)
+#' mdl <- fit(mdl, dat, run = 'example_run')
+#' 
+#' # check convergence
+#' traceplot(mdl)
+#' 
+#' # constant harvest rate projection scenarios
+#' mdl.project <- project(mdl, harvest = c(0.05, 0.10, 0.15), time = 20, harvest_rate = TRUE)
+#' 
+#' # check label
+#' mdl@@run
+#' mdl.project$run
+#' 
+#' # extract median values
+#' apply(mdl.project$depletion, 2:3, median)
+#' apply(mdl.project$harvest, 2:3, median)
+#' apply(mdl.project$harvest_rate, 2:3, median)
+#' 
+#' # constant catch projection scenarios
+#' mdl.project <- project(mdl, harvest = c(900, 1200, 1500), time = 20, harvest_rate = FALSE)
+#' 
+#' # extract median values
+#' apply(mdl.project$depletion, 2:3, median)
+#' apply(mdl.project$harvest, 2:3, median)
+#' apply(mdl.project$harvest_rate, 2:3, median)
+#' 
+#' 
+#' 
 #{{{ projection functions
-setGeneric("project", function(.Object,harvest.project, ...) standardGeneric("project"))
+#' @export
+setGeneric("project", function(object, harvest.project, ...) standardGeneric("project"))
 #{{ project from bdm object under constant harvest or harvest rate specified as a single value across all iterations
-setMethod("project",signature=c("bdm","vector"),function(.Object,harvest.project,time.project,harvest_rate = TRUE, ...) {
+#' @rdname project
+setMethod("project",signature = c("bdm", "vector"),function(object, harvest.project, time.project, harvest_rate = TRUE) {
   
   # dimensions
   # **********
-  n.time       <- .Object@data$T
+  n.time       <- object@data$T
   n.total.time <- n.time + time.project
   n.scenarios  <- length(harvest.project)
-  n.iter       <- .Object@nsamples
+  n.iter       <- object@nsamples
   
-  d.time <- as.numeric(.Object@data$time)
-  d.time <- c(d.time,(d.time[n.time]+1):(d.time[n.time]+time.project))
+  d.time <- as.numeric(object@data$time)
+  d.time <- c(d.time,(d.time[n.time] + 1):(d.time[n.time] + time.project))
   
   # harvest array
   # *************
-  if(harvest_rate) {
+  if (harvest_rate) {
     
-    harvest <- array(0,dim=c(n.iter,n.total.time,n.scenarios))
-    harvest[,1:n.time,] <- .Object@trace$harvest_rate
+    harvest <- array(0,dim = c(n.iter,n.total.time,n.scenarios))
+    harvest[,1:n.time,] <- object@trace$harvest_rate
     
     # replicate iterations along first dimension
-    harvest[,(n.time+1):n.total.time,] <- array(rep(as.vector(t(matrix(harvest.project,n.scenarios,time.project))),each=n.iter),dim=c(n.iter,time.project,n.scenarios))
+    harvest[,(n.time + 1):n.total.time,] <- array(rep(as.vector(t(matrix(harvest.project,n.scenarios,time.project))),each = n.iter),dim=c(n.iter,time.project,n.scenarios))
     
   } else {
     
-    harvest                           <- matrix(0,n.scenarios,n.total.time)
-    harvest[,1:n.time]                <- matrix(.Object@data$harvest,n.scenarios,n.time,byrow=TRUE)
-    harvest[,(n.time+1):n.total.time] <- matrix(harvest.project,n.scenarios,time.project)
+    harvest                             <- matrix(0,n.scenarios,n.total.time)
+    harvest[,1:n.time]                  <- matrix(object@data$harvest,n.scenarios,n.time,byrow = TRUE)
+    harvest[,(n.time + 1):n.total.time] <- matrix(harvest.project,n.scenarios,time.project)
     
     # replicate iterations along first dimension
-    harvest <- array(rep(as.vector(t(harvest)),each=n.iter),dim=c(n.iter,n.total.time,n.scenarios))
+    harvest <- array(rep(as.vector(t(harvest)),each = n.iter),dim = c(n.iter,n.total.time,n.scenarios))
   }
   
   # process error array
   # *******************
-  ep <- array(0,dim=c(n.iter,n.total.time))
-  ep[,1:n.time] <- .Object@trace$epsilon_p
+  ep <- array(0,dim = c(n.iter,n.total.time))
+  ep[,1:n.time] <- object@trace$epsilon_p
   
   # process error sigma
-  ep.sigma <- .Object@data$sigmap
+  ep.sigma <- object@data$sigmap
   
   # default process error correlation
   # Thorson (2014) CJFAS
@@ -48,60 +109,60 @@ setMethod("project",signature=c("bdm","vector"),function(.Object,harvest.project
   
   # initialise array with LN random value
   # generated by rstan
-  ep[,n.time+1] <- rho * log(ep[,n.time]+ep.sigma^2/2) + sqrt(1-rho^2) * rnorm(n.iter,0,ep.sigma)
+  ep[,n.time + 1] <- rho * log(ep[,n.time] + ep.sigma^2/2) + sqrt(1 - rho^2) * rnorm(n.iter,0,ep.sigma)
   
   # correlated random variates on log scale
-  for(t in (n.time+2):n.total.time)
-    ep[,t] <- rho * ep[,t-1] + sqrt(1-rho^2) * rnorm(n.iter,0,ep.sigma)
+  for (t in (n.time + 2):n.total.time)
+    ep[,t] <- rho * ep[,t - 1] + sqrt(1 - rho^2) * rnorm(n.iter,0,ep.sigma)
   
   # convert to natural scale
-  ep[,(n.time+1):n.total.time] <- exp(ep[,(n.time+1):n.total.time]-ep.sigma^2/2)
+  ep[,(n.time + 1):n.total.time] <- exp(ep[,(n.time + 1):n.total.time] - ep.sigma^2/2)
   
   # depletion array
   # ***************
-  x <- array(0,dim=c(n.iter,n.total.time,n.scenarios))
-  x[,1:n.time,] <- .Object@trace$x
+  x <- array(0,dim = c(n.iter,n.total.time,n.scenarios))
+  x[,1:n.time,] <- object@trace$x
   
-  for(s in 1:n.scenarios)
-    for(t in (n.time+1):n.total.time)
-      x[,t,s] <- .project_harvest(x[,t-1,s],ep[,t-1],harvest[,t-1,s],harvest_rate,.Object)
+  for (s in 1:n.scenarios)
+    for (t in (n.time+1):n.total.time)
+      x[,t,s] <- .project_harvest(x[,t - 1,s],ep[,t - 1],harvest[,t - 1,s],harvest_rate,object)
   
   # return
   # ******
-  dimnames(x)       <- list(iter=1:n.iter,time=d.time,scenario=1:n.scenarios)
-  dimnames(ep)      <- list(iter=1:n.iter,time=d.time)
-  dimnames(harvest) <- list(iter=1:n.iter,time=d.time,scenario=1:n.scenarios)
+  dimnames(x)       <- list(iter = 1:n.iter,time = d.time,scenario = 1:n.scenarios)
+  dimnames(ep)      <- list(iter = 1:n.iter,time = d.time)
+  dimnames(harvest) <- list(iter = 1:n.iter,time = d.time,scenario = 1:n.scenarios)
   
-  biomass <- apply(x,2:3,function(y) y * exp(.Object@trace$logK))
-  dimnames(biomass) <- list(iter=1:n.iter,time=d.time,scenario=1:n.scenarios)
+  biomass <- apply(x,2:3,function(y) y * exp(object@trace$logK))
+  dimnames(biomass) <- list(iter = 1:n.iter,time = d.time,scenario = 1:n.scenarios)
   
-  if(harvest_rate) {
-    list(run=.Object@run,scenarios=harvest.project,time=d.time,nsamples=n.iter,biomass=biomass,depletion=x,epsilon_p=ep,harvest=harvest*biomass,harvest_rate=harvest)
+  if (harvest_rate) {
+    list(run = object@run,scenarios = harvest.project,time = d.time,nsamples = n.iter,biomass = biomass,depletion = x,epsilon_p = ep,harvest = harvest*biomass,harvest_rate = harvest)
   } else {
-    list(run=.Object@run,scenarios=harvest.project,time=d.time,nsamples=n.iter,biomass=biomass,depletion=x,epsilon_p=ep,harvest=harvest,harvest_rate=harvest/biomass)
+    list(run = object@run,scenarios = harvest.project,time = d.time,nsamples = n.iter,biomass = biomass,depletion = x,epsilon_p = ep,harvest = harvest,harvest_rate = harvest/biomass)
   }
 })
 #{
-.project_harvest <- function(x,ep,harvest,harvest_rate,.Object) {
+.project_harvest <- function(x,ep,harvest,harvest_rate,object) {
   
-  r    <- .Object@trace$r
-  logK <- .Object@trace$logK
-  dmsy <- .Object@trace$dmsy
-  h    <- .Object@trace$h
-  g    <- .Object@trace$g
-  m    <- .Object@trace$m
-  n    <- .Object@data$n
+  r    <- object@trace$r
+  logK <- object@trace$logK
+  dmsy <- object@trace$dmsy
+  h    <- object@trace$h
+  g    <- object@trace$g
+  m    <- object@trace$m
+  n    <- object@data$n
   
-  if(harvest_rate) {
-    pars <- data.frame(x=x,r=r,logK=logK,dmsy=dmsy,h=h,g=g,m=m,H=harvest*x,ep=ep)
+  if (harvest_rate) {
+    pars <- data.frame(x = x,r = r,logK = logK,dmsy = dmsy,h = h,g = g,m = m,H = harvest*x,ep = ep)
   } else {
-    pars <- data.frame(x=x,r=r,logK=logK,dmsy=dmsy,h=h,g=g,m=m,H=exp(log(harvest) - logK),ep=ep)
+    pars <- data.frame(x = x,r = r,logK = logK,dmsy = dmsy,h = h,g = g,m = m,H = exp(log(harvest) - logK),ep = ep)
   }
   pars[,'H'] <- apply(pars,1,function(y) y['H'] <- min(y['H'],y['x']))
  
   x.out <- apply(pars,1,function(y) {
-              if(y['x']<=y['dmsy']) { max((y['x'] + y['r'] * y['x'] * (1 - y['x']/y['h']) - y['H'])*y['ep'],0.01)
-              } else max((y['x'] + y['g'] * y['m'] * y['x'] * (1 - y['x']^(n-1)) - y['H'])*y['ep'],0.01)
+              if (y['x'] <= y['dmsy']) { max((y['x'] + y['r'] * y['x'] * (1 - y['x']/y['h']) - y['H'])*y['ep'],0.01)
+              } else max((y['x'] + y['g'] * y['m'] * y['x'] * (1 - y['x']^(n - 1)) - y['H'])*y['ep'],0.01)
               })
     
   x.out

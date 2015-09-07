@@ -24,7 +24,7 @@ library(bdm)
 
 # Chatham Rise Hake
 
-The model is fitted to data from the chatham rise hake fishery in New Zealand, which consists of catches, a commerical abundance index and a survey index. The data are used to initialise an empirical data object (`edat`) that, by default, renormalises the indices to a geometric mean of one. See `?edat` for details.
+The model is fitted to data from the chatham rise hake fishery in New Zealand, which consists of catches, a commerical abundance index and a survey index. The data are used to initialise an empirical data object (`edat`) that, by default, renormalises the indices to a arithmetic mean of one. See `?edat` for details.
 
 ```{r hakcr-data, results='hide', fig.cap='Chatham rise hake data'}
 data(hakcr)
@@ -48,16 +48,16 @@ mass(lhdat)     <- list(mu=list(a=1.88e-9,b=3.305))
 sr(lhdat)       <- list(type='BH',mu=0.90,cv=0.10)
 
 # calculate r prior and fit log-normal distribution
-r <- fit(rcalc(lhdat))
+r <- rcalc(lhdat)
 plot(r)
 ```
 
 ## Estimation of depletion
-The model is initialised using the `bdm` command, with no arguments. Arguments can be supplied in the form or alternative model code, but by default initialisation loads a generalised surplus production model, which will be used for this example. Following initialisation of the model, the prior information on $r$, contained in the `rprior` object, can be loaded using the `update_bdm` function, which takes as input the `bdm` and `rprior` objects. This function updates the model code directly, following which it must be compiled.
+The model is initialised using the `bdm` command, with no arguments. Arguments can be supplied in the form or alternative model code, but by default initialisation loads a generalised surplus production model, which will be used for this example. Following initialisation of the model, the prior information on $r$, contained in the `rprior` object, can be loaded using the `updatePrior` function, which takes as input the `bdm` and `rprior` objects. This function updates the model code directly, following which it must be compiled.
 
 ```{r, results='hide'}
 mdl <- bdm()
-mdl <- update_bdm(mdl,r,compile=TRUE)
+mdl <- updatePrior(mdl, r, compile = TRUE)
 ```
 
 The default generalised surplus production model allows the depletion at maxium sustainable yield (MSY) to be fixed by the user. The depletion at MSY ($\phi$) forms part of the model inputs encoded in the `edat` object and can be accessed or assigned using the `shape` function. For chatham rise hake we assume that MSY occurs at 40\% of the carrying capacity (i.e. $\phi=0.4$). 
@@ -78,10 +78,10 @@ Trace, posterior histogram and cumulative density plots can be produced using th
 traceplot(mdl)
 ```
 ```{r hakhist, fig.cap='Posterior histograms for chatham rise hake fit.'}
-histplot(mdl,par=c('r','logK','q'))
+histplot(mdl,par = c('r','logK','q'))
 ```
 ```{r hakcumsum, fig.cap='Cumulative posterior denisty plot for chatham rise hake fit.'}
-cumsumplot(mdl,par=c('r','logK'))
+cumsumplot(mdl,par = c('r','logK'))
 ```
 
 ## Model outputs
@@ -95,7 +95,7 @@ dynplot(mdl)
 Plotting functions `traceplot`, `histplot` and `dynplot` return graphical objects from the `ggplot2` package and can be modified before they are printed. For example, to add a title to the plot of surplus production and change the y-axis one could type:
 
 ```{r, fig.show='hide'}
-gg <- dynplot(mdl, pars='surplus_production')
+gg <- dynplot(mdl, pars = 'surplus_production')
 gg <- gg + ggtitle('Surplus Production')
 print(gg)
 ```
@@ -134,15 +134,13 @@ kobePhase(subset(assmt,year==max(assmt$year))) +
 
 The `as.kobe` function can also be used to produce a summary of stock status over time; specifically the probability that the stock is in the green, red and yellow quadrants of the phase plane.
 
-```{r kobesummary, results = "asis"}
+```{r kobesummary, results = "hide"}
 assmt <- as.kobe(mdl, what = 'smry')
 pander::pandoc.table(assmt)
 ```
 
 
 # Chatham Rise Orange Roughy
-
-## Default application
 
 ```{r orhcr-data, results='hide', fig.cap='Chatham rise orange roughy data'}
 data(orhcr)
@@ -164,13 +162,13 @@ mass(lhdat)     <- list(mu=list(a=8.0e-2,b=2.75))
 sr(lhdat)       <- list(type='BH',mu=0.75,cv=0.10)
 
 # calculate r prior and fit log-normal distribution
-r <- fit(rcalc(lhdat))
+r <- rcalc(lhdat)
 plot(r)
 ```
 
 ```{r, results='hide'}
 mdl <- bdm()
-mdl <- update_bdm(mdl,r,compile=TRUE)
+mdl <- updatePrior(mdl, r, compile = TRUE)
 ```
 
 ```{r, results='hide'}
@@ -180,246 +178,21 @@ mdl <- fit(mdl,dat)
 Trace and posterior histogram plots produced using the `traceplot` and `histplot` functions.
 
 ```{r orhtrace, fig.cap='Traceplots for chatham rise orange roughy fit.'}
-traceplot(mdl,par=c('r','logK'))
+traceplot(mdl,par = c('r','logK'))
 ```
 ```{r orhhist, fig.cap='Posterior histograms for chatham rise orange roughy fit.'}
-histplot(mdl,par=c('r','logK'))
+histplot(mdl,par = c('r','logK'))
+```
+The status estimates of the stock can be obtained in a similar manner to the reference points above.
+
+```{r orhstatus, results = "asis"}
+pander::pandoc.table(data.frame(lapply(status(mdl),median)))
 ```
 
-This currently represents a standard application, but in some situations it may be necessary to modify the model itself. For example, we might want to create a model that estimates the process erro. This is illustrated here using the same Orange Roughy example.
+Based on these we can perform projections exploring alternative constant harvest rate options. For example:
 
-## Uploading a new model
-
-The current (default) model in `bdm` can be accessed by simply typing:
-
-```{r, results='hide'}
-mdl
+```{r orhproj}
+mdl.project <- project(mdl, harvest = c(0.01, 0.025, 0.05), time = 100)
 ```
-
-The revised model however could be coded as:
-
-```{r}
-  orh_code <- '
-    data {
-      int T;
-      int I;
-      real index[T,I];
-      real harvest[T];
-      real n;
-      real sigmao[T,I];
-      real sigmap;
-    }
-    parameters {
-      real<lower=3,upper=30> logK;
-      real<lower=0,upper=2> r;
-      real<lower=0> x[T];
-	  real<lower=0> sigmap2; 
-    }
-    transformed parameters {
-
-      real q[I];
-
-      // variance terms
-      real sigmao2[T,I];
-
-      // fletcher-schaefer
-      // parameters
-      real dmsy;
-      real h;
-      real m;
-      real g;
-      
-      dmsy <- pow((1/n),(1/(n-1)));
-      h <- 2*dmsy;
-      m <- r*h/4;
-      g <- pow(n,(n/(n-1)))/(n-1);
-
-      // variance terms
-      for(t in 1:T)
-        for(i in 1:I)
-            sigmao2[t,i] <- square(sigmao[t,i]);
-      
-      // compute mpd catchability assuming 
-      // variable sigmao over time assuming
-      // uniform prior on q
-      {
-        real sum1;
-        real sum2;
-        real p;
-        for(i in 1:I){
-          sum1 <- 0.0;
-          sum2 <- 0.0;
-          p <- 0.0;
-          for(t in 1:T){
-            if(index[t,i]>0.0 && x[t]>0.0) {
-              sum1 <- sum1 + log(index[t,i]/x[t])/sigmao2[t,i];
-              sum2 <- sum2 + 1/sigmao2[t,i];
-              p <- p + 1.0;
-            }
-          }
-          if(p>2.0) { q[i] <- exp((0.5 * p + sum1) / sum2);
-            } else q[i] <- 0.0;
-        }
-      }
-    } 
-    model {
-      
-      // prior densities for
-      // estimated parameters
-      // ********************
-      logK ~ uniform(3.0,30.0);
-      r ~ lognormal(-3.0,0.2);
-	  sigmap2 ~ inv_gamma(0.001,0.001);
-      
-      // state equation
-      // **************
-      {
-        real H;
-        real mu;
-        x[1] ~ lognormal(log(1.0)-sigmap2/2, sqrt(sigmap2));
-        for(t in 2:T) {
-          H <- fmin(exp(log(harvest[t-1]) - logK),x[t-1]);
-          if(x[t-1]<=dmsy) mu <- x[t-1] + r * x[t-1] * (1 - x[t-1]/h) - H;
-          if(x[t-1]> dmsy) mu <- x[t-1] + g * m * x[t-1] * (1 - pow(x[t-1],(n-1))) - H;
-          if(mu > 0.0) mu <- log(mu) - sigmap2/2;
-          else mu <- log(0.01) - sigmap2/2;
-          x[t] ~ lognormal(mu, sqrt(sigmap2));
-        }
-      }
-      
-      // observation equation
-      // ********************
-      {
-        real mu;
-        for(i in 1:I){
-          for(t in 1:T){
-            if(index[t,i]>0.0 && x[t]>0.0 && q[i]>0.0) {
-              mu <- log(q[i]*x[t]) - sigmao2[t,i]/2;
-              index[t,i] ~ lognormal(mu,sigmao[t,i]);
-            }
-          }
-        }
-      }
-
-      // apply penalty for H>0.95
-      // ************************
-      for(t in 1:T){
-      real H_; H_ <- harvest[t]/exp(log(x[t]) + logK);
-        if(H_>0.95) {
-          increment_log_prob(-log(H_/0.95) * (1/sigmap2));
-        }
-      }
-    }
-    generated quantities {
-
-      real biomass[T];
-      real depletion[T];
-      real harvest_rate[T];
-      real surplus_production[T];
-      
-      real epsilon_o[T,I];
-      real epsilon_p[T];
-
-      real current_biomass;
-      real current_depletion;
-      real current_harvest_rate;
-
-      real msy;
-      real biomass_at_msy;
-      real harvest_rate_at_msy;
-
-      real observed_index[T,I];
-      real predicted_index[T,I];
-      
-      {
-        real H;
-        for(t in 2:T) {
-          H <- fmin(exp(log(harvest[t-1]) - logK),x[t-1]);
-          if(x[t-1]<=dmsy) epsilon_p[t-1] <- x[t]/(x[t-1] + r * x[t-1] * (1 - x[t-1]/h) - H);
-          if(x[t-1]> dmsy) epsilon_p[t-1] <- x[t]/(x[t-1] + g * m * x[t-1] * (1 - pow(x[t-1],(n-1))) - H);
-        }
-        epsilon_p[T] <- lognormal_rng(log(1.0)-sigmap2/2, sqrt(sigmap2));
-      }
-      
-      for(t in 1:T) {
-        biomass[t] <- x[t] * exp(logK);
-        depletion[t] <- x[t];
-        harvest_rate[t] <- harvest[t]/exp(log(x[t]) + logK);
-        if(x[t]<=dmsy) surplus_production[t] <- r * x[t] * (1 - x[t]/h) * epsilon_p[t];
-        if(x[t]> dmsy) surplus_production[t] <- g * m * x[t] * (1 - pow(x[t],(n-1))) * epsilon_p[t];
-      }
-
-      current_biomass <- biomass[T];
-      current_depletion <- x[T];
-      current_harvest_rate <- harvest_rate[T];
-
-      msy <- m * exp(logK);
-      biomass_at_msy <- dmsy * exp(logK);
-      harvest_rate_at_msy <- m / dmsy;
-
-      for(i in 1:I){
-        for(t in 1:T){
-          if(index[t,i]>0.0) {
-            observed_index[t,i] <- index[t,i];
-          }
-          predicted_index[t,i] <- q[i]*x[t];
-        }
-      }
-
-      for(t in 1:T){
-        for(i in 1:I){
-          epsilon_o[t,i] <- observed_index[t,i]/predicted_index[t,i];
-        }
-      }
-    }
-  '
-```
-
-This new formulation includes a revision of our assumptions regarding the process error, allowing it to be estimated. Note that it already includes the $r$ prior values stored in `r@lognormal.par`. To update the current model, it is necessary to re-declare the model object and compile:
-
-```{r, results='hide'}
-mdl <- bdm(model.code = orh_code)
-mdl <- compile_bdm(mdl)
-```
-
-This new model can again be viewed by examining the object:
-
-```{r, results='hide'}
-mdl
-```
-
-If a new model is loaded into the `bdm` object, it is no-longer the default model: 
-
-```{r} 
-mdl@default_model 
-```
-
-This means that some of the standard functions will not work, one of which is the initialisation function, that provides initial, sensible values for the MCMC algorithm. If the new model were to be run without an initialisation function, it will produce an error. This is a conservative, error checking mechanism. 
-
-To construct a new inititialisation function we can use some of the functions that are implemented for the default model:
-
-```{r}
-init.r <- getr(mdl)
-init.logK <- getlogK(dat, r = init.r)
-init.x <- getx(dat, r = init.r, logK = init.logK)
-```
-
-These values can be used to create the initialisation function that must return a list of initial values:
-
-```{r, results='hide'}
-init.func <- function() list(r = init.r, logK = init.logK, x = init.x, sigmap2 = 0.0025)
-mdl <- fit(mdl, dat, init = init.func)
-```
-```{r neworhhist, fig.cap='Posterior histogram plots for chatham rise orange roughy fit using the new non-default model'}
-histplot(mdl,par=c('r','logK','sigmap2'))
-```
-
-We note that the model is uanble to resolve a value for `logK`, and estiamates an excessively high value for `sigmap2`. It would therefore be considered to have failed as an assessment. This can be most easily seen from the catchability traces:
-
-```{r neworhtrace, fig.cap='Catchability trace plots plots for chatham rise orange roughy fit using the new non-default model'}
-traceplot(mdl,par='q')
-```
-
-
 
 
