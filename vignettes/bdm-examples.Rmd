@@ -53,12 +53,11 @@ plot(r)
 ```
 
 ## Estimation of depletion
-The model is initialised using the `bdm` command, with no arguments. Arguments can be supplied in the form or alternative model code, but by default initialisation loads a generalised surplus production model, which will be used for this example. Following initialisation of the model, the prior information on $r$, contained in the `rprior` object, can be loaded using the `update` function, which takes as input the `bdm` and `rprior` objects. This function updates the model code directly, following which it must be compiled.
+The model is initialised using the `bdm` command, with no arguments. Arguments can be supplied in the form or alternative model code, but by default initialisation loads a generalised surplus production model, which will be used for this example. Following initialisation of the model, the prior information on $r$, contained in the `rprior` object, can be loaded using the `updatePrior` function, which takes as input the `bdm` and `rprior` objects. This function updates the model code directly, following which it must be compiled.
 
 ```{r, results='hide'}
 mdl <- bdm()
-#mdl <- update(mdl, prior = r, compile = TRUE)
-mdl <- compile(mdl)
+mdl <- updatePrior(mdl, r, compile = TRUE)
 ```
 
 The default generalised surplus production model allows the depletion at maxium sustainable yield (MSY) to be fixed by the user. The depletion at MSY ($\phi$) forms part of the model inputs encoded in the `edat` object and can be accessed or assigned using the `shape` function. For chatham rise hake we assume that MSY occurs at 40\% of the carrying capacity (i.e. $\phi=0.4$). 
@@ -169,8 +168,7 @@ plot(r)
 
 ```{r, results='hide'}
 mdl <- bdm()
-#mdl <- update(mdl, prior = r, compile = TRUE)
-mdl <- compile(mdl)
+mdl <- updatePrior(mdl, r, compile = TRUE)
 ```
 
 ```{r, results='hide'}

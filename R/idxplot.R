@@ -3,6 +3,7 @@
 #' 
 #' Plots the estimated abundance index dynamics over time against the observed values
 #' 
+#' @import ggplot2
 #' @export
 idxplot <- function(x, ...) UseMethod("idxplot")
 #'

@@ -33,13 +33,13 @@ setMethod("as.kobe",signature = c("bdm"),function(.Object, projection,
 
       res <- .read_bdm_projection(.Object,projection)
       
-      res <- lapply(res,FUN=.io_bdm,what=what,prob=prob,nwrms=nwrms,year=year)
+      res <- lapply(res,FUN = .io_bdm, what = what, prob = prob, nwrms = nwrms, year = year)
                        
-      res <- list(trks=ldply(res, function(x) x$trks,.id='projection_value'),
-               pts =ldply(res, function(x) x$pts,.id='projection_value'),
-               smry=ldply(res, function(x) x$smry,.id='projection_value'),
-               wrms=ldply(res, function(x) x$wrms,.id='projection_value'),
-               sims=ldply(res, function(x) x$sims,.id='projection_value'))
+      res <- list(trks = plyr::ldply(res, function(x) x$trks,.id='projection_value'),
+               pts = plyr::ldply(res, function(x) x$pts,.id='projection_value'),
+               smry = plyr::ldply(res, function(x) x$smry,.id='projection_value'),
+               wrms = plyr::ldply(res, function(x) x$wrms,.id='projection_value'),
+               sims = plyr::ldply(res, function(x) x$sims,.id='projection_value'))
       }
 
     
@@ -58,8 +58,8 @@ setMethod("as.kobe",signature = c("bdm"),function(.Object, projection,
   res <- .Object@trace$biomass
   dimnames(res) <- list(iter = iters, year = years)
   
-  res <- melt(res,value.name = 'stock')
-  res <- data.frame(res,harvest = melt(.Object@trace$harvest_rate)$value)
+  res <- reshape2::melt(res,value.name = 'stock')
+  res <- data.frame(res,harvest = reshape2::melt(.Object@trace$harvest_rate)$value)
   
   bmsy <- .Object@trace$biomass_at_msy
   fmsy <- .Object@trace$harvest_rate_at_msy
@@ -71,7 +71,7 @@ setMethod("as.kobe",signature = c("bdm"),function(.Object, projection,
   res$stock   <- res$stock/res$bmsy
   res$harvest <- res$harvest/res$fmsy
   
-  if(length(.Object@run) > 0) {
+  if (length(.Object@run) > 0) {
     run <- .Object@run
     res <- data.frame(run = run,res)
   }
@@ -89,27 +89,27 @@ setMethod("as.kobe",signature = c("bdm"),function(.Object, projection,
   nscenario <- length(projection$scenarios)
   
   res <- list()
-  for(s in 1:nscenario) {
+  for (s in 1:nscenario) {
   
 	  res.sc <- projection$biomass[,,s]
-	  dimnames(res.sc) <- list(iter=iters,year=years)
+	  dimnames(res.sc) <- list(iter = iters,year = years)
 	  
-	  res.sc <- melt(res.sc,value.name='stock')
-	  res.sc <- data.frame(res.sc,harvest=melt(projection$harvest_rate[,,s])$value)
+	  res.sc <- reshape2::melt(res.sc,value.name = 'stock')
+	  res.sc <- data.frame(res.sc,harvest = reshape2::melt(projection$harvest_rate[,,s])$value)
 	  
 	  bmsy <- .Object@trace$biomass_at_msy
 	  fmsy <- .Object@trace$harvest_rate_at_msy
 	  
-	  ref <- data.frame(iter=iters,bmsy=bmsy,fmsy=fmsy)
+	  ref <- data.frame(iter = iters,bmsy = bmsy,fmsy = fmsy)
 	  
-	  res.sc <- merge(res.sc,ref,by="iter")
+	  res.sc <- merge(res.sc,ref,by = "iter")
 	  
 	  res.sc$stock   <- res.sc$stock/res.sc$bmsy
 	  res.sc$harvest <- res.sc$harvest/res.sc$fmsy
     
-	  if(length(.Object@run)>0) {
+	  if (length(.Object@run) > 0) {
 	    run <- .Object@run
-	    res.sc <- data.frame(run=run,res.sc)
+	    res.sc <- data.frame(run = run,res.sc)
 	  }
   
 	  res[[s]] <- res.sc
@@ -131,11 +131,11 @@ setMethod("as.kobe",signature = c("bdm"),function(.Object, projection,
     wrms. = NULL
     sims. = NULL
         
-    if ("trks" %in% what){ 
-      stock   = ddply(res,.(year),function(x) quantile(x$stock,    prob, na.rm=TRUE))
-      harvest = ddply(res,.(year),function(x) quantile(x$harvest,  prob, na.rm=TRUE))
-      trks. = data.frame(melt(stock,id.vars="year"),"harvest"=melt(harvest,id.vars="year")[,3])
-      names(trks.)[c(2,3)]=c("Percentile","stock")}
+    if ("trks" %in% what) { 
+      stock   = plyr::ddply(res,.(year),function(x) quantile(x$stock,    prob, na.rm=TRUE))
+      harvest = plyr::ddply(res,.(year),function(x) quantile(x$harvest,  prob, na.rm=TRUE))
+      trks. = data.frame(reshape2::melt(stock,id.vars = "year"),"harvest" = reshape2::melt(harvest,id.vars = "year")[,3])
+      names(trks.)[c(2,3)] = c("Percentile","stock")}
     
     if ("pts" %in% what)
       pts. = res[res$year %in% pts,]
@@ -162,7 +162,7 @@ setMethod("as.kobe",signature = c("bdm"),function(.Object, projection,
             data.frame(red=red,green=green,yellow=yellow,overFished=overFished,overFishing=overFishing)
         }
     
-       smry. = ddply(data.frame(res,kobe.quadrant(as.numeric(res$stock),as.numeric(res$harvest))),
+       smry. <- plyr::ddply(data.frame(res,kobe.quadrant(as.numeric(res$stock),as.numeric(res$harvest))),
                            .(year), function(x) data.frame(stock      = median(x$stock,       na.rm=TRUE),
                                                            harvest    = median(x$harvest,     na.rm=TRUE),
                                                            red        = mean(  x$red,         na.rm=TRUE),

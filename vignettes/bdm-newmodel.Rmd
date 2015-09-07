@@ -240,7 +240,7 @@ This new formulation includes a revision of our assumptions regarding the proces
 
 ```{r, results='hide'}
 mdl <- bdm(model.code = new_model)
-#mdl <- update(mdl, prior = list(par = 'r', meanlog = -0.91, sdlog = 0.40))
+mdl <- updatePrior(mdl, prior = list(par = 'r', meanlog = -0.91, sdlog = 0.40))
 mdl <- compile(mdl)
 ```
 

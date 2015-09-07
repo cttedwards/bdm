@@ -2,7 +2,8 @@
 #' Plot posterior histograms
 #' 
 #' Plots histograms of posterior samples from an MCMC chain contained within a \code{bdm} class object.
-#' 
+#'
+#' @import ggplot2 
 #' @export
 #' 
 histplot <- function(object, ...) UseMethod("histplot")

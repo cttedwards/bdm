@@ -17,6 +17,7 @@
 #' 
 #' @include ggtheme.R
 #' 
+#' @import ggplot2
 #' @importFrom graphics plot
 #' @export
 plot.edat <- function(object)
@@ -28,10 +29,10 @@ plot.edat <- function(object)
     
     index[index < 0] <- NA
     
-    plt <- rainbow(dim(index)[2])
+    #plt <- rainbow(dim(index)[2])
     
     # color blind palette
-    #plt <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+    plt <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 	
 	gg <- ggplot() + 
         geom_bar(data = data.frame(time = time,value = harvest,label = 'Harvest'),aes(time,value), stat = 'identity', fill = "#999999")

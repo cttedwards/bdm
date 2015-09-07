@@ -1,5 +1,5 @@
 #'
-#' Update priors
+#' Update priors in \code{bdm} model
 #' 
 #' This function can be used to update the priors for \eqn{r} and \eqn{ln(K)}. 
 #' 
@@ -7,8 +7,6 @@
 #' 
 #' By default this function only updates the model code. The model will need to be re-compiled before it is run for the changes to take effect.
 #' 
-#' @include bdm-class.R
-#' @include rprior-class.R
 #' @include getr.R
 #' @include compile.R
 #' 
@@ -25,11 +23,13 @@
 #' # update prior for r
 #' mdl <- updatePrior(mdl, list(par = 'r', meanlog = -1.1, sdlog = 0.1))
 #' 
-#' update prior for logK
+#' # update prior for logK
 #' mdl <- updatePrior(mdl, list(par = 'logK', min = 1, max = 100))
 #' 
 #' # compile
+#' \dontrun{
 #' mdl <- compile(mdl)
+#' }
 #' 
 #' @export
 updatePrior <- function(object, ...) UseMethod("updatePrior")

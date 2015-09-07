@@ -25,7 +25,7 @@ compile <- function(object, ...) UseMethod("compile")
 #' @export
 compile.bdm <- function(object, ...) {
     
-    tmp <- stan_model(model_code = object@model_code, model_name = object@model_name,...)
+    tmp <- rstan::stan_model(model_code = object@model_code, model_name = object@model_name,...)
     
     object@model_cpp  <- tmp@model_cpp
     object@dso        <- tmp@dso

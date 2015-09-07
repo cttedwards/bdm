@@ -14,6 +14,7 @@
 #' 
 #' @include ggtheme.R
 #' 
+#' @import ggplot2
 #' @export
 setMethod("traceplot", signature = "bdm",function(object, pars, inc_warmup = TRUE, ask = FALSE, ...) {
   
