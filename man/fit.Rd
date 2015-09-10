@@ -49,7 +49,8 @@ data(hakcr)
 dat <- edat(harvest = hakcr$catch,index = cbind(hakcr$survey, hakcr$cpue))
 
 # initialize and fit default model
-mdl <- bdm(compile = TRUE)
+mdl <- bdm()
+mdl <- compile(mdl)
 mdl <- fit(mdl, dat)
 
 # check convergence

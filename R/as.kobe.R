@@ -15,7 +15,9 @@ setGeneric("as.kobe", function(.Object, ...) standardGeneric("as.kobe"))
 #' 
 #' @examples
 #' # see vignette
+#' \dontrun{
 #' vignette('bdm-examples')
+#' }
 #' 
 #' @rdname as.kobe
 #{{ convert bdm object into kobe dataframe with or without projections

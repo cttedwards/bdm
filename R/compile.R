@@ -8,7 +8,7 @@
 #' 
 #' @examples
 #' # initialise default model object
-#' mdl <- bdm(compile = FALSE)
+#' mdl <- bdm()
 #' 
 #' # compile Stan model code
 #' mdl <- compile(mdl)

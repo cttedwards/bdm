@@ -12,7 +12,6 @@
 #' 
 #' @param object a \code{bdm} class object
 #' @param prior a \code{rprior} class object or a \code{list} object containing information to update the prior
-#' @param compile a \code{logical} value indicating whether or not the code should be compiled
 #' 
 #' @return Returns a \code{bdm} object with updated model code.
 #' 
@@ -36,7 +35,7 @@ updatePrior <- function(object, ...) UseMethod("updatePrior")
 #'
 #' @rdname updatePrior
 #' @export
-updatePrior.bdm <-  function(object, prior, compile = FALSE) {
+updatePrior.bdm <-  function(object, prior) {
     
     if (is.list(prior)) {
         if (prior$par == 'r') {
@@ -59,9 +58,7 @@ updatePrior.bdm <-  function(object, prior, compile = FALSE) {
         object@model_code <- sub("r.?~.?lognormal\\(.+?\\);",paste("r ~ lognormal(",logmu,",",logsigma,");",sep = ""),object@model_code)
     }
     
-    if (compile) {
-        object <- compile(object)
-    } else message('re-compile the model before running fit()')
+    message('re-compile the model before running fit()')
     
     object
 }

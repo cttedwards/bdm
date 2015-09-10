@@ -6,7 +6,7 @@
 \alias{bdm-class}
 \title{Class definition for \code{bdm} object}
 \usage{
-bdm(path, model.code, model.name = "", compile = FALSE, ...)
+bdm(path, model.code, model.name = "", ...)
 }
 \description{
 This is the primary object class for the \pkg{bdm} package, containting all the information necessary to fit the model. It inherits from the \code{rstan::stanmodel} class and therefore includes the \code{stan} model code and compiled DSO.

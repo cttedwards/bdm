@@ -11,21 +11,21 @@
 #' 
 #' @export
 #'
-bdm <- function(path, model.code, model.name = '', compile = FALSE, ...) {
+bdm <- function(path, model.code, model.name = '', ...) {
     if (!missing(path)) { 
         model.name <- ifelse(model.name == '', sub("\\.[^.]*$", "", basename(path)), model.name)
-        new('bdm', path = path, model.name = model.name, compile = compile, default_model = FALSE, ...)
+        new('bdm', path = path, model.name = model.name, default_model = FALSE, ...)
     } else { 
         if (!missing(model.code)) { 
             model.name <- ifelse(model.name == '', deparse(substitute(model.code)), model.name)
-            new('bdm', model.code = model.code, model.name = model.name, compile = compile, default_model = FALSE, ...)
+            new('bdm', model.code = model.code, model.name = model.name, default_model = FALSE, ...)
         } else {
             model.name <- ifelse(model.name == '', 'bdm default', model.name)
-            new('bdm', model.code = bdm_default, model.name = model.name, compile = compile, default_model = TRUE, ...)
+            new('bdm', model.code = bdm_default, model.name = model.name, default_model = TRUE, ...)
         }
     }
 }
-setMethod("initialize", "bdm", function(.Object, path, model.code, model.name, compile, default_model, ...) {
+setMethod("initialize", "bdm", function(.Object, path, model.code, model.name, default_model, ...) {
     
     if (!missing(path)) {
         .Object@path       <- path
@@ -36,12 +36,6 @@ setMethod("initialize", "bdm", function(.Object, path, model.code, model.name, c
         .Object@path       <- ifelse(default_model, 'default_model', 'local_declaration')
         .Object@model_name <- model.name
         .Object@model_code <- model.code
-    }
-    if (compile) {
-        tmp <- stan_model(model_code = .Object@model_code, model_name = .Object@model_name, ...)
-        
-        .Object@model_cpp  <- tmp@model_cpp
-        .Object@dso        <- tmp@dso
     }
     
     .Object@chains <- 4
