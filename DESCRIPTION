@@ -1,66 +1,21 @@
 Package: bdm
 Type: Package
 Title: Bayesian biomass dynamics model
-Version: 1.0
-Date: 2015-03-24
+Version: 0.0.0.9000
+Date: 2015-09-10
 Author: Charles T T Edwards
 Maintainer: Charles T T Edwards <charles.edwards@niwa.co.nz>
 Description: Bayesian fit of a generalised production model to catch and
     abundance data using Hamiltonian MCMC
-License: GNU General Public License Version 3
+License: GPL (>=3)
+LazyData: true
 VignetteBuilder: knitr
 Suggests:
     knitr,
     testthat
 Depends:
-    R(>= 3.1.0),
-    methods,
-    rstan,
-    ggplot2,
-    reshape2,
-    plyr
+    R (>= 3.2.2),
+    rstan (>= 2.7.0)
 Imports:
+    methods,
     kobe(>= 1.3.2)
-Collate:
-    'bdm-class.R'
-    'as.kobe.R'
-    'bdm.R'
-    'compile.R'
-    'ggtheme.R'
-    'cumsumplot.R'
-    'dynplot.R'
-    'edat-class.R'
-    'edat.R'
-    'fit.R'
-    'getlogK.R'
-    'getr.R'
-    'getx.R'
-    'histplot.R'
-    'idxplot.R'
-    'rdat-class.R'
-    'iterate.R'
-    'rdatIter-class.R'
-    'iteration.R'
-    'mass.R'
-    'maturity.R'
-    'nmort.R'
-    'plot.edat.R'
-    'plot.rprior.R'
-    'project.R'
-    'rcalc.R'
-    'rdat.R'
-    'rdatIter.R'
-    'refpoints.R'
-    'residuals.bdm.R'
-    'rprior-class.R'
-    'rprior.R'
-    'shape.R'
-    'sigmao.R'
-    'sigmap.R'
-    'size.R'
-    'sr.R'
-    'status.R'
-    'survivorship.R'
-    'traceplot.R'
-    'updatePrior.R'
-    'zzz.R'
