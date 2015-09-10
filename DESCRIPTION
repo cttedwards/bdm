@@ -19,3 +19,10 @@ Depends:
 Imports:
     methods,
     kobe(>= 1.3.2)
+Collate:
+    'bdm-class.R'
+    'bdm.R'
+    'compiler.R'
+    'data.R'
+    'sampler.R'
+    'zzz.R'
