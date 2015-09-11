@@ -1,7 +1,7 @@
 Package: bdm
 Type: Package
 Title: Bayesian biomass dynamics model
-Version: 0.0.0.9002
+Version: 0.0.0.9003
 Date: 2015-09-11
 Author: Charles T T Edwards
 Maintainer: Charles T T Edwards <charles.edwards@niwa.co.nz>
@@ -35,7 +35,9 @@ Collate:
     'histplot.R'
     'idxplot.R'
     'outputs.R'
+    'plot.bdmData.R'
     'sampler.R'
+    'shape.R'
     'sigmao.R'
     'sigmap.R'
     'traceplot.R'

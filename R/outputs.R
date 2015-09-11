@@ -13,9 +13,7 @@
 #' 
 #' @examples
 #' data(albio)
-#' dat <- list(T = nrow(albio), I = 1, 
-#' harvest = albio$catch,
-#' index = structure(albio$cpue, dim = c(nrow(albio), 1)))
+#' dat <- bdmData(harvest = albio$catch, index = albio$cpue, time = rownames(albio))
 #' 
 #' \dontrun{
 #' # initialize and fit default model

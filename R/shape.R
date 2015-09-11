@@ -22,6 +22,7 @@
 #' # assign shape
 #' shape(dat) <- 0.4
 #' shape(dat)
+#' shape(dat, 'n')
 #' 
 #{{{ accessor function
 #' @export

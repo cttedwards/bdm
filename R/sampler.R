@@ -18,13 +18,9 @@
 #' @return Returns a \code{bdm} object containing posterior samples contained in \code{object@@trace}.
 #' 
 #' @examples
-#' library(bdm)
-#' 
 #' # get some data
 #' data(albio)
-#' dat <- list(T = nrow(albio), I = 1, 
-#' harvest = albio$catch,
-#' index = structure(albio$cpue, dim = c(nrow(albio), 1)))
+#' dat <- bdmData(harvest = albio$catch, index = albio$cpue, time = rownames(albio))
 #' 
 #' # initialize and fit default model
 #' \dontrun{
