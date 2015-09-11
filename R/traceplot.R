@@ -15,16 +15,11 @@
 #' @include ggtheme.R
 #' 
 #' @import ggplot2
+#' @import reshape2
 #' @import rstan
 #' 
 #' @export
-setMethod("traceplot", signature = "bdm",function(object, pars, inc_warmup = TRUE, ask = FALSE, ...) {
-  
-  if (missing(pars)) {
-    if (object@default_model) 
-      pars <- c('r','logK','lp__')
-    else stop('must define pars for non-default model')
-  }
+setMethod("traceplot", signature = "bdm",function(object, pars = c('r','logK','lp__'), inc_warmup = TRUE, ask = FALSE, ...) {
   
   dfr <- data.frame(variable = NULL,chain = NULL,value = NULL)
   

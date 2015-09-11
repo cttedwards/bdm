@@ -3,11 +3,6 @@
 #' 
 #' Plots the estimated abundance index dynamics over time against the observed values
 #' 
-#' @import ggplot2
-#' @export
-idxplot <- function(x, ...) UseMethod("idxplot")
-#'
-#' @rdname idxplot
 #' @param x a fitted \code{bdm} class object.
 #' @param labels character vector of labels for each index.
 #' 
@@ -15,6 +10,13 @@ idxplot <- function(x, ...) UseMethod("idxplot")
 #' 
 #' @include ggtheme.R
 #' 
+#' @import ggplot2
+#' @import reshape2
+#' 
+#' @export
+idxplot <- function(x, ...) UseMethod("idxplot")
+#'
+#' @rdname idxplot
 #' @export
 idxplot.bdm <- function(x, labels) {
     

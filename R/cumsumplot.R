@@ -3,10 +3,6 @@
 #' 
 #' Plots the cumulative sum of ordered posterior samples from an MCMC chain contained within a \code{bdm} class object.
 #' 
-#' @import ggplot2
-#' @export
-cumsumplot <- function(x, ...) UseMethod("cumsumplot")
-#' 
 #' @param x \code{bdm} class object.
 #' @param pars character vector of model parameters to be plotted. Defaults to \code{pars = c('r','logK','lp__')}.
 #' @param inc_warmup logical value indicating whether MCMC warmup should be included in the plot.
@@ -15,15 +11,16 @@ cumsumplot <- function(x, ...) UseMethod("cumsumplot")
 #' 
 #' @include ggtheme.R
 #' 
+#' @import ggplot2
+#' @import reshape2
+#' @import plyr
+#' 
+#' @export
+cumsumplot <- function(x, ...) UseMethod("cumsumplot")
+#' 
 #' @rdname cumsumplot
 #' @export
-cumsumplot.bdm <- function(x, pars, inc_warmup = FALSE) {
-    
-    if (missing(pars)) {
-        if (x@default_model) 
-            pars <- c('r','logK','lp__')
-        else stop('must define pars for non-default model')
-    }
+cumsumplot.bdm <- function(x, pars = c('r','logK','lp__'), inc_warmup = FALSE) {
     
     #############################################################
     # code for extraction of iterations from object@trace_array #
@@ -68,7 +65,7 @@ cumsumplot.bdm <- function(x, pars, inc_warmup = FALSE) {
     
     if (!inc_warmup) dfr <- subset(dfr,iteration > x@warmup)
     
-    dfr <- plyr::ddply(dfr, .(variable,chain), summarize, value  =  value[order(value)], cumsum  =  (1:length(chain))/length(chain))
+    dfr <- ddply(dfr, .(variable,chain), summarize, value  =  value[order(value)], cumsum  =  (1:length(chain))/length(chain))
     
     gg <- ggplot(dfr) + 
         geom_line(aes(x = value,y = cumsum,col = chain),size = 1.5) + 

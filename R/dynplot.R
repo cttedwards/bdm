@@ -5,29 +5,22 @@
 #' 
 #' Depletion is measured as the biomass over the carrying capacity, harvest rate is the catch over the estimated biomass, and surplus production is the production function multiplied by the process error residual. 
 #' 
+#' @param x \code{bdm} class object.
+#' @param pars character vector of model parameters to be plotted. Must be one or more of \code{'depletion'}, \code{'biomass'}, \code{'harvest_rate'} or \code{'surplus_production'}.
+#' 
+#' @return Returns a \code{ggplot} object that can be displayed or assigned and manuipulated using further arguments from the \pkg{ggplot2} package.
+#' 
+#' @include ggtheme.R
+#' 
 #' @import ggplot2
+#' @import reshape2
+#' 
 #' @export
 dynplot <- function(x, ...) UseMethod("dynplot")
 #'
 #' @rdname dynplot
-#' @param x \code{bdm} class object.
-#' @param pars character vector of model parameters to be plotted. Must be one or more of \code{'depletion'}, \code{'biomass'}, \code{'harvest_rate'} or \code{'surplus_production'}. Defaults to \code{pars = 'depletion'}.
-#' 
-#' @return Returns a \code{ggplot} object that can be displayed or assigned and manuipulated using further arguments from the \pkg{ggplot2} package.
-#'  
-#' @include ggtheme.R
-#' 
 #' @export
-dynplot.bdm <- function(x, pars) {
-    
-    if (missing(pars)) {
-        if (x@default_model) 
-            pars <- 'depletion'
-        else stop('must define pars for non-default model\n')
-    } else {
-        if (!(pars %in% c('depletion', 'biomass', 'harvest_rate', 'surplus_production')))
-            stop('pars must be one or more of depletion, biomass, harvest_rate or surplus_production\n')
-    }
+dynplot.bdm <- function(x, pars = 'depletion') {
     
     time <- x@data[['time']]
     nsamples <- x@nsamples
