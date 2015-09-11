@@ -43,12 +43,12 @@ setGeneric("sigmap<-", function(object, value) standardGeneric("sigmap<-"))
 #'
 #' @rdname sigmap
 setMethod("sigmap<-",
-          signature(object = "bdmData",value = "numeric"),
+          signature(object = "bdmData", value = "numeric"),
           function(object, value) {
             
             if (length(value) > 1)
               warning('length of value is >1: only first value used\n')
-            object$sigmap <- structure(value[1],.Dim=NULL)       
+            object$sigmap <- structure(value[1], .Dim = NULL)       
             
             object
           }

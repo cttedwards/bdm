@@ -1,7 +1,7 @@
 #'
 #' Theme for dignostic plotting using \pkg{ggplot2}
 #' 
-#' Diagnostic plots by \pkg{bdm} are produced using \pkg{ggplot2} with the theme set by a call to \code{ggtheme()}. Note that this function is not exported.
+#' Diagnostic plots by \pkg{bdm} are produced using \pkg{ggplot2} with the theme set by a call to \code{ggtheme()}. Note that this function is not exported to avoid conflicts with other packages.
 #' 
 #' @examples
 #' ggtheme <- function(base_size = 12, base_family = "") 

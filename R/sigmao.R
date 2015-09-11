@@ -92,7 +92,7 @@ setMethod("sigmao<-",
                 stop('dimensions do not match index dimensions\n')
               } 
                 
-              object$sigmao <- value     
+              object$sigmao <- value
               
               object$sigmao[object$index == -1] <- -1
               

@@ -1,6 +1,11 @@
 
 context("bdmData object")
 
+test_that('initialize bdmData', {
+    dat <- bdmData(index = runif(10), harvest = 1:10)
+    expect_is(dat, "bdmData")
+})
+
 test_that('sigmao(dat) initialise', {
     # check dimensions
     dat <- bdmData(index = runif(10), harvest = 1:10)
@@ -48,6 +53,15 @@ test_that('sigmao(dat) assignment', {
     sigmao(dat) <- sigmao.in
     expect_equal(dim(sigmao(dat)), c(10, 1))
     expect_equal(sigmao(dat), matrix(sigmao.in, 10, 1))
+})
+
+test_that('plot bdmData', {
+    # load some data
+    data(albio)
+    dat <- bdmData(harvest = albio$catch, index = albio$cpue, time = rownames(albio))
+    # plots
+    gg <- plot(dat)
+    expect_is(gg, "ggplot")
 })
 
 
