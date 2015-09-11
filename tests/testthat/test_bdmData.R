@@ -55,6 +55,15 @@ test_that('sigmao(dat) assignment', {
     expect_equal(sigmao(dat), matrix(sigmao.in, 10, 1))
 })
 
+test_that('shape(dat) assignment', {
+    dat <- bdmData(index = runif(10), harvest = 1:10)
+    shape.in   <- runif(1, 0.1, 0.9)
+    shape(dat) <- shape.in
+    expect_less_than(abs(shape(dat) - shape.in), .Machine$double.eps^0.25)
+    n <- shape(dat, 'n')
+    expect_less_than(abs((1/n)^(1/(n-1)) - shape.in), .Machine$double.eps^0.25)
+})
+
 test_that('plot bdmData', {
     # load some data
     data(albio)
