@@ -6,7 +6,7 @@ test_that("rstan compilation", {
     expect_error(bdm(model.code = "parameters {real y;} model {y ~ normal(0,1);}"))
     # must provide a model name
     mdl <- bdm(model.code = "parameters {real y;} model {y ~ normal(0,1);}", model.name = "toy_model")
-    mdl <- compiler(mdl)
+    capture.output(mdl <- compiler(mdl))
     expect_is(mdl, "bdm")
     expect_equal(mdl@model_name, "toy_model")
     expect_is(mdl@dso, "cxxdso")
@@ -15,14 +15,14 @@ test_that("rstan compilation", {
     # model name generated automatically
     toy_model <- "parameters {real y;} model {y ~ normal(0,1);}"
     mdl <- bdm(model.code = toy_model)
-    mdl <- compiler(mdl)
+    capture.output(mdl <- compiler(mdl))
     expect_is(mdl, "bdm")
     expect_equal(mdl@model_name, "toy_model")
     expect_is(mdl@dso, "cxxdso")
     expect_true(mdl@dso@dso_saved)
     # default initialization
     mdl <- bdm()
-    mdl <- compiler(mdl)
+    capture.output(mdl <- compiler(mdl))
     expect_is(mdl, "bdm")
     expect_equal(mdl@model_name, "default")
     expect_is(mdl@dso, "cxxdso")
