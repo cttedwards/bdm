@@ -7,6 +7,7 @@
 #' 
 #' @param object a \code{bdm} model object
 #' @param data a \code{list} object containing the model inputs
+#' @param run optional character vector to label the run
 #' @param init an initialisation function that should take no arguments and return a named list of intial values for the estimated parameters
 #' @param chains number of MCMC chains
 #' @param iter number of iterations per chain
@@ -41,34 +42,39 @@
 setGeneric("sampler", function(object, ...) standardGeneric("sampler"))
 #'
 #' @rdname sampler
-setMethod("sampler", signature = "bdm", definition = function(object, data = list(), init = function() list(r = exp(-1), logK = 6), chains, iter, warmup, thin, ...) {
-  
-  object@data <- data
+setMethod("sampler", signature = "bdm", definition = function(object, data = list(), run = character(), init = function() list(r = exp(-1), logK = 6), chains, iter, warmup, thin, ...) {
     
-  object@init <- init
-  
-  # non-default sampling dimensions
-  if (!missing(iter)) {
+    # initial assignments
+    object@data <- data
+    object@init <- init
+    object@run  <- run
+    
+    # non-default sampling dimensions
+    if (!missing(iter)) {
       object@iter   <- iter
       if (missing(warmup)) 
           warmup <- floor(iter/2)
-  }
-  if (!missing(chains)) object@chains <- chains
-  if (!missing(thin))   object@thin   <- thin
-  if (!missing(warmup)) {
+    }
+    if (!missing(chains)) object@chains <- chains
+    if (!missing(thin))   object@thin   <- thin
+    if (!missing(warmup)) {
       if (warmup >= object@iter)
           stop('warmup must be < iter\n')
       object@warmup <- warmup
-  }
-  
-  # number of posterior samples
-  object@nsamples <- ((object@iter - object@warmup) * object@chains)/object@thin
+    }
     
-  # mcmc-sampling using rstan
-  stanfit_object <- suppressWarnings(sampling(object,data = object@data,init = object@init,iter = object@iter,chains = object@chains,warmup = object@warmup,thin = object@thin, ...))
+    # number of posterior samples
+    object@nsamples <- ((object@iter - object@warmup) * object@chains)/object@thin
     
-  # extract traces
-  object@trace       <- extract(stanfit_object)
-  
-  return(object)
+    # mcmc-sampling using rstan
+    stanfit_object <- suppressWarnings(sampling(object, data = object@data, init = object@init, iter = object@iter, chains = object@chains, warmup = object@warmup, thin = object@thin, ...))
+    
+    # record initial values for each chain
+    object@init.values <- stanfit_object@inits
+    
+    # extract traces
+    object@trace       <- extract(stanfit_object)
+    object@trace_array <- extract(stanfit_object,permuted = FALSE,inc_warmup = TRUE)
+    
+    return(object)
 })
