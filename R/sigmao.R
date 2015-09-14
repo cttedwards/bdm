@@ -1,7 +1,7 @@
 #'
 #' Access or assign the observation error
 #' 
-#' By default the \pkg{bdm} package assumes that the observation error variance is fixed on input and specified in the \code{\link{edat}} object class. This function can be used to access or assign the standard deviation \eqn{\sigma_o} within an \code{edat} object.
+#' By default the \pkg{bdm} package assumes that the observation error variance is fixed on input and specified in the \code{\link{bdmData}} object class. This function can be used to access or assign the standard deviation \eqn{\sigma_o} within an \code{bdmData} object.
 #' 
 #' Observation error is used to refer to the deviation of the abundance observation from the deterministic expectation:
 #' \deqn{
@@ -13,14 +13,15 @@
 #' }
 #' The distribution of \eqn{I} around the value predicted by the model can be due to a variety of difference uncertainties, not just observation, and is sometimes referred to as the total error. Realistic values for the observation error are typically informed by standardisation of the abundance index time series. The default value is \eqn{\sigma_o = 0.2} for all time points. 
 #' 
-#' @param object an \code{edat} object
+#' @param object an \code{bdmData} object
 #' @param value a \code{numeric} vector or \code{matrix} for \eqn{\sigma_o}
+#' @param ... additional arguments to the generic function
 #' 
-#' @return Accessor function returns a matrix of \eqn{\sigma_o} values. Assignment function populates the \code{edat} object.
+#' @return Accessor function returns a matrix of \eqn{\sigma_o} values. Assignment function populates the \code{bdmData} object.
 #' 
 #' @examples
-#' # initialize edat object
-#' dat <- edat(harvest = 20:30, index = cbind(runif(11), runif(11)))
+#' # initialize bdmData object
+#' dat <- bdmData(harvest = 20:30, index = cbind(runif(11), runif(11)))
 #' 
 #' # assign single value
 #' sigmao(dat) <- 0.1
@@ -45,7 +46,7 @@
 #' @export
 setGeneric("sigmao", function(object, ...) standardGeneric("sigmao"))
 #' @rdname sigmao
-setMethod("sigmao",signature(object = "edat"), function(object) return(object[['sigmao']]))
+setMethod("sigmao",signature(object = "bdmData"), function(object) return(object[['sigmao']]))
 #}}}
 
 #{{{ assignment functions
@@ -55,7 +56,7 @@ setGeneric("sigmao<-", function(object, value) standardGeneric("sigmao<-"))
 #{{ numeric
 #' @rdname sigmao
 setMethod("sigmao<-",
-          signature(object = "edat", value = "numeric"),
+          signature(object = "bdmData", value = "numeric"),
           function(object, value) {
             
               sigmao.dim    <- c(object$T, object$I)
@@ -85,14 +86,14 @@ setMethod("sigmao<-",
 #{{ matrix
 #' @rdname sigmao
 setMethod("sigmao<-",
-          signature(object = "edat", value = "matrix"),
+          signature(object = "bdmData", value = "matrix"),
           function(object, value) {
               
               if (any(dim(value) != dim(object$index))) {
                 stop('dimensions do not match index dimensions\n')
               } 
                 
-              object$sigmao <- value     
+              object$sigmao <- value
               
               object$sigmao[object$index == -1] <- -1
               

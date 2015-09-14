@@ -1,5 +1,5 @@
 #'
-#' @rdname edat-class
+#' @rdname bdmData-class
 #' 
 #' @param index Matrix of abundance index values
 #' @param harvest Numeric vector of catch values
@@ -13,24 +13,19 @@
 #' # load Indian Ocean albacore data
 #' data(albio)
 #' 
-#' # create edat object
-#' dat <- edat(harvest = albio$catch, index = albio$cpue, time = rownames(albio))
+#' # create data object
+#' dat <- bdmData(harvest = albio$catch, index = albio$cpue, time = rownames(albio))
 #' 
-#' # assign observation error
-#' sigmao(dat) <- 0.15
+#' @seealso Use \code{\link{sigmao}} and \code{\link{sigmap}} to set or extract the \eqn{\sigma} values. Use \code{\link{shape}} to set or extract the shape of the production function. 
 #' 
-#' # set depletion at MSY
-#' shape(dat,'phi') <- 0.4
+#' @include bdmData-class.R
 #' 
-#' @seealso Use \code{\link{sigmao}} and \code{\link{}} to set or extract the \eqn{\sigma} values. Use \code{\link{shape}} to set or extract the shape of the production function. 
-#' 
-#' @include edat-class.R
 #' @export
-#' 
-#{{{ constructor
-edat <- function(index, harvest, ...) new("edat", index, harvest, ...)
-#}}}
-setMethod("initialize","edat",function(.Object,index,harvest,time,n,sigmao,sigmap,renormalise=FALSE) {
+bdmData <- function(index, harvest, time, n, sigmao, sigmap, renormalise = FALSE) {
+    new("bdmData", index, harvest, time, n, sigmao, sigmap, renormalise)
+}
+
+setMethod("initialize", signature = "bdmData", definition = function(.Object, index, harvest, time, n, sigmao, sigmap, renormalise) {
   
   .Object@.Data <- vector('list',8)
   names(.Object) <- c('T','I','index','harvest','time','n','sigmao','sigmap')

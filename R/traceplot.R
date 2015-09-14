@@ -1,9 +1,9 @@
 #'
 #' Traceplot for MCMC output
 #' 
-#' Plots the trace outputs from an MCMC run implented using \code{\link{fit}}.
+#' Plots the trace outputs from an MCMC run implented using \code{\link{sampler}}.
 #' 
-#' This function uses the S4 generic provided by \pkg{rstan}.
+#' This function uses the S4 generic \code{\link[package:rstan]{traceplot}} provided by \pkg{rstan}.
 #' 
 #' @param object a \code{bdm} object
 #' @param pars parameters to be plotted
@@ -15,14 +15,11 @@
 #' @include ggtheme.R
 #' 
 #' @import ggplot2
+#' @import reshape2
+#' @import rstan
+#' 
 #' @export
-setMethod("traceplot", signature = "bdm",function(object, pars, inc_warmup = TRUE, ask = FALSE, ...) {
-  
-  if (missing(pars)) {
-    if (object@default_model) 
-      pars <- c('r','logK','lp__')
-    else stop('must define pars for non-default model')
-  }
+setMethod("traceplot", signature = "bdm",function(object, pars = c('r','logK','lp__'), inc_warmup = TRUE, ask = FALSE) {
   
   dfr <- data.frame(variable = NULL,chain = NULL,value = NULL)
   

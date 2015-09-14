@@ -3,29 +3,25 @@
 #' 
 #' Plots histograms of posterior samples from an MCMC chain contained within a \code{bdm} class object.
 #'
-#' @import ggplot2 
-#' @export
-#' 
-histplot <- function(object, ...) UseMethod("histplot")
-#' 
-#' @rdname histplot
 #' @param object a \code{bdm} class object.
 #' @param pars character vector of model parameters to be plotted. Defaults to \code{pars = c('r','logK','lp__')}.
 #' @param inc_warmup logical value indicating whether MCMC warmup should be included in the plot.
+#' @param ... additional arguments to the generic function
 #' 
 #' @return Returns a \code{ggplot} object that can be displayed or assigned and manuipulated using further arguments from the \pkg{ggplot2} package.
 #' 
 #' @include ggtheme.R
 #' 
+#' @import ggplot2
+#' @import reshape2
+#'  
 #' @export
-histplot.bdm <- function(object, pars, inc_warmup  =  FALSE) {
+histplot <- function(object, ...) UseMethod("histplot")
+#' 
+#' @rdname histplot
+#' @export
+histplot.bdm <- function(object, pars = c('r','logK','lp__'), inc_warmup  =  FALSE, ...) {
     
-  if (missing(pars)) {
-    if (object@default_model) 
-      pars <- c('r','logK','lp__')
-    else stop('must define pars for non-default model')
-  }
-  
   #############################################################
   # code for extraction of iterations from object@trace_array #
   # (array with dimensions: iteration; parameter; chain)      #

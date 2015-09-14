@@ -16,4 +16,4 @@
 #'   \item{\code{sigmao}}{Matrix of log-normal observation error scale parameters \eqn{\sigma_o} with dimensions equal to \code{index}}
 #' }
 #' 
-setClass("edat", contains = "list", slots = list(names = "character"))
+setClass("bdmData", contains = "list", slots = list(names = "character"))

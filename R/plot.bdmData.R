@@ -1,16 +1,17 @@
 #'
 #' Plot index and harvest data
 #' 
-#' This function provides a \code{plot} method for the \code{edat} object class. It returns a \code{ggplot} object that can be assigned and manipulated using functions provided by \pkg{ggplot2}.
+#' This function provides a \code{plot} method for the \code{bdmData} object class. It returns a \code{ggplot} object that can be assigned and manipulated using functions provided by \pkg{ggplot2}.
 #' 
-#' @param object an \code{\link{edat}} object class
+#' @param x an \code{\link{bdmData}} object class
+#' @param ... additional arguments to the generic function
 #' 
 #' @examples
 #' # load Indian Ocean albacore data
 #' data(albio)
 #' 
-#' # create edat object
-#' dat <- edat(harvest = albio$catch, index = albio$cpue, time = rownames(albio))
+#' # create bdmData object
+#' dat <- bdmData(harvest = albio$catch, index = albio$cpue, time = rownames(albio))
 #' 
 #' # plot
 #' plot(dat)
@@ -18,14 +19,15 @@
 #' @include ggtheme.R
 #' 
 #' @import ggplot2
-#' @importFrom graphics plot
+#' 
+#' @method plot bdmData
 #' @export
-plot.edat <- function(object)
+plot.bdmData <- function(x, ...)
 {
 
-	time    <- as.numeric(object[['time']])
-	harvest <- object[['harvest']]
-    index   <- object[['index']]
+	time    <- as.numeric(x[['time']])
+	harvest <- x[['harvest']]
+    index   <- x[['index']]
     
     index[index < 0] <- NA
     
