@@ -19,6 +19,7 @@
 #' 
 #' @import ggplot2
 #' 
+#' @method plot bdmData
 #' @export
 plot.bdmData <- function(object)
 {
