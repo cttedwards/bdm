@@ -196,9 +196,7 @@ harvest_rate_at_msy <- m / dmsy;
 
 for(i in 1:I){
 for(t in 1:T){
-if(index[t,i]>0.0) {
 observed_index[t,i] <- index[t,i];
-}
 predicted_index[t,i] <- q[i]*x[t];
 }
 }
