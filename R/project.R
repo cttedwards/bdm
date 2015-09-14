@@ -16,8 +16,8 @@
 #'  \item{\code{scenarios}}{vector of harvest or harvest rate scenarios}
 #'  \item{\code{time}}{complete series of time step labels}
 #'  \item{\code{nsamples}}{number of posterior samples equal to \code{object@@nsamples}}
-#'  \item{\code{biomass}}{array of biomass values with dimensions (iteration, time, scenario)}
-#'  \item{\code{depletion}}{array of depletion values with dimensions (iteration, time, scenario)}
+#'  \item{\code{biomass}}{array of biomass values with dimensions: iteration, time, scenario}
+#'  \item{\code{depletion}}{array of depletion values with dimensions: iteration, time, scenario}
 #'  \item{\code{epsilon_p}}{process error residual matrix}
 #'  \item{\code{harvest}}{catch time series array}
 #'  \item{\code{harvest_rate}}{harvest rate time series array}
@@ -26,15 +26,15 @@
 #' @examples
 #' 
 #' # get some data
-#' data(hakcr)
-#' dat <- edat(harvest = hakcr$catch,index = cbind(hakcr$survey, hakcr$cpue))
+#' data(haknz)
+#' dat <- bdmData(harvest = haknz$landings, index = cbind(haknz$survey, haknz$cpue))
 #' 
 #' # initialize and fit default model
-#' mdl <- bdm(compile = TRUE)
-#' mdl <- fit(mdl, dat, run = 'example_run')
-#' 
-#' # check convergence
-#' traceplot(mdl)
+#' \dontshow{
+#' mdl <- bdm()
+#' mdl <- compiler(mdl)
+#' mdl <- sampler(mdl, dat, run = 'example_run')
+#' }
 #' 
 #' # constant harvest rate projection scenarios
 #' mdl.project <- project(mdl, harvest = c(0.05, 0.10, 0.15), time = 20, harvest_rate = TRUE)
@@ -44,26 +44,27 @@
 #' mdl.project$run
 #' 
 #' # extract median values
+#' \dontshow{
 #' apply(mdl.project$depletion, 2:3, median)
 #' apply(mdl.project$harvest, 2:3, median)
 #' apply(mdl.project$harvest_rate, 2:3, median)
-#' 
+#' }
 #' # constant catch projection scenarios
 #' mdl.project <- project(mdl, harvest = c(900, 1200, 1500), time = 20, harvest_rate = FALSE)
 #' 
 #' # extract median values
+#' \dontshow{
 #' apply(mdl.project$depletion, 2:3, median)
 #' apply(mdl.project$harvest, 2:3, median)
 #' apply(mdl.project$harvest_rate, 2:3, median)
-#' 
-#' 
+#' }
 #' 
 #{{{ projection functions
 #' @export
 setGeneric("project", function(object, harvest.project, ...) standardGeneric("project"))
 #{{ project from bdm object under constant harvest or harvest rate specified as a single value across all iterations
 #' @rdname project
-setMethod("project",signature = c("bdm", "vector"),function(object, harvest.project, time.project, harvest_rate = TRUE) {
+setMethod("project", signature = c("bdm", "vector"),function(object, harvest.project, time.project, harvest_rate = TRUE) {
   
   # dimensions
   # **********
