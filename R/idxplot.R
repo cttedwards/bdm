@@ -5,6 +5,7 @@
 #' 
 #' @param x a fitted \code{bdm} class object.
 #' @param labels character vector of labels for each index.
+#' @param ... additional arguments to the generic function
 #' 
 #' @return Returns a \code{ggplot} object that can be displayed or assigned and manuipulated using further arguments from the \pkg{ggplot2} package.
 #' 
@@ -18,7 +19,7 @@ idxplot <- function(x, ...) UseMethod("idxplot")
 #'
 #' @rdname idxplot
 #' @export
-idxplot.bdm <- function(x, labels) {
+idxplot.bdm <- function(x, labels, ...) {
     
     nidx     <- x@data[['I']]
     time     <- x@data[['time']]

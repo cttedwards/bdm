@@ -14,7 +14,7 @@ getlogK <- function(object, ...) UseMethod("getlogK")
 #' 
 #' @rdname getlogK
 #' @export
-getlogK.bdm <- function(object) {
+getlogK.bdm <- function(object, ...) {
     
     r    <- getr(object)[['E[r]']]
     logK <- getlogK(object@data, r)
@@ -40,7 +40,7 @@ getlogK.bdm <- function(object) {
 }
 #' @rdname getlogK
 #' @export
-getlogK.list <- function(object, r) {
+getlogK.list <- function(object, r, ...) {
     
     # get logK through grid search
     # assuming a logistic production model

@@ -15,7 +15,7 @@ getx <- function(object, ...) UseMethod("getx")
 #' 
 #' @rdname getx
 #' @export
-getx.bdm <- function(object) {
+getx.bdm <- function(object, ...) {
     
     r    <- getr(object)[['E[r]']]
     logK <- getlogK(object@data, r)
@@ -27,7 +27,7 @@ getx.bdm <- function(object) {
 
 #' @rdname getx
 #' @export
-getx.list <- function(object, r, logK) {
+getx.list <- function(object, r, logK, ...) {
     
     cc <- object$harvest
     tt <- length(cc)

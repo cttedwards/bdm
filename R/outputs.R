@@ -8,6 +8,7 @@
 #' 
 #' @param object a \code{bdm} model object
 #' @param pars a \code{character} vector specifiying the parameters to be returned
+#' @param ... additional arguments to the generic function
 #' 
 #' @return Returns a \code{list} containing the specified elements, each of which is a vector equal to the number of posterior samples.  
 #' 

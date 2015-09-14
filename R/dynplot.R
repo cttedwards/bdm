@@ -7,6 +7,7 @@
 #' 
 #' @param x \code{bdm} class object.
 #' @param pars character vector of model parameters to be plotted. Must be one or more of \code{'depletion'}, \code{'biomass'}, \code{'harvest_rate'} or \code{'surplus_production'}.
+#' @param ... additional arguments to the generic function
 #' 
 #' @return Returns a \code{ggplot} object that can be displayed or assigned and manuipulated using further arguments from the \pkg{ggplot2} package.
 #' 
@@ -20,7 +21,7 @@ dynplot <- function(x, ...) UseMethod("dynplot")
 #'
 #' @rdname dynplot
 #' @export
-dynplot.bdm <- function(x, pars = 'depletion') {
+dynplot.bdm <- function(x, pars = 'depletion', ...) {
     
     time <- x@data[['time']]
     nsamples <- x@nsamples

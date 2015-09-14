@@ -15,7 +15,7 @@ getr <- function(object, ...) UseMethod("getr")
 #'
 #' @rdname getr
 #' @export
-getr.bdm <- function(object) {
+getr.bdm <- function(object, ...) {
     
     # extract r from model_code
     

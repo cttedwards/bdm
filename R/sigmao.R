@@ -15,6 +15,7 @@
 #' 
 #' @param object an \code{bdmData} object
 #' @param value a \code{numeric} vector or \code{matrix} for \eqn{\sigma_o}
+#' @param ... additional arguments to the generic function
 #' 
 #' @return Accessor function returns a matrix of \eqn{\sigma_o} values. Assignment function populates the \code{bdmData} object.
 #' 

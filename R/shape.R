@@ -10,6 +10,7 @@
 #' @param object a \code{bdmData} class object
 #' @param par a character string of either \code{n} or \code{phi}
 #' @param value a numeric value specifying the value of either \code{n} or \code{phi}
+#' @param ... additional arguments to the generic function
 #' 
 #' @examples
 #' # initialize bdmData object

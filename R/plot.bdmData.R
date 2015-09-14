@@ -3,7 +3,8 @@
 #' 
 #' This function provides a \code{plot} method for the \code{bdmData} object class. It returns a \code{ggplot} object that can be assigned and manipulated using functions provided by \pkg{ggplot2}.
 #' 
-#' @param object an \code{\link{bdmData}} object class
+#' @param x an \code{\link{bdmData}} object class
+#' @param ... additional arguments to the generic function
 #' 
 #' @examples
 #' # load Indian Ocean albacore data
@@ -21,12 +22,12 @@
 #' 
 #' @method plot bdmData
 #' @export
-plot.bdmData <- function(object)
+plot.bdmData <- function(x, ...)
 {
 
-	time    <- as.numeric(object[['time']])
-	harvest <- object[['harvest']]
-    index   <- object[['index']]
+	time    <- as.numeric(x[['time']])
+	harvest <- x[['harvest']]
+    index   <- x[['index']]
     
     index[index < 0] <- NA
     

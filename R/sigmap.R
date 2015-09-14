@@ -15,6 +15,7 @@
 #' 
 #' @param object an \code{bdmData} object
 #' @param value a \code{numeric} value for \eqn{\sigma_p}
+#' @param ... additional arguments to the generic function
 #' 
 #' @return Accessor function returns a numeric value. Assignment function populates the \code{bdmData} object.
 #' 

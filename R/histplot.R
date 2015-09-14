@@ -6,6 +6,7 @@
 #' @param object a \code{bdm} class object.
 #' @param pars character vector of model parameters to be plotted. Defaults to \code{pars = c('r','logK','lp__')}.
 #' @param inc_warmup logical value indicating whether MCMC warmup should be included in the plot.
+#' @param ... additional arguments to the generic function
 #' 
 #' @return Returns a \code{ggplot} object that can be displayed or assigned and manuipulated using further arguments from the \pkg{ggplot2} package.
 #' 
@@ -19,7 +20,7 @@ histplot <- function(object, ...) UseMethod("histplot")
 #' 
 #' @rdname histplot
 #' @export
-histplot.bdm <- function(object, pars = c('r','logK','lp__'), inc_warmup  =  FALSE) {
+histplot.bdm <- function(object, pars = c('r','logK','lp__'), inc_warmup  =  FALSE, ...) {
     
   #############################################################
   # code for extraction of iterations from object@trace_array #

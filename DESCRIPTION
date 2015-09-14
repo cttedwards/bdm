@@ -6,7 +6,7 @@ Date: 2015-09-14
 Author: Charles T T Edwards
 Maintainer: Charles T T Edwards <charles.edwards@niwa.co.nz>
 Description: Bayesian fit of a generalised production model to catch and
-    abundance data using Hamiltonian MCMC
+    abundance data using Hamiltonian MCMC.
 License: GPL (>=3)
 LazyData: true
 VignetteBuilder: knitr
