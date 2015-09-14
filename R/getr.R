@@ -10,6 +10,14 @@
 #' 
 #' @return A list containing the elements \code{'E[log(r)]'} (equal to \eqn{\mu}), \code{'SD[log(r)]'} (equal to \eqn{\sigma}), \code{'E[r]'}, \code{'VAR[r]'} and \code{'CV[r]'}.
 #' 
+#' @examples
+#' # default model
+#' mdl <- bdm()
+#' 
+#' # extract r from
+#' # bdm object
+#' getr(mdl)
+#' 
 #' @export
 getr <- function(object, ...) UseMethod("getr")
 #'

@@ -10,6 +10,27 @@
 #' @param logK an assumed value for the carrying capacity \eqn{ln(K)}
 #' @param ... additional arguments to generic function
 #' 
+#' @examples
+#' # get some data
+#' data(albio)
+#' dat <- bdmData(harvest = albio$catch, index = albio$cpue, time = rownames(albio))
+#' 
+#' # default model
+#' mdl <- bdm()
+#' 
+#' # extract depletion from
+#' # bdm object
+#' getx(mdl)
+#' 
+#' # extract with data
+#' mdl@@data <- dat
+#' getx(mdl)
+#' 
+#' # calculate depletion from
+#' # catches and assumed parameters
+#' getx(dat, logK = 6, r = exp(-1))
+#' 
+#' 
 #' @export
 getx <- function(object, ...) UseMethod("getx")
 #' 
@@ -17,9 +38,11 @@ getx <- function(object, ...) UseMethod("getx")
 #' @export
 getx.bdm <- function(object, ...) {
     
-    r    <- getr(object)[['E[r]']]
-    logK <- getlogK(object@data, r)
-    x    <- getx(object@data, r, logK)
+    r    <- getr(object)
+    logK <- getlogK(object)
+    if (!is.null(logK[['E[logK]']])) {
+        x <- getx(object@data, r[['E[r]']], logK[['E[logK]']])
+    } else x <- NULL
     
     # return
     list('E[x]' = x)

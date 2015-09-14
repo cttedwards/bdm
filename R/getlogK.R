@@ -9,6 +9,26 @@
 #' @param r an assumed value for the intrinsic growth rate \eqn{r}
 #' @param ... additional arguments to generic function
 #'
+#' @examples
+#' # get some data
+#' data(albio)
+#' dat <- bdmData(harvest = albio$catch, index = albio$cpue, time = rownames(albio))
+#' 
+#' # default model
+#' mdl <- bdm()
+#' 
+#' # extract logK from
+#' # bdm object
+#' getlogK(mdl)
+#' 
+#' # extract with data
+#' mdl@@data <- dat
+#' getlogK(mdl)
+#' 
+#' # calculate logK from
+#' # catches and assumed r
+#' getlogK(dat, r = exp(-1))
+#' 
 #' @export
 getlogK <- function(object, ...) UseMethod("getlogK")
 #' 
@@ -17,7 +37,10 @@ getlogK <- function(object, ...) UseMethod("getlogK")
 getlogK.bdm <- function(object, ...) {
     
     r    <- getr(object)[['E[r]']]
-    logK <- getlogK(object@data, r)
+    
+    if (length(object@data) > 0) {
+        logK <- getlogK(object@data, r)
+    } else logK <- NULL
     
     # extract logK distribution parameters from model_code
     
