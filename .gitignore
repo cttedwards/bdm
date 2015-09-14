@@ -7,3 +7,4 @@ man/*.Rd
 *.Rproj
 .Rbuildignore
 .Rproj.user
+data-raw
