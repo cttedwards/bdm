@@ -1,7 +1,7 @@
 Package: bdm
 Type: Package
 Title: Bayesian biomass dynamics model
-Version: 0.0.0.9007
+Version: 0.0.0.9008
 Date: 2015-09-15
 Author: Charles T T Edwards
 Maintainer: Charles T T Edwards <charles.edwards@niwa.co.nz>
@@ -13,13 +13,14 @@ VignetteBuilder: knitr
 Suggests:
     knitr,
     testthat,
+    pander,
+    kobe,
     lhm
 Depends:
     R (>= 3.2.2),
     rstan (>= 2.7.0)
 Imports:
     methods (>= 3.2.2),
-    kobe (>= 1.3.2),
     reshape2 (>= 1.4.1),
     ggplot2 (>= 1.0.1),
     plyr (>= 1.8.3)
