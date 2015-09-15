@@ -46,7 +46,6 @@
 #' mean(log(r))
 #' getr(mdl)[['E[log(r)]']]
 #' 
-#' @importClassesFrom lhm prior
 #' @export
 updatePrior <- function(object, ...) UseMethod("updatePrior")
 #'
