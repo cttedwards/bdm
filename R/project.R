@@ -24,17 +24,15 @@
 #' }
 #' 
 #' @examples
-#' 
+#' \dontrun{
 #' # get some data
 #' data(haknz)
 #' dat <- bdmData(harvest = haknz$landings, index = cbind(haknz$survey, haknz$cpue))
 #' 
 #' # initialize and fit default model
-#' \dontshow{
 #' mdl <- bdm()
 #' mdl <- compiler(mdl)
 #' mdl <- sampler(mdl, dat, run = 'example_run')
-#' }
 #' 
 #' # constant harvest rate projection scenarios
 #' mdl.project <- project(mdl, harvest = c(0.05, 0.10, 0.15), time = 20, harvest_rate = TRUE)
@@ -44,16 +42,14 @@
 #' mdl.project$run
 #' 
 #' # extract median values
-#' \dontshow{
 #' apply(mdl.project$depletion, 2:3, median)
 #' apply(mdl.project$harvest, 2:3, median)
 #' apply(mdl.project$harvest_rate, 2:3, median)
-#' }
+#' 
 #' # constant catch projection scenarios
 #' mdl.project <- project(mdl, harvest = c(900, 1200, 1500), time = 20, harvest_rate = FALSE)
 #' 
 #' # extract median values
-#' \dontshow{
 #' apply(mdl.project$depletion, 2:3, median)
 #' apply(mdl.project$harvest, 2:3, median)
 #' apply(mdl.project$harvest_rate, 2:3, median)

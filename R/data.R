@@ -13,7 +13,7 @@
 
 #' New Zealand hake
 #'
-#' A dataset containing the catch, catch per unit effort (CPUE) and trawl survey abundance data for hake from New Zealand (Chatham Rise stock) Indian Ocean albacore between 1975 and 2012.
+#' A dataset containing the catch, catch per unit effort (CPUE) and trawl survey abundance data for hake from New Zealand (Chatham Rise stock) between 1975 and 2012.
 #'
 #' @format A data frame with 38 rows and 6 variables:
 #' \describe{
@@ -24,5 +24,5 @@
 #'   \item{cpue}{standardised CPUE in tonnes per tow from the Eastern Chatham Rise}
 #'   \item{cpue_cv}{estimated CPUE coefficient of variation from the standardisation}
 #' }
-#' @source Horn, P.L., Stock assessment of hake (Merluccius australis) on the Chatham Rise (HAK 4) and off the west coast of South Island (HAK 7) for the 2012–13 fishing year. New Zealand Fisheries Assessment Report, 2013/31: 58 p.
+#' @source Horn, P.L., Stock assessment of hake (Merluccius australis) on the Chatham Rise (HAK 4) and off the west coast of South Island (HAK 7) for the 2012-13 fishing year. New Zealand Fisheries Assessment Report, 2013/31: 58 p.
 "haknz"
