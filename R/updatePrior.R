@@ -3,12 +3,13 @@
 #' 
 #' This function can be used to update the priors for \eqn{r} and \eqn{ln(K)}. 
 #' 
-#' The \pkg{bdm} package by default assumes that the prior on \eqn{r} is log-normal and the prior for \eqn{ln(K)} is uniform. If the function is supplied with a \code{\link[package:lhm]{prior}} class object then it will extract the log-normal distribution parameters for \eqn{r} and use regular expression matching to update the model code. If the function is provided with a named list then it can be used to update the priors for either \eqn{r} or \eqn{ln(K)} in a similar manner. See the examples for how the list arguments are specified.
+#' The \pkg{bdm} package by default assumes that the prior on \eqn{r} is log-normal and the prior for \eqn{ln(K)} is uniform. If the function is supplied with a \code{\link[package:lhm]{prior}} class object then it will extract the log-normal distribution parameters for \eqn{r} and use regular expression matching to update the model code. If the function is provided with a named list then it can be used to update the priors for \eqn{r}, \eqn{ln(K)} or the initial depletion \eqn{x0}, in a similar manner. See the examples for how the list arguments are specified.
 #' 
 #' By default this function only updates the model code. The model will need to be re-compiled before it is run for the changes to take effect.
 #' 
 #' @param object a \code{bdm} class object
 #' @param prior a \code{prior} class object or a \code{list} object containing information to update the prior
+#' @param ... additional arguments to generic function
 #' 
 #' @return Returns a \code{bdm} object with updated model code.
 #' 
@@ -21,6 +22,9 @@
 #' 
 #' # update prior for logK
 #' mdl <- updatePrior(mdl, list(par = 'logK', min = 1, max = 100))
+#' 
+#' # update prior for initial depletion
+#' mdl <- updatePrior(mdl, list(par = 'x0', meanlog = log(0.8), sdlog = 0.01))
 #' 
 #' # check updates
 #' getr(mdl)
@@ -55,15 +59,21 @@ updatePrior.bdm <-  function(object, prior, ...) {
     
     if (is.list(prior)) {
         if (prior$par == 'r') {
-            logmu    <- signif(prior$meanlog,3)
-            logsigma <- signif(prior$sdlog,3)
-            object@model_code <- sub("r.?~.?lognormal\\(.+?\\);",paste("r ~ lognormal(",logmu,",",logsigma,");",sep = ""),object@model_code)
+            mu    <- signif(prior$meanlog,3)
+            sigma <- signif(prior$sdlog,3)
+            object@model_code <- sub("r.?~.?lognormal\\(.+?\\);",paste("r ~ lognormal(",mu,",",sigma,");",sep = ""),object@model_code)
             
         }
         if (prior$par == 'logK') {
             low <- signif(prior$min,3)
             upp <- signif(prior$max,3)
             object@model_code <- sub("logK.?~.?uniform\\(.+?\\);",paste("logK ~ uniform(",low,",",upp,");",sep = ""),object@model_code)
+            
+        }
+        if (prior$par == 'x0') {
+            mu    <- signif(prior$meanlog,3)
+            sigma <- signif(prior$sdlog,3)
+            object@model_code <- sub("x\\[1\\].?~.?lognormal\\(.+?\\);",paste("x[1] ~ lognormal(",mu - (sigma^2)/2,",",sigma,");",sep = ""),object@model_code)
             
         }
     } else if (class(prior) == 'prior') {
