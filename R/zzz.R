@@ -1,4 +1,4 @@
 .onAttach <- function(libname, pkgname)
 {
-    packageStartupMessage("bdm beta version 0.0.0.9009 (2015-09-16 16:38:24)")
+    packageStartupMessage("bdm beta version 0.0.0.9013 (2016-03-04 12:29:03)")
 }
