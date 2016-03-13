@@ -33,8 +33,9 @@ setMethod("compiler", signature = "bdm", definition = function(object, ...) {
     stanc_list_return <- stanc(model_code = object@model_code, model_name = object@model_name, ...)
     stanmodel_object  <- stan_model(stanc_ret = stanc_list_return)
     
-    object@model_cpp  <- stanmodel_object@model_cpp
-    object@dso        <- stanmodel_object@dso
+	object@mk_cppmodule <- stanmodel_object@mk_cppmodule
+    object@model_cpp    <- stanmodel_object@model_cpp
+    object@dso          <- stanmodel_object@dso
     
     return(object)
   
