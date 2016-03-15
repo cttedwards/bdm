@@ -7,7 +7,7 @@ Instructions
 =============
 First, install the "rstan" and "devtools" packages from CRAN
 
-    # Install and load devtools package
+    # Install packages
     install.packages("devtools")
     install.packages("rstan")
 
