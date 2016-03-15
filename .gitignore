@@ -4,3 +4,4 @@ vignettes/.build.timestamp
 .Rbuildignore
 .Rproj.user
 data-raw
+Makefile
