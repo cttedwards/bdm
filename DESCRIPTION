@@ -1,8 +1,8 @@
 Package: bdm
 Type: Package
 Title: Bayesian biomass dynamics model
-Version: 0.0.0.9015
-Date: 2016-03-14
+Version: 0.0.0.9016
+Date: 2016-11-25
 Author: Charles T T Edwards
 Maintainer: Charles T T Edwards <charles.edwards@niwa.co.nz>
 Description: Bayesian fit of a generalised production model to catch and
