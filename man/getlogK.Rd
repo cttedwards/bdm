@@ -10,7 +10,7 @@ getlogK(object, ...)
 
 \method{getlogK}{bdm}(object, ...)
 
-\method{getlogK}{list}(object, r, ...)
+\method{getlogK}{list}(object, r, interval, ...)
 }
 \arguments{
 \item{object}{either a \code{bdm} class object or a \code{list} object containing the elements \code{index} (an array) and \code{harvest} (a vector)}

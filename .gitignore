@@ -1,6 +1,7 @@
 vignettes/.build.timestamp
 *.html
 *.Rproj
+*.zip
 .Rbuildignore
 .Rproj.user
 data-raw

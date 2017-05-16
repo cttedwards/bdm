@@ -37,13 +37,8 @@ getlogK <- function(object, ...) UseMethod("getlogK")
 getlogK.bdm <- function(object, ...) {
     
     r    <- getr(object)[['E[r]']]
-    
-    if (length(object@data) > 0) {
-        logK <- getlogK(object@data, r)
-    } else logK <- NULL
-    
+	
     # extract logK distribution parameters from model_code
-    
     m <- regexpr('logK.?~.?uniform\\(.+?\\)',object@model_code)
     x <- regmatches(object@model_code,m)
     
@@ -56,6 +51,13 @@ getlogK.bdm <- function(object, ...) {
     m2 <- m2 + 1
     attributes(m2)$match.length <- attributes(m2)$match.length - 2
     x2 <- as.numeric(regmatches(x,m2))
+	
+	# if there are data then estimate logK
+    if (length(object@data) > 0) {
+        logK <- getlogK(object@data, r, interval = c(x1, x2))
+    } else logK <- NULL
+    
+    
     
     # return
     list('E[logK]' = logK, 'min[logK]' = x1, 'max[logK]' = x2)
@@ -63,7 +65,7 @@ getlogK.bdm <- function(object, ...) {
 }
 #' @rdname getlogK
 #' @export
-getlogK.list <- function(object, r, ...) {
+getlogK.list <- function(object, r, interval, ...) {
     
     # get logK through grid search
     # assuming a logistic production model
@@ -91,11 +93,15 @@ getlogK.list <- function(object, r, ...) {
     
     np <- 1000
     logK.llk <- numeric(np)
-    logK.seq <- seq(3,30,length = np)
+    logK.seq <- seq(interval[1],interval[2],length = np)
     for (i in 1:np) 
         logK.llk[i] <- obj(logK.seq[i])
+		
+	min.loc <- which.min(logK.llk)
     
-    init.logK <- logK.seq[which.min(logK.llk)]
+	if (min.loc %in% c(1,np)) warning("estimate on prior bound") 
+	
+    init.logK <- logK.seq[min.loc]
     
     init.logK
 }
