@@ -35,6 +35,9 @@ setMethod("initialize", signature = "bdmData", definition = function(.Object, in
     
       index[which(is.na(index))] <- -1
       if (is.vector(index)) index <- as.matrix(index)
+      
+      colnames(index) <- NULL
+      rownames(index) <- NULL
 	  
       .Object$T <- T.index <- nrow(index)
       .Object$I <- ncol(index)
