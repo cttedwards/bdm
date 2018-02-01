@@ -2,8 +2,8 @@
 % Please edit documentation in R/bdm-class.R, R/bdm.R
 \docType{class}
 \name{bdm-class}
-\alias{bdm}
 \alias{bdm-class}
+\alias{bdm}
 \title{Class definition for \code{bdm} object}
 \usage{
 bdm(path, model.code, model.name = "")
@@ -47,6 +47,7 @@ This is the primary object class for the \pkg{bdm} package. It inherits from the
 
 \item{\code{dso}}{object of class \code{cxxdso} holding the compiled C++ code as a dynamic shared object.}
 }}
+
 \examples{
 # initialise default model object
 mdl <- bdm()
@@ -57,4 +58,3 @@ mdl
 }
 
 }
-

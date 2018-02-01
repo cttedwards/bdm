@@ -2,10 +2,10 @@
 % Please edit documentation in R/outputs.R
 \docType{methods}
 \name{status}
-\alias{refpoints}
-\alias{refpoints,bdm-method}
 \alias{status}
 \alias{status,bdm-method}
+\alias{refpoints}
+\alias{refpoints,bdm-method}
 \title{Extract status and reference point estimates}
 \usage{
 status(object, ...)
@@ -50,4 +50,3 @@ lapply(refpoints(mdl), median)
 }
 
 }
-

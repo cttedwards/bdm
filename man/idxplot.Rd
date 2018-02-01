@@ -22,4 +22,3 @@ Returns a \code{ggplot} object that can be displayed or assigned and manuipulate
 \description{
 Plots the estimated abundance index dynamics over time against the observed values
 }
-

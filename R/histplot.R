@@ -63,7 +63,7 @@ histplot.bdm <- function(object, pars = c('r','logK','lp__'), inc_warmup  =  FAL
   
   dfr$chain <- unlist(lapply(strsplit(as.character(dfr$chain),split = ':'),function(x) x[2]))
   
-  if (!inc_warmup) dfr <- subset(dfr,iteration > object@warmup)
+  if (!inc_warmup) dfr <- subset(dfr,iteration > (object@warmup / object@thin))
   
   gg <- ggplot(dfr) + 
           geom_histogram(aes(x = value,fill = chain),position = 'stack') + 

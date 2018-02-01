@@ -5,13 +5,13 @@
 \alias{cumsumplot.bdm}
 \title{Plot cumulative sum of MCMC chain}
 \usage{
-cumsumplot(x, ...)
+cumsumplot(object, ...)
 
-\method{cumsumplot}{bdm}(x, pars = c("r", "logK", "lp__"),
+\method{cumsumplot}{bdm}(object, pars = c("r", "logK", "lp__"),
   inc_warmup = FALSE, ...)
 }
 \arguments{
-\item{x}{\code{bdm} class object.}
+\item{object}{\code{bdm} class object.}
 
 \item{...}{additional arguments to the generic function}
 
@@ -25,4 +25,3 @@ Returns a \code{ggplot} object that can be displayed or assigned and manuipulate
 \description{
 Plots the cumulative sum of ordered posterior samples from an MCMC chain contained within a \code{bdm} class object.
 }
-

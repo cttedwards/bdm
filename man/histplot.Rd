@@ -25,4 +25,3 @@ Returns a \code{ggplot} object that can be displayed or assigned and manuipulate
 \description{
 Plots histograms of posterior samples from an MCMC chain contained within a \code{bdm} class object.
 }
-

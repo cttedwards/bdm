@@ -17,4 +17,3 @@ getparams(object, ...)
 \description{
 Return model parameters (including input data)
 }
-

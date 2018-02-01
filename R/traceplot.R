@@ -61,12 +61,12 @@ setMethod("traceplot", signature = "bdm",function(object, pars = c('r','logK','l
   dfr$chain <- unlist(lapply(strsplit(as.character(dfr$chain),split = ':'),function(x) x[2]))
   
   if (!inc_warmup) 
-    dfr <- subset(dfr,iteration > object@warmup)
+    dfr <- subset(dfr,iteration > (object@warmup / object@thin))
   
   gg <- ggplot(dfr)
     
   if (inc_warmup) 
-    gg <- gg + geom_vline(xintercept = object@warmup,linetype = 'longdash',col = 'grey50')
+    gg <- gg + geom_vline(xintercept = (object@warmup / object@thin),linetype = 'longdash',col = 'grey50')
   
   gg <- gg + geom_line(aes(x = iteration,y = value,col = chain)) + 
     facet_wrap(~variable,scales = 'free_y') +

@@ -65,4 +65,3 @@ mean(log(r))
 getr(mdl)[['E[log(r)]']]
 
 }
-

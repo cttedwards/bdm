@@ -73,4 +73,3 @@ apply(mdl.project$harvest_rate, 2:3, median)
 }
 
 }
-

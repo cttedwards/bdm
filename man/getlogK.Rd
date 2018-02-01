@@ -46,4 +46,3 @@ getlogK(mdl)
 getlogK(dat, r = exp(-1))
 
 }
-

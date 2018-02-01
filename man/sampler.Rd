@@ -58,4 +58,3 @@ mdl <- sampler(mdl, dat)
 }
 
 }
-

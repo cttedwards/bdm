@@ -32,4 +32,3 @@ mdl <- bdm()
 getr(mdl)
 
 }
-

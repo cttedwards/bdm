@@ -2,8 +2,8 @@
 % Please edit documentation in R/bdmData-class.R, R/bdmData.R
 \docType{class}
 \name{bdmData-class}
-\alias{bdmData}
 \alias{bdmData-class}
+\alias{bdmData}
 \title{Class containing input data for model run}
 \usage{
 bdmData(index, harvest, time, n, sigmao, sigmap, renormalise = FALSE)
@@ -43,6 +43,7 @@ This is an S4 object class that extends the \code{list} base type and allows som
   \item{\code{sigmao}}{Matrix of log-normal observation error scale parameters \eqn{\sigma_o} with dimensions equal to \code{index}}
 }}
 }}
+
 \examples{
 # load Indian Ocean albacore data
 data(albio)
@@ -54,4 +55,3 @@ dat <- bdmData(harvest = albio$catch, index = albio$cpue, time = rownames(albio)
 \seealso{
 Use \code{\link{sigmao}} and \code{\link{sigmap}} to set or extract the \eqn{\sigma} values. Use \code{\link{shape}} to set or extract the shape of the production function.
 }
-

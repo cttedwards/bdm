@@ -25,4 +25,3 @@ Plots the dynamics over time of the estimated biomass, depletion, harvest rate o
 \details{
 Depletion is measured as the biomass over the carrying capacity, harvest rate is the catch over the estimated biomass, and surplus production is the production function multiplied by the process error residual.
 }
-

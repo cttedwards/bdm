@@ -5,8 +5,8 @@
 \alias{sigmao}
 \alias{sigmao,bdmData-method}
 \alias{sigmao<-}
-\alias{sigmao<-,bdmData,matrix-method}
 \alias{sigmao<-,bdmData,numeric-method}
+\alias{sigmao<-,bdmData,matrix-method}
 \title{Access or assign the observation error}
 \usage{
 sigmao(object, ...)
@@ -67,4 +67,3 @@ sigmao(dat) <- matrix(runif(22), nrow = 11)
 sigmao(dat)
 
 }
-

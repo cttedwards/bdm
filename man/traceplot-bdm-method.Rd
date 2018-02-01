@@ -26,4 +26,3 @@ Plots the trace outputs from an MCMC run implented using \code{\link{sampler}}.
 \details{
 This function uses the S4 generic \code{\link[package:rstan]{traceplot}} provided by \pkg{rstan}.
 }
-

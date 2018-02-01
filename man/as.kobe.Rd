@@ -28,4 +28,3 @@ vignette('bdm-examples')
 }
 
 }
-

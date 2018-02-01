@@ -50,4 +50,3 @@ sigmap(dat)
 
 
 }
-

@@ -49,4 +49,3 @@ getx(dat, logK = 6, r = exp(-1))
 
 
 }
-

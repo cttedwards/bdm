@@ -47,4 +47,3 @@ shape(dat)
 shape(dat, 'n')
 
 }
-

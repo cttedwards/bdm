@@ -1,8 +1,8 @@
 Package: bdm
 Type: Package
 Title: Bayesian biomass dynamics model
-Version: 0.0.0.9019
-Date: 2017-05-16
+Version: 0.0.0.9022
+Date: 2017-09-19
 Author: Charles T T Edwards
 Maintainer: Charles T T Edwards <charles.edwards@niwa.co.nz>
 Description: Bayesian fit of a generalised production model to catch and
@@ -24,10 +24,11 @@ Imports:
     reshape2 (>= 1.4.1),
     ggplot2 (>= 1.0.1),
     plyr (>= 1.8.3)
-Collate:
+Collate: 
     'bdm-class.R'
-    'as.kobe.R'
     'bdm.R'
+    'as.bdm.R'
+    'as.kobe.R'
     'bdmData-class.R'
     'bdmData.R'
     'compiler.R'
@@ -52,4 +53,4 @@ Collate:
     'traceplot.R'
     'updatePrior.R'
     'zzz.R'
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1

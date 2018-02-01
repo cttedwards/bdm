@@ -25,4 +25,3 @@ dat <- bdmData(harvest = albio$catch, index = albio$cpue, time = rownames(albio)
 plot(dat)
 
 }
-

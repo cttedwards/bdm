@@ -17,7 +17,7 @@ linux: $(R_FILES)
 	R CMD INSTALL --build .
 
 windows: $(R_FILES)
-	R --vanilla -e 'source(\"version_update.R\"); roxygen2::roxygenize(\".\")'
+	R --vanilla -e 'source(\"version_update.R\"); devtools::document(\".\")'
 	Rcmd INSTALL --build .
 	
 vignettes:
