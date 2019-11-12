@@ -37,10 +37,10 @@ plot.bdmData <- function(x, ...)
     plt <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 	
 	gg <- ggplot() + 
-        geom_bar(data = data.frame(time = time,value = harvest,label = 'Harvest'),aes(time,value), stat = 'identity', fill = "#999999")
+        geom_bar(data = data.frame(time = time,value = harvest,label = 'Harvest\n'),aes(time,value), stat = 'identity', fill = "#999999")
 	
     for (i in 1:dim(index)[2]) {
-        dfr <- data.frame(time = time,value = index[,i],label = 'Index')
+        dfr <- data.frame(time = time,value = index[,i],label = 'Index\n')
         gg <- gg + 
             geom_point(data = dfr,aes(time,value),col = plt[i], size = 4) +
             geom_line(data = dfr,aes(time,value),col = plt[i], size = 1.5)

@@ -13,6 +13,9 @@ DESCRIPTION[5] <- paste('Date:', DATE)
 writeLines(DESCRIPTION, 'DESCRIPTION')
 rm(DESCRIPTION)
 
+# help files
+devtools::document()
+
 # Write .onAttach
 filename <- "R/zzz.R"
 cat(".onAttach <- function(libname, pkgname)\n", file = filename)

@@ -8,8 +8,9 @@
 \usage{
 as.kobe(.Object, ...)
 
-\S4method{as.kobe}{bdm}(.Object, projection, what = c("sims", "trks", "pts",
-  "smry", "wrms")[1], prob = c(0.75, 0.5, 0.25), year = NULL, nwrms = 10)
+\S4method{as.kobe}{bdm}(.Object, projection, what = c("sims", "trks",
+  "pts", "smry", "wrms")[1], prob = c(0.75, 0.5, 0.25), year = NULL,
+  nwrms = 10)
 }
 \arguments{
 \item{.Object}{a \code{bdm} class object}

@@ -21,28 +21,63 @@ dynplot <- function(x, ...) UseMethod("dynplot")
 #'
 #' @rdname dynplot
 #' @export
-dynplot.bdm <- function(x, pars = 'depletion', ...) {
+#dynplot.bdm <- function(x, pars = 'depletion', ...) {
+#    
+#    time <- x@data[['time']]
+#    nsamples <- x@nsamples
+#    
+#    #######################################################
+#    # code for extraction of iterations from object@trace #
+#    # (list of parameter arrays with all chains combined) #
+#    #######################################################
+#    dfr <- data.frame(iter = integer(),time = integer(),value = numeric(),label = character())
+#    for (par in pars) {
+#        par.arr <- x@trace[[par]]
+#        dimnames(par.arr) <- list(iter = 1:nsamples,time = time)
+#        
+#        par.dfr <- melt(par.arr)
+#        par.dfr <- data.frame(par.dfr,label = par)
+#        
+#        dfr <- rbind(dfr,par.dfr)
+#    }
+#    
+#    gg <- ggplot(dfr,aes(time,value)) + 
+#        stat_summary(fun.ymin = function(x) quantile(x,0.025),fun.ymax = function(x) quantile(x,0.975),geom = 'ribbon',alpha = 0.3) +
+#        stat_summary(fun.y = function(x) mean(x),geom = 'line',lwd = 1.5) +
+#        labs(x = 'Time',y = 'Predicted Value') #+
+#        #ggtheme()
+#    
+#    if (length(pars)>1)
+#        gg <- gg + facet_grid(label~., scales  =  'free_y')
+#    
+#    return(gg)
+#}
+
+dynplot.bdm <- function(x, ..., pars = 'depletion') {
     
-    time <- x@data[['time']]
-    nsamples <- x@nsamples
+    y <- c(x, list(...))
     
-    #######################################################
-    # code for extraction of iterations from object@trace #
-    # (list of parameter arrays with all chains combined) #
-    #######################################################
-    dfr <- data.frame(iter = integer(),time = integer(),value = numeric(),label = character())
-    for (par in pars) {
-        par.arr <- x@trace[[par]]
-        dimnames(par.arr) <- list(iter = 1:nsamples,time = time)
-        
-        par.dfr <- melt(par.arr)
-        par.dfr <- data.frame(par.dfr,label = par)
-        
-        dfr <- rbind(dfr,par.dfr)
+    dfr <- data.frame(iter = integer(),time = integer(),value = numeric(),label = character(),run = character())
+    for (i in 1:length(y)) {
+        x <- y[[i]]
+        for (par in pars) {
+            par.arr <- x@trace[[par]]
+            dimnames(par.arr) <- list(iter = 1:x@nsamples,time = dat$time)
+            
+            par.dfr <- melt(par.arr)
+            par.dfr <- data.frame(par.dfr,label = par, run = x@run)
+            
+            dfr <- rbind(dfr,par.dfr)
+        }
     }
     
-    gg <- ggplot(dfr,aes(time,value)) + 
-        stat_summary(fun.ymin = function(x) quantile(x,0.025),fun.ymax = function(x) quantile(x,0.975),geom = 'ribbon',alpha = 0.3) +
+    if (length(y) > 1) {
+        gg <- ggplot(dfr,aes(time,value,col = run, fill = run))
+    } else {
+        gg <- ggplot(dfr,aes(time,value))
+    }
+        
+    gg <- gg + stat_summary(fun.ymin = function(x) quantile(x,0.025),fun.ymax = function(x) quantile(x,0.975),geom = 'ribbon',alpha = 0.3) +
         stat_summary(fun.y = function(x) mean(x),geom = 'line',lwd = 1.5) +
         labs(x = 'Time',y = 'Predicted Value') +
         ggtheme()
@@ -52,4 +87,6 @@ dynplot.bdm <- function(x, pars = 'depletion', ...) {
     
     return(gg)
 }
+
+
 #}}}
