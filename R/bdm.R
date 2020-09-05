@@ -45,7 +45,7 @@ data {
     real sigmap;
 }
 parameters {
-    real<lower=3,upper=30> logK;
+    real<lower=1,upper=100> logK;
     real<lower=0,upper=2> r;
     real<lower=0> x[T];
 }
@@ -103,7 +103,7 @@ model {
     // prior densities for
     // estimated parameters
     // ********************
-    logK ~ uniform(3.0,30.0);
+    logK ~ uniform(1.0,100.0);
     r ~ lognormal(-1.0,0.20);
     
     // state equation
@@ -146,6 +146,9 @@ model {
     }
 }
 generated quantities {
+
+    real rPrior;
+    real logKprior;
     
     real biomass[T];
     real depletion[T];
@@ -214,6 +217,9 @@ generated quantities {
             epsilon_o[t,i] = observed_index[t,i]/predicted_index[t,i];
         }
     }
+    
+    logKprior ~ uniform_rng(1.0,100.0);
+    rPrior ~ lognormal_rng(-1.0,0.20);
 }
 '
 #}}}

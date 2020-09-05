@@ -62,12 +62,14 @@ updatePrior.bdm <-  function(object, prior, ...) {
             mu    <- signif(prior$meanlog,3)
             sigma <- signif(prior$sdlog,3)
             object@model_code <- sub("r.?~.?lognormal\\(.+?\\);",paste("r ~ lognormal(",mu,",",sigma,");",sep = ""),object@model_code)
+            object@model_code <- sub("rPrior.?~.?lognormal_rng\\(.+?\\);",paste("rPrior ~ lognormal_rng(",mu,",",sigma,");",sep = ""),object@model_code)
             
         }
         if (prior$par == 'logK') {
             low <- signif(prior$min,3)
             upp <- signif(prior$max,3)
             object@model_code <- sub("logK.?~.?uniform\\(.+?\\);",paste("logK ~ uniform(",low,",",upp,");",sep = ""),object@model_code)
+            object@model_code <- sub("logKprior.?~.?uniform_rng\\(.+?\\);",paste("logKprior ~ uniform_rng(",low,",",upp,");",sep = ""),object@model_code)
             
         }
         if (prior$par == 'x0') {
@@ -111,6 +113,7 @@ updatePrior.bdm <-  function(object, prior, ...) {
         logmu    <- signif(lognormal.par[['E[log(x)]']],3)
         logsigma <- signif(lognormal.par[['SD[log(x)]']],3)
         object@model_code <- sub("r.?~.?lognormal\\(.+?\\);",paste("r ~ lognormal(",logmu,",",logsigma,");",sep = ""),object@model_code)
+        object@model_code <- sub("rPrior.?~.?lognormal_rng\\(.+?\\);",paste("rPrior ~ lognormal_rng(",mu,",",sigma,");",sep = ""),object@model_code)
     
     } else {
         stop('prior is incorrectly specified\n')
