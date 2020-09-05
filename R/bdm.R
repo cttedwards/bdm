@@ -218,8 +218,8 @@ generated quantities {
         }
     }
     
-    logKprior ~ uniform_rng(1.0,100.0);
-    rPrior ~ lognormal_rng(-1.0,0.20);
+    logKprior = uniform_rng(1.0,100.0);
+    rPrior = lognormal_rng(-1.0,0.20);
 }
 '
 #}}}

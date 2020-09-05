@@ -11,8 +11,6 @@
 #' 
 #' @return Returns a \code{ggplot} object that can be displayed or assigned and manuipulated using further arguments from the \pkg{ggplot2} package.
 #' 
-#' @include ggtheme.R
-#' 
 #' @import ggplot2
 #' @import reshape2
 #' 
