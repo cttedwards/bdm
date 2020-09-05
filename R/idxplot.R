@@ -47,7 +47,7 @@ idxplot.bdm <- function(x, labels, ...) {
         stat_summary(data = dfr,aes(time,value),fun.ymin = function(x) quantile(x,0.025),fun.ymax = function(x) quantile(x,0.975),geom = 'ribbon',alpha = 0.3) +
         stat_summary(data = dfr,aes(time,value),fun.y = function(x) mean(x),geom = 'line',lwd = 1.5) +
         labs(x = 'Time',y = 'Predicted Index') +
-        ggtheme() %+replace% theme(legend.position = "none")
+        theme_bw(base_size = 12) %+replace% theme(legend.position = "none")
     
     dfr.empirical <- x@data$index
     dimnames(dfr.empirical) <- list(time  =  x@data$time, label  =  labels)

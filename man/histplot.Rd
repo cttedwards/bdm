@@ -7,8 +7,7 @@
 \usage{
 histplot(object, ...)
 
-\method{histplot}{bdm}(object, pars = c("r", "logK", "lp__"),
-  inc_warmup = FALSE, ...)
+\method{histplot}{bdm}(object, pars = c("r", "logK", "lp__"), inc_warmup = FALSE, ...)
 }
 \arguments{
 \item{object}{a \code{bdm} class object.}

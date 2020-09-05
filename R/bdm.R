@@ -164,6 +164,10 @@ generated quantities {
     real biomass_at_msy;
     real harvest_rate_at_msy;
     
+    real current_biomass_over_bmsy;
+    real current_depletion_over_dmsy;
+    real current_harvest_rate_over_hmsy;
+    
     real observed_index[T,I];
     real predicted_index[T,I];
     
@@ -193,6 +197,10 @@ generated quantities {
     depletion_at_msy = dmsy;
     biomass_at_msy = dmsy * exp(logK);
     harvest_rate_at_msy = m / dmsy;
+    
+    current_biomass_over_bmsy = current_biomass / biomass_at_msy;
+    current_depletion_over_dmsy = current_depletion / depletion_at_msy;
+    current_harvest_rate_over_hmsy = current_harvest_rate / harvest_rate_at_msy;
     
     for(i in 1:I){
         for(t in 1:T){

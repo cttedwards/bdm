@@ -1,4 +1,40 @@
+## ---- echo = FALSE-------------------------------------------------------
+knitr::opts_chunk$set(fig.path = 'fig/bdm-newmodel-', fig.width=  6, tidy = FALSE, message = FALSE, warning = FALSE, collapse = TRUE, comment = "#>")
 
+## ---- results='hide'-----------------------------------------------------
+library(bdm)
+
+## ----haknz-data, results='hide', fig.cap='Chatham rise hake data'--------
+data(haknz)
+dat <- bdmData(harvest = haknz$landings,index = cbind(haknz$survey, haknz$cpue), time = haknz$year, renormalise = TRUE)
+plot(dat)
+
+## ---- eval=FALSE, echo=TRUE----------------------------------------------
+#    new_model <- "
+#      ...
+#      parameters {
+#        real<lower=3,upper=30> logK;
+#        real<lower=0,upper=2> r;
+#        real<lower=0> x[T];
+#        real<lower=0> sigmap2;
+#      }
+#      ...
+#      model {
+#  
+#        // prior densities for
+#        // estimated parameters
+#        // ********************
+#        logK ~ uniform(3.0,30.0);
+#        r ~ lognormal(-1.0,0.20);
+#        sigmap2 ~ inv_gamma(0.001,0.001);
+#  
+#        ...
+#      }
+#      ...
+#    "
+
+## ---- eval=TRUE, echo=FALSE----------------------------------------------
+  new_model <- "
     data {
       int T;
       int I;
@@ -169,4 +205,10 @@
         }
       }
     }
-  
+  "
+
+## ---- results='hide'-----------------------------------------------------
+mdl <- bdm(model.code = new_model)
+mdl <- updatePrior(mdl, prior = list(par = 'r', meanlog = -0.91, sdlog = 0.40))
+mdl <- compiler(mdl)
+

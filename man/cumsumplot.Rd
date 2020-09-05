@@ -7,8 +7,7 @@
 \usage{
 cumsumplot(object, ...)
 
-\method{cumsumplot}{bdm}(object, pars = c("r", "logK", "lp__"),
-  inc_warmup = FALSE, ...)
+\method{cumsumplot}{bdm}(object, pars = c("r", "logK", "lp__"), inc_warmup = FALSE, ...)
 }
 \arguments{
 \item{object}{\code{bdm} class object.}

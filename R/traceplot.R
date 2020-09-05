@@ -71,7 +71,7 @@ setMethod("traceplot", signature = "bdm",function(object, pars = c('r','logK','l
   gg <- gg + geom_line(aes(x = iteration,y = value,col = chain)) + 
     facet_wrap(~variable,scales = 'free_y') +
     xlab('Iteration') +
-    ylab('Parameter value') + ggtheme()
+    ylab('Parameter value') + theme_bw(base_size = 12)
   
   return(gg)
   

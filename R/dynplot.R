@@ -64,23 +64,26 @@ dynplot.bdm <- function(x, ..., pars = 'depletion') {
             par.arr <- x@trace[[par]]
             dimnames(par.arr) <- list(iter = 1:x@nsamples,time = dat$time)
             
+            if (length(x@run) == 0) {
+                warning("'run' unspecified") 
+            }
+            
             par.dfr <- melt(par.arr)
-            par.dfr <- data.frame(par.dfr,label = par, run = x@run)
+            par.dfr <- data.frame(par.dfr,label = par, run = ifelse(length(x@run) == 0, "", x@run))
             
             dfr <- rbind(dfr,par.dfr)
         }
     }
     
     if (length(y) > 1) {
-        gg <- ggplot(dfr,aes(time,value,col = run, fill = run))
+        gg <- ggplot(dfr,aes(time,value,col = run, fill = run)) + labs(x = 'Time', y = 'Predicted Value', col = 'Model\nrun', fill = 'Model\nrun')
     } else {
-        gg <- ggplot(dfr,aes(time,value))
+        gg <- ggplot(dfr,aes(time,value)) + labs(x = 'Time', y = 'Predicted Value')
     }
         
-    gg <- gg + stat_summary(fun.ymin = function(x) quantile(x,0.025),fun.ymax = function(x) quantile(x,0.975),geom = 'ribbon',alpha = 0.3) +
-        stat_summary(fun.y = function(x) mean(x),geom = 'line',lwd = 1.5) +
-        labs(x = 'Time',y = 'Predicted Value') +
-        ggtheme()
+    gg <- gg + stat_summary(fun.min = function(x) quantile(x,0.025), fun.max = function(x) quantile(x,0.975), geom = 'ribbon', alpha = 0.3) +
+        stat_summary(fun = function(x) mean(x), geom = 'line', lwd = 1.5) +
+        theme_bw(base_size = 12)
     
     if (length(pars)>1)
         gg <- gg + facet_grid(label~., scales  =  'free_y')

@@ -43,7 +43,7 @@ setMethod("status",signature("bdm"),
               parnames <- names(object@trace)
               
               if (missing(pars)) {
-                  pars <- c('current_biomass', 'current_depletion', 'current_harvest_rate')
+                  pars <- c('current_biomass', 'current_depletion', 'current_harvest_rate', 'current_biomass_over_bmsy', 'current_depletion_over_dmsy', 'current_harvest_rate_over_hmsy')
               }
               
               for (i in 1:length(pars)) {

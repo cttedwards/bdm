@@ -13,7 +13,7 @@ plot(dat)
 library(lhm)
 
 # initialise lhm data object for calculation of r with uncertainty
-rdat <- lhm(amax = 100, iter = 200)
+rdat <- lhm(ainf = 100, iter = 200)
 
 # then life-history vectors can be assigned to each iteration
 # with or without uncertainty

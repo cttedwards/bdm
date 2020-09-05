@@ -17,7 +17,6 @@ linux: $(R_FILES)
 	R CMD INSTALL --build .
 
 windows: $(R_FILES)
-	#R --vanilla -e 'source(\"version_update.R\"); devtools::document(\".\")'
     Rscript version_update.R
 	Rcmd INSTALL --build .
 	

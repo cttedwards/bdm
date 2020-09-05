@@ -37,7 +37,7 @@ plot.bdmData <- function(x, ...)
     plt <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 	
 	gg <- ggplot() + 
-        geom_bar(data = data.frame(time = time,value = harvest,label = 'Harvest\n'),aes(time,value), stat = 'identity', fill = "#999999")
+        geom_col(data = data.frame(time = as.character(time), value = harvest,label = 'Harvest\n'), aes(time, value), fill = "#999999")
 	
     for (i in 1:dim(index)[2]) {
         dfr <- data.frame(time = time,value = index[,i],label = 'Index\n')
@@ -50,7 +50,7 @@ plot.bdmData <- function(x, ...)
         facet_grid(label ~ ., scales = 'free_y') + 
         xlab('Time') +
 	    ylab('') + 
-        ggtheme()
+        theme_bw()
     
 	return(gg)
 }

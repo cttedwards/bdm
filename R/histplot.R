@@ -69,7 +69,7 @@ histplot.bdm <- function(object, pars = c('r','logK','lp__'), inc_warmup  =  FAL
           geom_histogram(aes(x = value,fill = chain),position = 'stack') + 
           facet_wrap(~variable,scales = 'free_x') +
           xlab('Parameter value') +
-          ylab('Sample counts') + ggtheme()
+          ylab('Sample counts') + theme_bw(base_size = 12)
   
   #######################################################
   # code for extraction of iterations from object@trace #
