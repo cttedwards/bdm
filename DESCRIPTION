@@ -43,6 +43,7 @@ Collate:
     'getx.R'
     'histplot.R'
     'idxplot.R'
+    'postplot.R'
     'outputs.R'
     'plot.bdmData.R'
     'project.R'
