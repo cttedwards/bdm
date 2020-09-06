@@ -44,7 +44,7 @@ idxplot.bdm <- function(x, labels, ...) {
     }
     
     gg <- ggplot() + 
-        stat_summary(data = dfr,aes(time,value),fun.min = function(x) quantile(x,0.025),funymax = function(x) quantile(x,0.975),geom = 'ribbon',alpha = 0.3) +
+        stat_summary(data = dfr,aes(time,value),fun.min = function(x) quantile(x,0.025),fun.max = function(x) quantile(x,0.975),geom = 'ribbon',alpha = 0.3) +
         stat_summary(data = dfr,aes(time,value),fun = function(x) mean(x),geom = 'line',lwd = 1.5) +
         labs(x = 'Time',y = 'Predicted Index') +
         theme_bw(base_size = 12) %+replace% theme(legend.position = "none")
