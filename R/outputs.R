@@ -70,7 +70,7 @@ setMethod("refpoints",signature("bdm"),
               parnames <- names(object@trace)
               
               if (missing(pars)) {
-                  pars <- c('msy', 'depletion_at_msy', 'biomass_at_msy', 'harvest_rate_at_msy')
+                  pars <- c('r', 'logK', 'msy', 'depletion_at_msy', 'biomass_at_msy', 'harvest_rate_at_msy')
               }
               
               for (i in 1:length(pars)) {

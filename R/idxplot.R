@@ -55,7 +55,7 @@ idxplot.bdm <- function(x, labels, ...) {
     dfr.empirical <- melt(dfr.empirical)
     
     gg <- gg + geom_point(data = dfr.empirical,aes(time,value,col = label), size = 4) + 
-        geom_line(data = dfr.empirical,aes(time,value,col = label), size = 1.5)
+        geom_line(data = dfr.empirical,aes(time,value,col = label), size = 1.5) + guides(col = FALSE)
     
     if (nidx > 1)
         gg <- gg + facet_grid(label~.)

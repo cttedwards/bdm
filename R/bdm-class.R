@@ -48,9 +48,9 @@ setMethod("initialize", signature = "bdm", definition = function(.Object, path, 
         .Object@model_code <- model.code
     }
     
-    .Object@chains <- 4
-    .Object@iter   <- 2000
-    .Object@thin   <- 1
+    .Object@chains <- 3
+    .Object@iter   <- 10000
+    .Object@thin   <- 3
     .Object@warmup <- floor(.Object@iter/2)
     
     return(.Object)
