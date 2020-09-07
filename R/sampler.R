@@ -99,5 +99,11 @@ setMethod("sampler", signature = "bdm", definition = function(object, data = lis
     object@trace       <- extract(stanfit_object)
     object@trace_array <- extract(stanfit_object,permuted = FALSE,inc_warmup = TRUE)
     
+    # check
+    if (dim(object@trace[['r']]) != object@nsamples) {
+      object@nsamples <- dim(object@trace[['r']])
+    }
+    
+    # return
     return(object)
 })
