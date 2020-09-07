@@ -103,7 +103,7 @@ model {
     // prior densities for
     // estimated parameters
     // ********************
-    logK ~ uniform(1.0,100.0);
+    logK ~ uniform(1.0,10.0);
     r ~ lognormal(-1.0,0.20);
     
     // state equation
@@ -218,7 +218,7 @@ generated quantities {
         }
     }
     
-    logKprior = uniform_rng(1.0,100.0);
+    logKprior = uniform_rng(1.0,10.0);
     rPrior = lognormal_rng(-1.0,0.20);
 }
 '
