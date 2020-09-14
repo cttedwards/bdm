@@ -45,8 +45,8 @@ data {
     real sigmap;
 }
 parameters {
-    real<lower=1,upper=100> logK;
-    real<lower=0,upper=2> r;
+    real<lower=1> logK;
+    real<lower=0> r;
     real<lower=0> x[T];
 }
 transformed parameters {
@@ -103,7 +103,7 @@ model {
     // prior densities for
     // estimated parameters
     // ********************
-    logK ~ uniform(1.0,10.0);
+    logK ~ uniform(1.0,12.0);
     r ~ lognormal(-1.0,0.20);
     
     // state equation

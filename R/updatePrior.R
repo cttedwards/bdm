@@ -106,12 +106,12 @@ updatePrior.bdm <-  function(object, prior, ...) {
             cv    <- sqrt(exp(sigma2) - 1)
             
             # assign
-            lognormal.par <- list('E[log(x)]' = mu, 'SD[log(x)]' = sigma, 'E[x]' = theta, 'VAR[x]' = nu, 'CV[x]' = cv)
+            lognormal.par <- list('E[log(r)]' = mu, 'SD[log(r)]' = sigma, 'E[r]' = theta, 'VAR[r]' = nu, 'CV[r]' = cv)
             
         } 
         
-        logmu    <- signif(lognormal.par[['E[log(x)]']],3)
-        logsigma <- signif(lognormal.par[['SD[log(x)]']],3)
+        logmu    <- signif(lognormal.par[['E[log(r)]']],3)
+        logsigma <- signif(lognormal.par[['SD[log(r)]']],3)
         object@model_code <- sub("r.?~.?lognormal\\(.+?\\);",paste("r ~ lognormal(",logmu,",",logsigma,");",sep = ""),object@model_code)
         object@model_code <- sub("rPrior.?=.?lognormal\\_rng\\(.+?\\);",paste("rPrior = lognormal_rng(",logmu,",",logsigma,");",sep = ""),object@model_code)
     
