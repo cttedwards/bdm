@@ -18,11 +18,15 @@ postplot <- function(x, ...) UseMethod("postplot")
 #'
 #' @rdname postplot
 #' @export
-postplot.bdm <- function(x, ..., type = "histogram") {
+postplot.bdm <- function(x, ..., type = "histogram", labels) {
   
-  pars = c("r", "rPrior", "logK", "logKprior")
+    pars = c("r", "rPrior", "logK", "logKprior")
     
     y <- c(x, list(...))
+    
+    if (!missing(labels) & length(y) != length(labels)) {
+      stop("'labels' vector length does not match number of models")  
+    }
     
     if (type == "histogram") {
       
@@ -30,8 +34,11 @@ postplot.bdm <- function(x, ..., type = "histogram") {
       for (i in 1:length(y)) {
           x <- y[[i]]
           
+          if (!missing(labels)) {
+              x@run <- labels[i]
+          }
           if (length(x@run) == 0) {
-                  warning("'run' unspecified") 
+              warning("'run' unspecified") 
           }
           
           for (par in pars) {
@@ -44,6 +51,11 @@ postplot.bdm <- function(x, ..., type = "histogram") {
               
               dfr <- rbind(dfr,par.dfr)
           }
+      }
+      
+      if (!missing(labels)) {
+        dfr$run <- factor(dfr$run)
+        dfr$run <- factor(dfr$run, levels = levels(dfr$run)[match(levels(dfr$run), labels)])
       }
       
       gg <- ggplot(dfr) + geom_density(aes(x = value, fill = label), alpha = 0.4) + theme_bw(base_size = 16) + labs(xlab = "", ylab = "", fill = "")
@@ -60,8 +72,11 @@ postplot.bdm <- function(x, ..., type = "histogram") {
       for (i in 1:length(y)) {
           x <- y[[i]]
           
+          if (!missing(labels)) {
+            x@run <- labels[i]
+          }
           if (length(x@run) == 0) {
-                  warning("'run' unspecified") 
+              warning("'run' unspecified") 
           }
           
           par.dfr <- data.frame(iter = 1:x@nsamples, 
@@ -79,6 +94,11 @@ postplot.bdm <- function(x, ..., type = "histogram") {
                                 run = ifelse(length(x@run) == 0, "", x@run))
           
           dfr <- rbind(dfr,par.dfr)
+      }
+      
+      if (!missing(labels)) {
+        dfr$run <- factor(dfr$run)
+        dfr$run <- factor(dfr$run, levels = levels(dfr$run)[match(levels(dfr$run), labels)])
       }
       
       gg <- ggplot(dfr) + 

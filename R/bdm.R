@@ -218,7 +218,7 @@ generated quantities {
         }
     }
     
-    logKprior = uniform_rng(1.0,10.0);
+    logKprior = uniform_rng(1.0,12.0);
     rPrior = lognormal_rng(-1.0,0.20);
 }
 '

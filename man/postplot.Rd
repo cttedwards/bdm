@@ -7,7 +7,7 @@
 \usage{
 postplot(x, ...)
 
-\method{postplot}{bdm}(x, ..., type = "histogram")
+\method{postplot}{bdm}(x, ..., type = "histogram", labels)
 }
 \arguments{
 \item{x}{\code{bdm} class object.}
