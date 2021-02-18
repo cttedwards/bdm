@@ -26,11 +26,19 @@
 setGeneric("optimr", function(object, ...) standardGeneric("optimr"))
 #'
 #' @rdname sampler
-setMethod("optimr", signature = "bdm", definition = function(object, data = list(), run = character(), init = "random", ...) {
+setMethod("optimr", signature = "bdm", definition = function(object, data = list(), run = character(), init = "fixed", ...) {
     
     # initial assignments
-    object@data <- data
-    object@run  <- run
+    if (length(data) > 0) {
+        if (length(object@data) > 0)
+            warning("Replaced existent data in bdm model object")
+        object@data <- data
+    }
+    if (length(run) > 0) {
+        if (length(object@run) > 0)
+            warning("Replaced existent run label in bdm model object (", object@run,") with ", run)
+        object@run <- run
+    }
     
     # check for default model
     # parameterisation
@@ -53,10 +61,14 @@ setMethod("optimr", signature = "bdm", definition = function(object, data = list
     }
     
     # maxium a posterior estimate using rstan
-    list_object <- suppressWarnings(optimizing(object, data = object@data, init = init, as_vector = TRUE, ...))
+    fit_object <- suppressWarnings(optimizing(object, data = object@data, init = init, as_vector = FALSE, ...))
     
     # extract estimates
-    object@map <- list_object$par
+    if (fit_object$return_code == 0) {
+        object@map <- fit_object$par
+    } else {
+        warning("Optimization terminated with error")
+    }
     
     # return
     return(object)
