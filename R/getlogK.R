@@ -82,8 +82,10 @@ getlogK.list <- function(object, r, interval, ...) {
     obj <- function(logK) {
         
         bm[1] <- 1
-        for (t in 1:tt) 
-            bm[t + 1] <- max(bm[t] + r*bm[t]*(1 - bm[t]) - cc[t]/exp(logK),ll)
+        for (t in 1:tt) {
+            H = min(exp(log(cc[t]) - logK), bm[t])
+            bm[t + 1] <- bm[t] + r*bm[t]*(1 - bm[t]) - H
+        }
         bm <- bm[-length(bm)]
         
         q <- mean(apply(ii, 2, function(x) exp(mean(log(x[x > 0]/bm[x > 0])))))
@@ -103,7 +105,7 @@ getlogK.list <- function(object, r, interval, ...) {
 	
     init.logK <- logK.seq[min.loc]
     
-    init.logK
+    return(init.logK)
 }
 
 
