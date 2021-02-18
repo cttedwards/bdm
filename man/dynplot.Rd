@@ -7,7 +7,7 @@
 \usage{
 dynplot(x, ...)
 
-\method{dynplot}{bdm}(x, ..., pars = "depletion", labels)
+\method{dynplot}{bdm}(x, ..., pars = "depletion", labels = character())
 }
 \arguments{
 \item{x}{\code{bdm} class object.}

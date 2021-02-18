@@ -39,6 +39,8 @@ This is the primary object class for the \pkg{bdm} package. It inherits from the
 
 \item{\code{trace_array}}{\code{array} holding the processed samples from \code{\link[rstan:extract]{extract(..., permuted = FALSE, inc_warmup = TRUE)}}. This should rarely be needed for direct access but is used for diagnostic plots.}
 
+\item{\code{map}}{list containing the maxium a posterior model fit}
+
 \item{\code{model_name}}{\code{character} string giving the model name.}
 
 \item{\code{model_code}}{the model code in the Stan modelling language.}
