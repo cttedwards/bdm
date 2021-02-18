@@ -11,6 +11,7 @@
 #' @slot nsamples the resultant number of samples retained from the sample run
 #' @slot trace \code{list} holding the processed samples from \code{\link[rstan:extract]{extract(..., permuted = TRUE, inc_warmup = FALSE)}}.
 #' @slot trace_array \code{array} holding the processed samples from \code{\link[rstan:extract]{extract(..., permuted = FALSE, inc_warmup = TRUE)}}. This should rarely be needed for direct access but is used for diagnostic plots.
+#' @slot map list containing the maxium a posterior model fit
 #' @slot model_name \code{character} string giving the model name.
 #' @slot model_code the model code in the Stan modelling language.
 #' @slot model_cpp translation of Stan code into C++.
@@ -32,6 +33,7 @@ setClass("bdm",contains = "stanmodel",
                     nsamples = "numeric",     # total number of posterior samples recorded
                     trace = "list",           # list of posterior samples without warmup and with chains mixed
                     trace_array = "array",    # array of posterior samples including warmup
+                    map = "list",             # list containing map output
                     run = "character"         # optional label for this particular run
          )
 )
