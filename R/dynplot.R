@@ -51,11 +51,13 @@ dynplot <- function(x, ...) UseMethod("dynplot")
 #    return(gg)
 #}
 
-dynplot.bdm <- function(x, ..., pars = 'depletion', labels) {
+dynplot.bdm <- function(x, ..., pars = 'depletion', labels = character()) {
     
     y <- c(x, list(...))
     
-    if (!missing(labels) & length(y) != length(labels)) {
+    is.labelled <- ifelse(length(labels) > 0, TRUE, FALSE)
+    
+    if (is.labelled & length(y) != length(labels)) {
         stop("'labels' vector length does not match number of models")  
     }
     
@@ -66,7 +68,7 @@ dynplot.bdm <- function(x, ..., pars = 'depletion', labels) {
             par.arr <- x@trace[[par]]
             dimnames(par.arr) <- list(iter = 1:x@nsamples,time = dat$time)
             
-            if (!missing(labels)) {
+            if (is.labelled) {
                 x@run <- labels[i]
             }
             if (length(x@run) == 0) {
@@ -80,7 +82,7 @@ dynplot.bdm <- function(x, ..., pars = 'depletion', labels) {
         }
     }
     
-    if (!missing(labels)) {
+    if (is.labelled) {
         dfr$run <- factor(dfr$run)
         dfr$run <- factor(dfr$run, levels = levels(dfr$run)[match(levels(dfr$run), labels)])
     }
