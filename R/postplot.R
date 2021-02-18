@@ -18,13 +18,15 @@ postplot <- function(x, ...) UseMethod("postplot")
 #'
 #' @rdname postplot
 #' @export
-postplot.bdm <- function(x, ..., type = "histogram", labels) {
+postplot.bdm <- function(x, ..., type = "histogram", labels = character()) {
   
     pars = c("r", "rPrior", "logK", "logKprior")
     
     y <- c(x, list(...))
     
-    if (!missing(labels) & length(y) != length(labels)) {
+    is.labelled <- ifelse(length(labels) > 0, TRUE, FALSE)
+    
+    if (is.labelled & length(y) != length(labels)) {
       stop("'labels' vector length does not match number of models")  
     }
     
@@ -34,7 +36,7 @@ postplot.bdm <- function(x, ..., type = "histogram", labels) {
       for (i in 1:length(y)) {
           x <- y[[i]]
           
-          if (!missing(labels)) {
+          if (is.labelled) {
               x@run <- labels[i]
           }
           if (length(x@run) == 0) {
@@ -53,7 +55,7 @@ postplot.bdm <- function(x, ..., type = "histogram", labels) {
           }
       }
       
-      if (!missing(labels)) {
+      if (is.labelled) {
         dfr$run <- factor(dfr$run)
         dfr$run <- factor(dfr$run, levels = levels(dfr$run)[match(levels(dfr$run), labels)])
       }
@@ -72,7 +74,7 @@ postplot.bdm <- function(x, ..., type = "histogram", labels) {
       for (i in 1:length(y)) {
           x <- y[[i]]
           
-          if (!missing(labels)) {
+          if (is.labelled) {
             x@run <- labels[i]
           }
           if (length(x@run) == 0) {
@@ -96,7 +98,7 @@ postplot.bdm <- function(x, ..., type = "histogram", labels) {
           dfr <- rbind(dfr,par.dfr)
       }
       
-      if (!missing(labels)) {
+      if (is.labelled) {
         dfr$run <- factor(dfr$run)
         dfr$run <- factor(dfr$run, levels = levels(dfr$run)[match(levels(dfr$run), labels)])
       }
