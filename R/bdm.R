@@ -42,12 +42,13 @@ data {
     real harvest[T];
     real n;
     real sigmao[T,I];
-    real sigmap;
+    //real sigmap;
 }
 parameters {
     real<lower=1> logK;
     real<lower=0> r;
     real<lower=0> x[T];
+    real<lower=0> sigmap;
 }
 transformed parameters {
 
@@ -105,6 +106,7 @@ model {
     // ********************
     logK ~ uniform(1.0,12.0);
     r ~ lognormal(-1.0,0.20);
+    sigmap ~ exponential(10.0);
     
     // state equation
     // **************
@@ -149,6 +151,7 @@ generated quantities {
 
     real rPrior;
     real logKprior;
+    real sigmapPrior;
     
     real biomass[T];
     real depletion[T];
@@ -220,6 +223,7 @@ generated quantities {
     
     logKprior = uniform_rng(1.0,12.0);
     rPrior = lognormal_rng(-1.0,0.20);
+    sigmapPrior = exponential_rng(10.0);
 }
 '
 #}}}
