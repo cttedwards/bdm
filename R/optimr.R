@@ -26,7 +26,7 @@
 setGeneric("optimr", function(object, ...) standardGeneric("optimr"))
 #'
 #' @rdname sampler
-setMethod("optimr", signature = "bdm", definition = function(object, data = list(), run = character(), init = "fixed", ...) {
+setMethod("optimr", signature = "bdm", definition = function(object, data = list(), run = character(), init = "random", ...) {
     
     # initial assignments
     if (length(data) > 0) {
@@ -56,7 +56,11 @@ setMethod("optimr", signature = "bdm", definition = function(object, data = list
         if (init == "fixed") {
             init <- list(r = init.r[['E[r]']], logK = init.logK[['E[logK]']], x = init.x[['E[x]']], sigmap = 0.05)
         } else if (init == "random") {
-            init <- list(r = rlnorm(1, init.r[['E[log(r)]']], init.r[['SD[log(r)]']]), logK = runif(1, init.logK[['min[logK]']], init.logK[['max[logK]']]), x = rbeta(length(init.x[['E[x]']]), 2, 2), sigmap = 0.05)
+        
+            # helper function
+            ff <- function(y) rbeta(length(y), 10 * y, 10 * (1 - y))
+            
+            init <- list(r = rlnorm(1, init.r[['E[log(r)]']], init.r[['SD[log(r)]']]), logK = init.logK[['E[logK]']], x = ff(init.x[['E[x]']]), sigmap = 0.05)
         } 
     }
     
