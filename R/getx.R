@@ -59,13 +59,15 @@ getx.list <- function(object, r, logK, ...) {
     ll <- 1e-4
     
     bm[1] <- 1
-    for (t in 1:tt) 
-        bm[t + 1] <- max(bm[t] + r*bm[t]*(1 - bm[t]) - cc[t]/exp(logK),ll)
+    for (t in 1:tt) {
+        H = min(exp(log(cc[t]) - logK), bm[t])
+        bm[t + 1] <- bm[t] + r*bm[t]*(1 - bm[t]) - H
+    }
     bm <- bm[-length(bm)]
     
     init.x <- bm
     
-    init.x
+    return(init.x)
 }
 
 
