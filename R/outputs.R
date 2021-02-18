@@ -35,7 +35,7 @@
 #' @export
 setGeneric("status", function(object, ...) standardGeneric("status"))
 #' @rdname status
-setMethod("status",signature("bdm"),
+setMethod("status", signature("bdm"),
           function(object, pars) {
               
               status.list <- list()
@@ -62,7 +62,7 @@ setMethod("status",signature("bdm"),
 #' @export
 setGeneric("refpoints", function(object, ...) standardGeneric("refpoints"))
 #' @rdname status
-setMethod("refpoints",signature("bdm"),
+setMethod("refpoints", signature("bdm"),
           function(object, pars) {
               
               refpoints.list <- list()
