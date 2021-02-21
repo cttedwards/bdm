@@ -25,7 +25,7 @@
 #' @export
 setGeneric("optimr", function(object, ...) standardGeneric("optimr"))
 #'
-#' @rdname sampler
+#' @rdname optimr
 setMethod("optimr", signature = "bdm", definition = function(object, data = list(), run = character(), init = "random", ...) {
     
     # initial assignments
@@ -54,14 +54,30 @@ setMethod("optimr", signature = "bdm", definition = function(object, data = list
         init.x    <- getx(object)
         
         if (init == "fixed") {
-            init <- list(r = init.r[['E[r]']], logK = init.logK[['E[logK]']], x = init.x[['E[x]']], sigmap = 0.05)
-        } else if (init == "random") {
+        
+            init <- list(r = init.r[['E[r]']], logK = init.logK[['E[logK]']], x = init.x[['E[x]']])
+            
+        } else { if (init == "random") {
         
             # helper function
             ff <- function(y) rbeta(length(y), 10 * y, 10 * (1 - y))
             
-            init <- list(r = rlnorm(1, init.r[['E[log(r)]']], init.r[['SD[log(r)]']]), logK = init.logK[['E[logK]']], x = ff(init.x[['E[x]']]), sigmap = 0.05)
-        } 
+            init <- list(r = rlnorm(1, init.r[['E[log(r)]']], init.r[['SD[log(r)]']]), logK = init.logK[['E[logK]']], x = ff(init.x[['E[x]']]))
+            
+        } else { if (init == "sampler") {
+            
+            init <- list()
+            init[['r']]    <- median(object@trace[['r']])
+            init[['logK']] <- median(object@trace[['logK']])
+            init[['x']]    <- apply(object@trace[['x']], 2, median)
+            
+        }}}
+    } else { 
+        if (is.list(init)) {
+        
+            message("Intial values supplied on input")
+            
+        }
     }
     
     # maxium a posterior estimate using rstan
