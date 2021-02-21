@@ -84,6 +84,13 @@ setMethod("sampler", signature = "bdm", definition = function(object, data = lis
             init <- function() 
                 list(r = rlnorm(1, init.r[['E[log(r)]']], init.r[['SD[log(r)]']]), logK = runif(1, init.logK[['min[logK]']], init.logK[['max[logK]']]), x = rbeta(length(init.x[['E[x]']]), 2, 2), sigmap = 0.05)
         } 
+    } else { 
+        if (is.list(init)) {
+        
+            init <- function() init
+        
+            message("Intial values supplied on input")
+        }
     }
     
     # number of posterior samples
