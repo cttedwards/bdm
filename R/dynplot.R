@@ -66,7 +66,7 @@ dynplot.bdm <- function(x, ..., pars = 'depletion', labels = character()) {
         x <- y[[i]]
         for (par in pars) {
             par.arr <- x@trace[[par]]
-            dimnames(par.arr) <- list(iter = 1:x@nsamples,time = dat$time)
+            dimnames(par.arr) <- list(iter = 1:x@nsamples,time = x@data$time)
             
             if (is.labelled) {
                 x@run <- labels[i]
