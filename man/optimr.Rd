@@ -2,9 +2,12 @@
 % Please edit documentation in R/optimr.R
 \name{optimr}
 \alias{optimr}
+\alias{optimr,bdm-method}
 \title{Fit \code{bdm} model using maxium penalised density}
 \usage{
 optimr(object, ...)
+
+\S4method{optimr}{bdm}(object, data = list(), run = character(), init = "random", ...)
 }
 \value{
 Returns a \code{bdm} object containing MAP estimates.
